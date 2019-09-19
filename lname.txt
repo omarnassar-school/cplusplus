@@ -1,0 +1,4 @@
+This is just a test
+%cat > lname.txt
+This is just a test
+^D
