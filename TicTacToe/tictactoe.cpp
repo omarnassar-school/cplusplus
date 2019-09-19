@@ -1,8 +1,11 @@
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 
-boolean checkWin(int);
+bool checkWin(int);
+bool checkTie();
+void printBoard();
 
 int main() {
   
@@ -16,22 +19,15 @@ int main() {
   int X_wins = 0;
   int O_wins = 0;
 
-  boolean stillPlaying = true;
-  while (stillPlaying) {
-    if (checkWin(0) == false) {
-      stillPlaying == false;
-    }
-    else {
-      cout << "yeet" << endl;
-    }
-    
-    
+  bool stillPlaying = true;
+  while (stillPlaying == true) { //&& checkWin(X_MOVE) == false && checkWin(O_MOVE) == false && checkTie() == false) {
+    printBoard();
   }
   
   return 0;
 }
 
-boolean checkWin(int player) {
+bool checkWin(int player) {
   if (player == 0) {
     return false;
   }
@@ -39,3 +35,24 @@ boolean checkWin(int player) {
     return true;
   }
 }
+
+bool checkTie() {
+
+}
+
+void printBoard() {
+  cout << " \t1\t2\t3" << endl;
+  for (int row = 0; row < 3; row++) {
+    char output = ('a' + row) + "\t";
+    for (int column = 0; column < 3; column++) {
+      //if (board[row][column] == BLANK) {
+	output += "\t";
+	//}
+	//else if (board[row][column] == X_MOVE) {
+	//output += "X\t";
+	//      }
+	//      else if (board[row][column] == O_MOVE) {
+	//	output += "0\t";
+	//      }
+    }
+    cout << output << endl;

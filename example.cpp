@@ -3,21 +3,22 @@
 
 using namespace std;
 
+float pow(float a, int x);
+
 int main()
 {
-  char str[20];
-  char str2[20];
-  cin.get(str, 20);
-  cin.get();
-  int count = 0;
-  for (int i = 0; i < 20; i++) {
-    if (str[i] != '\0') {
-      str2[count] = str[i];
-      count++;
-    }
-    
-  }
-  cout << str << endl;
-  cout << str2 << endl;
+  float number = 3.0;
+  int power = 2;
+  float result = pow(number, power);
+  cout << result << endl;
+  
   return 0;
+}
+
+float pow(float a, int x) {
+  float answer = a;
+  for (int i = 0; i < x - 1; i++) {
+    answer = answer * a;
+  }
+  return answer;
 }
