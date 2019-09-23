@@ -1,3 +1,9 @@
+/*Author: Omar Nassar
+ *Date: 9/23/19
+ *The purpose of this program is to determine whether a word is a palindrome or not
+ */
+
+
 #include <iostream>
 #include <cstring>
 #include <algorithm>
