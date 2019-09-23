@@ -1,3 +1,5 @@
+
+
 #include <iostream>
 #include <cstring>
 
@@ -33,7 +35,7 @@ int main() {
     cin.clear();
     cin.ignore(1000000, '\n');
     if ((input[0] == 'a' || input[0] == 'b' || input[0] == 'c')
-	&& (input[1] == '1' || input [1] == '2' || input[1] == '3')) {
+	&& (input[1] == '1' || input[1] == '2' || input[1] == '3')) {
       board[(int) input[0] - 'a'][(int) input[1] - '1'] = player;
     }
     //stillPlaying = false;

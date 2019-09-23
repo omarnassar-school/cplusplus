@@ -23,3 +23,6 @@ cd ..
 cd 377576
 ls
 exit
+cd TicTacToe
+ls
+emacs tictactoe.cpp
