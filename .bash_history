@@ -38,3 +38,45 @@ ls
 ./student.exe
 quit
 exit
+ls
+cd StudentList
+ls
+g++ -o student student.cpp
+./student.exe
+quit
+g++ -o student student.cpp
+g++ -o student student.cpp
+g++ -o student student.cpp
+g++ -o student student.cpp
+g++ -o student student.cpp
+./student.exe
+./student.exe
+clear
+g++ -o student student.cpp
+g++ -o student student.cpp && ./student.exe
+g++ -o student student.cpp && ./student.exe
+g++ -o student student.cpp && ./student.exe
+g++ -o student student.cpp && ./student.exe
+g++ -o student student.cpp && ./student.exe
+g++ -o student student.cpp && ./student.exe
+g++ -o student student.cpp && ./student.exe
+g++ -o student student.cpp && ./student.exe
+g++ -o student student.cpp && ./student.exe
+./student.exe
+./student.exe
+g++ -o student student.cpp && ./student.exe
+g++ -o student student.cpp && ./student.exe
+g++ -o student student.cpp && ./student.exe
+g++ -o student student.cpp && ./student.exe
+cd ..
+ls
+git init
+git add .
+git commit -m "first commit"
+git push origin master
+git init
+git add .
+git commit -m "first commit"
+git push origin master
+exit
+exit
