@@ -38,6 +38,7 @@ int main() {
       
     }
     if (strcmp(input, "PRINT") == 0 || strcmp(input, "print") == 0) {
+      cout << "test" << endl;
       PRINT(students);
     }
     if (strcmp(input,"QUIT") == 0 || strcmp(input, "quit") == 0) {
@@ -71,9 +72,7 @@ Student* ADD() {
 }
 
 void PRINT(vector<Student*> students) {
-  cout << "test" << endl;
   vector<Student*>::iterator a;
-  cout << students.begin() << endl;
   for (a = students.begin(); a != students.end(); ++a) {
     cout << (*a) -> first << " " << (*a) -> last << ", " << (*a) -> id << ", " <<
       fixed << setprecision(2) << (*a) -> gpa << endl;
