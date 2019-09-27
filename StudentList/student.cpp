@@ -17,7 +17,7 @@ struct Student {//storing all parts of student
   float gpa;
 };
 
-Student* ADD();
+Student* ADD(); //adding a new student
 void PRINT(vector<Student*> students);
 void DELETE(vector<Student*>* students, int id);
 
