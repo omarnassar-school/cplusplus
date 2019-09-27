@@ -80,3 +80,20 @@ git commit -m "first commit"
 git push origin master
 exit
 exit
+ls
+cd StudentList
+ls
+rm '#palindrome2.cpp#'
+rm student.exe.stackdump
+ls
+cd ..
+git init
+git add .
+git commit -m "first commit"
+git push origin master
+exit
+ls
+cd Palindrome
+emacs palindrome.cpp
+./palindrome.exe
+exit
