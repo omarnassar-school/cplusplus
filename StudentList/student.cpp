@@ -34,7 +34,7 @@ int main() {
       students.push_back(ADD()); //adding more students
       //cout << students.size() << endl;
     }
-    if (strcmp(input, "DELETE") == 0 || strcmp(input, "delete") == 0) {
+    else if (strcmp(input, "DELETE") == 0 || strcmp(input, "delete") == 0) {
       cout << "What is the student's ID?" << endl;
       int idInput;
       cin >> idInput;
@@ -42,12 +42,16 @@ int main() {
       cin.ignore(1000000, '\n');
       DELETE(&students, idInput); //function for deleting students
     }
-    if (strcmp(input, "PRINT") == 0 || strcmp(input, "print") == 0) {
+    else if (strcmp(input, "PRINT") == 0 || strcmp(input, "print") == 0) {
       PRINT(students); //printint students
     }
-    if (strcmp(input,"QUIT") == 0 || strcmp(input, "quit") == 0) {
+    else if (strcmp(input,"QUIT") == 0 || strcmp(input, "quit") == 0) {
       break; //exiting loop
     }
+    else {//if none of the four functions is given as input
+      cout << "Invalid Input. Try Again" << endl;
+    }
+    
   }
   
   return 0;
