@@ -97,3 +97,16 @@ cd Palindrome
 emacs palindrome.cpp
 ./palindrome.exe
 exit
+ls
+cd StudentList
+emacs student.cpp
+emacs student.cpp
+emacs student.cpp
+cd ..
+git init
+git add .
+git commit -m "first commit"
+git push origin master
+git push origin master
+exit
+exit
