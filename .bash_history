@@ -128,3 +128,40 @@ git push origin master
 ls
 clear
 exit
+cd Classes
+ls
+./a
+./a
+emacs games.cpp
+emacs media.cpp
+emacs games.cpp
+emacs games.h
+g++ *.cpp
+./a
+emacs music.h
+emacs games.h
+emacs music.h
+g++ *.cpp
+g++ *.cpp
+./a
+g++ *.cpp
+g++ *.cpp
+g++ *.cpp
+./a
+g++ *.cpp
+./a
+g++ *.cpp
+./a
+eexit
+exit
+cd Classes
+ls
+emacs main.cpp
+exit
+ls
+cd Classes
+cd ..
+cd StudentList
+ls
+emacs student.cpp
+exit

@@ -154,7 +154,14 @@ void add(vector<Media*>* media, int type) {
 
 void search(char* title, vector<Media*>* media) {
   cout << "searching for " << title << endl;
-  
+  vector<Media*>::iterator i;
+  for (i = media -> begin(); i != media -> end(); i++) {
+    if(strcmp((*i) -> getTitle(), title) == 0) {
+      if ((*i) -> getType() == 0) {
+	cout << "movie" << endl;
+      }
+    }
+  }
 }
 
 void erase(char* title, vector<Media*>* media) {
