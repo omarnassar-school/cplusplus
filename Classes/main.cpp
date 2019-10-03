@@ -158,7 +158,11 @@ void search(char* title, vector<Media*>* media) {
   for (i = media -> begin(); i != media -> end(); i++) {
     if(strcmp((*i) -> getTitle(), title) == 0) {
       if ((*i) -> getType() == 0) {
-	cout << "movie" << endl;
+	cout << endl << "The Title: " << (*i) -> getTitle() << endl;
+	cout << "The Year: " << *(*i) -> getYear() << endl;
+	cout << "Director: " << dynamic_cast<Movies*>(*i) -> getDirector() << endl;
+	cout << "Duration: " << *dynamic_cast<Movies*>(*i) -> getDuration() << endl;
+	cout << "Rating: " << *dynamic_cast<Movies*>(*i) -> getRating() << endl << endl;
       }
     }
   }
