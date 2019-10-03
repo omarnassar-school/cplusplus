@@ -106,14 +106,55 @@ void add(vector<Media*>* media, int type) {
   }
   if (type == 1) {
     cout << "game" << endl;
+    Games* game = new Games();
+    cout << "What is it called?" << endl;
+    cin.get(game -> getTitle(), 100);
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    cout << "When was it released?" << endl;
+    cin >> *game -> getYear();
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    cout << "Who published it?" << endl;
+    cin.get(game -> getPublisher(), 100);
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    cout << "What is the rating" << endl;
+    cin >> *game -> getRating();
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    media -> push_back(game);
   }
   if (type == 2) {
     cout << "music" << endl;
+    Music* music = new Music();
+    cout << "What is it called?" << endl;
+    cin.get(music -> getTitle(), 100);
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    cout << "When was it released?" << endl;
+    cin >> *music -> getYear();
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    cout << "Who made it?" << endl;
+    cin.get(music -> getArtist(), 50);
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    cout << "How long is it?" << endl;
+    cin >> *music -> getDuration();
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    cout << "Who published it" << endl;
+    cin.get(music -> getPublisher(), 100);
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    media -> push_back(music);
   }
 }
 
 void search(char* title, vector<Media*>* media) {
   cout << "searching for " << title << endl;
+  
 }
 
 void erase(char* title, vector<Media*>* media) {

@@ -110,3 +110,21 @@ git push origin master
 git push origin master
 exit
 exit
+ls
+cd Classe
+cd Classes
+ls
+g++ .a
+g++ -a
+g++ a
+g++ *.cpp
+g++ *.cpp
+cd ..
+git init
+git add .
+git commit -m "first commit"
+git push origin master
+git push origin master
+ls
+clear
+exit
