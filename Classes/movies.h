@@ -9,8 +9,8 @@ using namespace std;
 
 class Movies : public Media {
  public:
-  Movie();
-  virtual int getType;
+  Movies();
+  virtual int getType();
   char* getDirector();
   int* getDuration();
   float* getRating();

@@ -10,7 +10,7 @@ using namespace std;
 class Games : public Media {
  public:
   Games();
-  virtual int getType;
+  virtual int getType();
   char* getPublisher();
   float* getRating();
  private:
