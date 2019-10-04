@@ -158,11 +158,27 @@ void search(char* title, vector<Media*>* media) {
   for (i = media -> begin(); i != media -> end(); i++) {
     if(strcmp((*i) -> getTitle(), title) == 0) {
       if ((*i) -> getType() == 0) {
-	cout << endl << "The Title: " << (*i) -> getTitle() << endl;
+	cout << endl << "Type: Movie" << endl;
+	cout << "The Title: " << (*i) -> getTitle() << endl;
 	cout << "The Year: " << *(*i) -> getYear() << endl;
 	cout << "Director: " << dynamic_cast<Movies*>(*i) -> getDirector() << endl;
 	cout << "Duration: " << *dynamic_cast<Movies*>(*i) -> getDuration() << endl;
 	cout << "Rating: " << *dynamic_cast<Movies*>(*i) -> getRating() << endl << endl;
+      }
+      else if ((*i) -> getType() == 1) {
+	cout << endl << "Type: Game" << endl;
+	cout << "The Title: " << (*i) -> getTitle() << endl;
+	cout << "The Year: " << *(*i) -> getYear() << endl;
+	cout << "The Publisher: " << dynamic_cast<Games*>(*i) -> getPublisher() << endl;
+	cout << "The Rating: " << *dynamic_cast<Games*>(*i) -> getRating() << endl << endl;
+      }
+      else if ((*i) -> getType() == 2) {
+	cout << endl << "Type: Music" << endl;
+	cout << "The Title: " << (*i) -> getTitle() << endl;
+	cout << "The Year: " << *(*i) -> getYear() << endl;
+	cout << "The Artist: " << dynamic_cast<Music*>(*i) -> getArtist() << endl;
+	cout << "The Duration: " << *dynamic_cast<Music*>(*i) -> getDuration() << endl;
+	cout << "The Publisher: " << dynamic_cast<Music*>(*i) -> getPublisher() << endl << endl;
       }
     }
   }
@@ -170,4 +186,46 @@ void search(char* title, vector<Media*>* media) {
 
 void erase(char* title, vector<Media*>* media) {
   cout << "deleting " << title << endl;
+  char input;
+  vector<Media*>::iterator i;
+  for (i = media -> begin(); i != media -> end(); i++) {
+    if(strcmp((*i) -> getTitle(), title) == 0) {
+      if ((*i) -> getType() == 0) {
+	cout << endl << "Type: Movie" << endl;
+	cout << "The Title: " << (*i) -> getTitle() << endl;
+	cout << "The Year: " << *(*i) -> getYear() << endl;
+	cout << "Director: " << dynamic_cast<Movies*>(*i) -> getDirector() << endl;
+	cout << "Duration: " << *dynamic_cast<Movies*>(*i) -> getDuration() << endl;
+	cout << "Rating: " << *dynamic_cast<Movies*>(*i) -> getRating() << endl << endl;
+	cout << "Are you sure you want to delete this? (y/n)" << endl;
+	cin >> input;
+	cin.clear();
+	cin.ignore(1000000, '\n');
+	if (input == 'y') {
+	  
+	}
+	else if (input == 'n') {
+	  
+	}
+	else {
+	  cout << "Invalid Input." << endl;
+	}
+      }
+      else if ((*i) -> getType() == 1) {
+	cout << endl << "Type: Game" << endl;
+	cout << "The Title: " << (*i) -> getTitle() << endl;
+	cout << "The Year: " << *(*i) -> getYear() << endl;
+	cout << "The Publisher: " << dynamic_cast<Games*>(*i) -> getPublisher() << endl;
+	cout << "The Rating: " << *dynamic_cast<Games*>(*i) -> getRating() << endl << endl;
+      }
+      else if ((*i) -> getType() == 2) {
+	cout << endl << "Type: Music" << endl;
+	cout << "The Title: " << (*i) -> getTitle() << endl;
+	cout << "The Year: " << *(*i) -> getYear() << endl;
+	cout << "The Artist: " << dynamic_cast<Music*>(*i) -> getArtist() << endl;
+	cout << "The Duration: " << *dynamic_cast<Music*>(*i) -> getDuration() << endl;
+	cout << "The Publisher: " << dynamic_cast<Music*>(*i) -> getPublisher() << endl << endl;
+      }
+    }
+  }
 }

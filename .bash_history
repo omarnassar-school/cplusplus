@@ -165,3 +165,16 @@ cd StudentList
 ls
 emacs student.cpp
 exit
+git push origin master
+git init
+git commit -m "first commit"
+git init
+git add .
+git commit -m "first commit"
+git push origin master
+git init
+git add .
+git commit -m "first commit"
+git push origin master
+quit
+exit
