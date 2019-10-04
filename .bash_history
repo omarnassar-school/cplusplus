@@ -178,3 +178,28 @@ git commit -m "first commit"
 git push origin master
 quit
 exit
+ls
+cd Classes
+cd ..
+cd StudentList
+ls
+emacs student.cpp
+cd..
+cd ..
+cd Classes
+g++ *.cpp && ./a
+g++ *.cpp && ./a
+g++ *.cpp && ./a
+g++ *.cpp && ./a
+g++ *.cpp && ./a
+g++ *.cpp && ./a
+g++ *.cpp && ./a
+cd ..
+git init
+git add .
+git commit -m "first commit"
+git push origin master
+exit
+cd Classes
+./a
+exit
