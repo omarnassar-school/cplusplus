@@ -144,7 +144,7 @@ void add(vector<Media*>* media, int type) {
     cin >> *music -> getDuration();
     cin.clear();
     cin.ignore(1000000, '\n');
-    cout << "Who published it" << endl;
+    cout << "Who published it?" << endl;
     cin.get(music -> getPublisher(), 100);
     cin.clear();
     cin.ignore(1000000, '\n');
@@ -202,10 +202,13 @@ void erase(char* title, vector<Media*>* media) {
 	cin.clear();
 	cin.ignore(1000000, '\n');
 	if (input == 'y') {
-	  
+	  delete *i;
+	  i = media -> erase(i);
+	  cout << "Entry deleted." << endl << endl;
+	  return;
 	}
 	else if (input == 'n') {
-	  
+	  cout << "Entry not deleted." << endl << endl;
 	}
 	else {
 	  cout << "Invalid Input." << endl;
@@ -217,6 +220,22 @@ void erase(char* title, vector<Media*>* media) {
 	cout << "The Year: " << *(*i) -> getYear() << endl;
 	cout << "The Publisher: " << dynamic_cast<Games*>(*i) -> getPublisher() << endl;
 	cout << "The Rating: " << *dynamic_cast<Games*>(*i) -> getRating() << endl << endl;
+	cout << "Are you sure you want to delete this? (y/n)" << endl;
+	cin >> input;
+	cin.clear();
+	cin.ignore(1000000, '\n');
+	if (input == 'y') {
+	  delete *i;
+	  i = media -> erase(i);
+	  cout << "Entry deleted." << endl << endl;
+	  return;
+	}
+	else if (input == 'n') {
+	  cout << "Entry not deleted." << endl << endl;
+	}
+	else {
+	  cout << "Invalid Input." << endl;
+	}
       }
       else if ((*i) -> getType() == 2) {
 	cout << endl << "Type: Music" << endl;
@@ -225,6 +244,22 @@ void erase(char* title, vector<Media*>* media) {
 	cout << "The Artist: " << dynamic_cast<Music*>(*i) -> getArtist() << endl;
 	cout << "The Duration: " << *dynamic_cast<Music*>(*i) -> getDuration() << endl;
 	cout << "The Publisher: " << dynamic_cast<Music*>(*i) -> getPublisher() << endl << endl;
+	cout << "Are you sure you want to delete this? (y/n)" << endl;
+	cin >> input;
+	cin.clear();
+	cin.ignore(1000000, '\n');
+	if (input == 'y') {
+	  delete *i;
+	  i = media -> erase(i);
+	  cout << "Entry deleted." << endl << endl;
+	  return;
+	}
+	else if (input == 'n') {
+	  cout << "Entry not deleted." << endl << endl;
+	}
+	else {
+	  cout << "Invalid Input." << endl;
+	}
       }
     }
   }
