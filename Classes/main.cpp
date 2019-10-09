@@ -234,6 +234,7 @@ void erase(vector<Media*>* media) {//function for erasing entries, takes in vect
   if (valid == true) {
     vector<Media*>::iterator i;
     for (i = media -> begin(); i != media -> end(); i++) {
+      //cout << (*i) << endl;
       if(strcmp((*i) -> getTitle(), title) == 0 || *(*i) -> getYear() == year) {
 	if ((*i) -> getType() == 0) {
 	  cout << endl << "Type: Movie" << endl;

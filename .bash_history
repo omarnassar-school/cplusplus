@@ -210,3 +210,16 @@ emacs main.cpp
 ls
 g++ *.cpp && ./a
 exit
+git init
+git add .
+git commit -m "first commit"
+git push origin master
+ls
+cd Classes
+emacs main.cpp
+exit
+git init
+git add .
+git commit -m "first commit"
+git push origin master
+exit
