@@ -9,12 +9,12 @@ using namespace std;
 class Media {
  public:
   Media();
-  int* getYear();
-  char* getTitle();
-  virtual int getType();
+  int* getYear(); //pointing to year
+  char* getTitle(); //pointing to title
+  virtual int getType(); //storing type
  private:
-  int year;
-  char title[100];
+  int year; //storing year
+  char title[100]; //storing title
 };
 
 #endif

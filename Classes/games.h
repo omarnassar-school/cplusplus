@@ -7,15 +7,15 @@
 
 using namespace std;
 
-class Games : public Media {
+class Games : public Media {//games is a child of media
  public:
   Games();
-  virtual int getType();
-  char* getPublisher();
-  float* getRating();
+  virtual int getType(); //storing type
+  char* getPublisher(); //pointer to publisher
+  float* getRating(); //pointer to rating
  private:
-  char publisher[100];
-  float rating;
+  char publisher[100]; //storing publisher
+  float rating; //storing rating
 };
 
 #endif

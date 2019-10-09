@@ -5,23 +5,23 @@
 
 using namespace std;
 
-Movies::Movies() {
+Movies::Movies() {//calling .h file
 
 
 }
 
-int Movies::getType() {
+int Movies::getType() {//sending type to media class
   return 0;
 }
 
-char* Movies::getDirector() {
+char* Movies::getDirector() {//sending director to .h file
   return director;
 }
 
-int* Movies::getDuration() {
+int* Movies::getDuration() {//sending duration to .h file
   return &duration;
 }
 
-float* Movies::getRating() {
+float* Movies::getRating() {//sending rating to .h file
   return &rating;
 }

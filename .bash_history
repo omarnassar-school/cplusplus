@@ -203,3 +203,28 @@ exit
 cd Classes
 ./a
 exit
+git init
+git pull origin master
+git pull origin master
+cs Classes
+cd Classes
+ls
+emacs main.cpp
+emacs main.cpp
+cd ..
+git store credentials
+git config --global credential.helper wincred
+git init
+git add .
+git commit -m "first commit"
+git push origin master
+git push origin master
+cd ..
+cd 377576
+cd Classes
+emacs main.cpp
+exit
+cd Classes
+g++ *.cpp && ./a
+exit
+exit

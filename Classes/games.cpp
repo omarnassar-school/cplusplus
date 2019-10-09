@@ -5,19 +5,19 @@
 
 using namespace std;
 
-Games::Games() {
+Games::Games() {//calling .h file
 
   
 }
 
-int Games::getType() {
+int Games::getType() {//storing type
   return 1;
 }
 
-char* Games::getPublisher() {
+char* Games::getPublisher() {//sending publisher to .h file
   return publisher;
 }
 
-float* Games::getRating() {
+float* Games::getRating() {//sending rating to .h file
   return &rating;
 }
