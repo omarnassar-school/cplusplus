@@ -203,3 +203,10 @@ exit
 cd Classes
 ./a
 exit
+git init
+git pull origin master
+cd Classes
+emacs main.cpp
+ls
+g++ *.cpp && ./a
+exit
