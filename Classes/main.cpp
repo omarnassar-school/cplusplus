@@ -250,7 +250,7 @@ void erase(vector<Media*>* media) {//function for erasing entries, takes in vect
 	    delete *i;
 	    i = media -> erase(i);
 	    cout << "Entry deleted." << endl << endl;
-	    return;
+	    //return;
 	  }
 	  else if (input2 == 'n') {//if user doesn't want to delete entry
 	    cout << "Entry not deleted." << endl << endl;
@@ -273,7 +273,7 @@ void erase(vector<Media*>* media) {//function for erasing entries, takes in vect
 	    delete *i;
 	    i = media -> erase(i);
 	    cout << "Entry deleted." << endl << endl;
-	    return;
+	    //return;
 	  }
 	  else if (input2 == 'n') {
 	    cout << "Entry not deleted." << endl << endl;
@@ -297,7 +297,7 @@ void erase(vector<Media*>* media) {//function for erasing entries, takes in vect
 	    delete *i;
 	    i = media -> erase(i);
 	    cout << "Entry deleted." << endl << endl;
-	    return;
+	    //return;
 	  }
 	  else if (input2 == 'n') {
 	    cout << "Entry not deleted." << endl << endl;
