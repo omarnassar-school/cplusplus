@@ -14,6 +14,7 @@
 
 using namespace std;
 
+<<<<<<< HEAD
 void add(vector<Media*>* media, int type); //initializing function to add media, takes in type of media
 void search(vector<Media*>* media); //initializing function to search for entries
 void erase(vector<Media*>* media); //initializing function
@@ -23,17 +24,33 @@ int main() {
   //mediaV.push_back(NULL);
   char input[10]; //storing input
   while (true) {//while user hasn't quit
+=======
+void add(vector<Media*>* media, int type); //initializing function for adding new entries
+void search(vector<Media*>* media); //initializing function for searching for entries
+void erase(vector<Media*>* media); //initializing function for erasing entries
+
+int main() {
+  vector<Media*> mediaV; //creating vector of entries
+  //mediaV.push_back(NULL);
+  char input[10]; //storing input
+  while (true) {
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
     cout << "What would you like to do? (ADD, SEARCH, DELETE, QUIT)" << endl;
     cin.get(input, 10); //getting input for what user wants to do
     cin.clear();
     cin.ignore(1000000, '\n');
+<<<<<<< HEAD
     if (strcmp(input, "ADD") == 0 || strcmp(input, "add") == 0) {//if user wants to add
+=======
+    if (strcmp(input, "ADD") == 0 || strcmp(input, "add") == 0) {//if the user wants to add
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
       while (true) {
 	cout << "What would you like to add? (MOVIE, GAME, MUSIC)" << endl;
 	cin.get(input, 10); //what type of media user wants to add
 	cin.clear();
 	cin.ignore(1000000, '\n');
 	if (strcmp(input, "MOVIE") == 0 || strcmp(input, "movie") == 0) {//if user wants to add a movie
+<<<<<<< HEAD
 	  add(&mediaV, 0); //call add function with vector and type
 	  break;
 	}
@@ -43,6 +60,17 @@ int main() {
 	}
 	else if (strcmp(input, "MUSIC") == 0 || strcmp(input, "music") == 0) {//if user wants to add music
 	  add(&mediaV, 2); //call add function with vector and type
+=======
+	  add(&mediaV, 0);
+	  break;
+	}
+	else if (strcmp(input, "GAME") == 0 || strcmp(input, "game") == 0) {//if user wants to add a game
+	  add(&mediaV, 1);
+	  break;
+	}
+	else if (strcmp(input, "MUSIC") == 0 || strcmp(input, "music") == 0) {//if user wants to add music
+	  add(&mediaV, 2);
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
 	  break;
 	}
 	else {//if input isn't valid
@@ -51,15 +79,26 @@ int main() {
       }
     }
     else if (strcmp(input, "SEARCH") == 0 || strcmp(input, "search") == 0) {//if user wants to search
+<<<<<<< HEAD
       search(&mediaV); //call search function with vector
     }
     else if (strcmp(input, "DELETE") == 0 || strcmp(input, "delete") == 0) {//if user wants to delete
       erase(&mediaV); //call delete function with vector
+=======
+      search(&mediaV);
+    }
+    else if (strcmp(input, "DELETE") == 0 || strcmp(input, "delete") == 0) {//if user wants to delete
+      erase(&mediaV);
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
     }
     else if (strcmp(input, "QUIT") == 0 || strcmp(input, "quit") == 0) {//if user wants to quit
       break;
     }
+<<<<<<< HEAD
     else {//if input isn't valid
+=======
+    else {//if user doesn't input one of the options listed
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
       cout << "Invalid Input." << endl;
     }
   }
@@ -67,10 +106,19 @@ int main() {
   return 0;
 }
 
+<<<<<<< HEAD
 void add(vector<Media*>* media, int type) {//function for adding, takes in vector and type
   if (type == 0) {//if user wants to add a movie
     Movies* movie = new Movies(); //making a new movie
     //getting information
+=======
+void add(vector<Media*>* media, int type) {//adding a new entry, take in vector array and the type of media
+  char input[100];
+  int input2;
+  if (type == 0) {//if user is adding a movie
+    Movies* movie = new Movies(); //making a new movie entry
+    //all of the descriptions of the movie
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
     cout << "What is the title?" << endl;
     cin.get(movie -> getTitle(), 100);
     cin.clear();
@@ -91,11 +139,19 @@ void add(vector<Media*>* media, int type) {//function for adding, takes in vecto
     cin >> *movie -> getRating();
     cin.clear();
     cin.ignore(1000000, '\n');
+<<<<<<< HEAD
     media -> push_back(movie); //adding movie to the vector
   }
   if (type == 1) {//if user wants to add a game
     Games* game = new Games(); //making a new game
     //getting information
+=======
+    media -> push_back(movie); //adding entry to the vector
+  }
+  if (type == 1) {//if user is adding a game
+    Games* game = new Games(); //making a new game entry
+    //all of the descriptions of the game
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
     cout << "What is it called?" << endl;
     cin.get(game -> getTitle(), 100);
     cin.clear();
@@ -112,11 +168,19 @@ void add(vector<Media*>* media, int type) {//function for adding, takes in vecto
     cin >> *game -> getRating();
     cin.clear();
     cin.ignore(1000000, '\n');
+<<<<<<< HEAD
     media -> push_back(game); //adding game to the vecor
   }
   if (type == 2) {//if user wants to add music
     Music* music = new Music(); //making a new music class
     //getting information
+=======
+    media -> push_back(game); //adding entry to the vector
+  }
+  if (type == 2) {//if user is adding music
+    Music* music = new Music(); //making a new music entry
+    //all of the descriptions of the music
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
     cout << "What is it called?" << endl;
     cin.get(music -> getTitle(), 100);
     cin.clear();
@@ -137,6 +201,7 @@ void add(vector<Media*>* media, int type) {//function for adding, takes in vecto
     cin.get(music -> getPublisher(), 100);
     cin.clear();
     cin.ignore(1000000, '\n');
+<<<<<<< HEAD
     media -> push_back(music); //adding music to vector
   }
 }
@@ -146,6 +211,17 @@ void search(vector<Media*>* media) {
   char input[10]; //storing input
   char title[100]; //storing title
   int year; //storing year
+=======
+    media -> push_back(music); //adding the entry to the vector
+  }
+}
+
+void search(vector<Media*>* media) {//function for searching, takes in a vector storing entries
+  bool valid; //boolean for making sure input is valid
+  char input[10];
+  char title[100];
+  int year;
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
   cout << "What would you like to search by? (TITLE/YEAR)" << endl;
   cin.get(input, 10); //search by either titile or year
   cin.clear();
@@ -164,16 +240,25 @@ void search(vector<Media*>* media) {
     cin.ignore(1000000, '\n');
     valid = true; //input is valid
   }
+<<<<<<< HEAD
   else {//if input isn't valid
+=======
+  else {//if user inputs anything else
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
     cout << "Invalid Input." << endl;
     valid = false;
   }
   if (valid == true) {//if input was valid
     vector<Media*>::iterator i; //iterator to go through the vector
     for (i = media -> begin(); i != media -> end(); i++) {
+<<<<<<< HEAD
       if(strcmp((*i) -> getTitle(), title) == 0 || *(*i) -> getYear() == year) {//if the title or year match what was inputted
 	//printing different attributes based on type
 	if ((*i) -> getType() == 0) {//if it's a movie
+=======
+      if(strcmp((*i) -> getTitle(), title) == 0 || *(*i) -> getYear() == year) {//if any entry matches the title or year
+	if ((*i) -> getType() == 0) {
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
 	  cout << endl << "Type: Movie" << endl;
 	  cout << "Title: " << (*i) -> getTitle() << endl;
 	  cout << "Year: " << *(*i) -> getYear() << endl;
@@ -202,8 +287,13 @@ void search(vector<Media*>* media) {
 }
 
 void erase(vector<Media*>* media) {//function for erasing entries, takes in vector
+<<<<<<< HEAD
   char input2; //storing whether wants to delete
   //same method as searching
+=======
+  //uses same method as search for searching and printing
+  char input2;
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
   bool valid;
   char input[10];
   char title[100];
@@ -233,6 +323,7 @@ void erase(vector<Media*>* media) {//function for erasing entries, takes in vect
   if (valid == true) {
     vector<Media*>::iterator i;
     for (i = media -> begin(); i != media -> end(); i++) {
+      //cout << (*i) << endl;
       if(strcmp((*i) -> getTitle(), title) == 0 || *(*i) -> getYear() == year) {
 	if ((*i) -> getType() == 0) {
 	  cout << endl << "Type: Movie" << endl;
@@ -241,10 +332,11 @@ void erase(vector<Media*>* media) {//function for erasing entries, takes in vect
 	  cout << "Director: " << dynamic_cast<Movies*>(*i) -> getDirector() << endl;
 	  cout << "Duration: " << *dynamic_cast<Movies*>(*i) -> getDuration() << endl;
 	  cout << "Rating: " << *dynamic_cast<Movies*>(*i) -> getRating() << endl << endl;
-	  cout << "Are you sure you want to delete this? (y/n)" << endl;
+	  cout << "Are you sure you want to delete this? (y/n)" << endl; //making sure user actually wants to delete the entry
 	  cin >> input2;
 	  cin.clear();
 	  cin.ignore(1000000, '\n');
+<<<<<<< HEAD
 	  if (input2 == 'y') {//if user wants to delete
 	    delete *i; //deleting i from memory
 	    i = media -> erase(i); //removing i from iterator
@@ -256,6 +348,18 @@ void erase(vector<Media*>* media) {//function for erasing entries, takes in vect
 	    cout << "Entry not deleted." << endl << endl;
 	  }
 	  else {//if input isn't valid
+=======
+	  if (input2 == 'y') {//if user actually wants to delete the entry
+	    delete *i;
+	    i = media -> erase(i);
+	    cout << "Entry deleted." << endl << endl;
+	    //return;
+	  }
+	  else if (input2 == 'n') {//if user doesn't want to delete entry
+	    cout << "Entry not deleted." << endl << endl;
+	  }
+	  else {//if anything else is inputted
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
 	    cout << "Invalid Input." << endl;
 	  }
       }
@@ -273,7 +377,10 @@ void erase(vector<Media*>* media) {//function for erasing entries, takes in vect
 	    delete *i;
 	    i = media -> erase(i);
 	    cout << "Entry deleted." << endl << endl;
+<<<<<<< HEAD
 	    i--;
+=======
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
 	    //return;
 	  }
 	  else if (input2 == 'n') {
@@ -298,7 +405,10 @@ void erase(vector<Media*>* media) {//function for erasing entries, takes in vect
 	    delete *i;
 	    i = media -> erase(i);
 	    cout << "Entry deleted." << endl << endl;
+<<<<<<< HEAD
 	    i--;
+=======
+>>>>>>> 7786d01101ade9b227783f14cd8baa86e4053b7e
 	    //return;
 	  }
 	  else if (input2 == 'n') {
