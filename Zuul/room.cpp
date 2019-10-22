@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <map>
 #include "room.h"
 
 using namespace std;
@@ -9,10 +10,18 @@ Room::Room() {
   
 }
 
-map* Room::getExits() {
-  return &map;
+char* Room::getDescription() {
+  return description;
 }
 
-list* Room::getItems() {
-  return &items;
+int* Room::getID() {
+  return &id;
+}
+
+map<int, char*>* Room::getExits() {
+  return &exits;
+}
+
+int* Room::getItem() {
+  return &item;
 }

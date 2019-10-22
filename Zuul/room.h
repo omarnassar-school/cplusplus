@@ -3,17 +3,22 @@
 
 #include <iostream>
 #include <cstring>
+#include <map>
 
 using namespace std;
 
 class Room {
  public:
   Room();
-  map* getExits();
-  list* items();
+  char* getDescription();
+  int* getID();
+  map<int, char*>* getExits();
+  int* getItem();
  private:
-  map exits();
-  list items();
+  char description[100];
+  int id;
+  map<int, char*> exits;
+  int item;
 };
 
 #endif
