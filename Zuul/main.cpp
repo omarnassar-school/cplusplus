@@ -9,21 +9,18 @@
 #include <vector>
 #include <map>
 #include "room.h"
+#include "item.h"
 
 using namespace std;
 
-struct Item {
-  char name[10];
-  int id;
-};
-
-//void initializeRooms(vector<Room*>* rooms);
-//void initializeItems(vector<Item*>* items);
+void initializeRooms(vector<Room*>* rooms);
+void initializeItems(vector<Item*>* items);
 
 int main() {
   vector<Room*> rooms;
   vector<Item*> items;
   char input[10];
+  initializeItems(&items);
   cout << "You are late to school and are rushing to get to school when someone runs up from behind you and takes your things. You try to catch him but he is too fast. He drops your backpack but keeps running with a few of your things. He runs inside the school and hides somewhere. What you need to find along with your backpack is your pencil, eraser, late slip, calculator, and your graded test that your parents signed and you were supposed to return today." << endl;
 
   cout << endl << "Type 'help' if you need help." << endl << endl;
@@ -48,10 +45,14 @@ int main() {
   return 0;
 }
 
-//void initializeRooms(vector<Room*>* rooms) {
-//  
-//}
+void initializeRooms(vector<Room*>* rooms) {
+  
+}
 
-//void initializeItems(vector<Items*>* items) {
-//  
-//}
+void initializeItems(vector<Item*>* items) {
+  Item* juul = new Item();
+  juul -> getName() = "Juul";
+  cout << juul -> getName() << endl;
+  juul -> getID() = 1;
+  items -> push_back(juul);
+}
