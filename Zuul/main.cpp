@@ -47,27 +47,123 @@ int main() {
 }
 
 void initializeRooms(vector<Room*>* rooms) {
+  char* west = (char*)("west");
+  char* east = (char*)("east");
+  char* north = (char*)("north");
+  char* south = (char*)("south");
   map<int, char*> temp;
   //Outside Front
   Room* outsideFront = new Room();
   outsideFront -> setDescription((char*)("outside in front of the school"));
   outsideFront -> setID(1);
-  temp.insert(pair<int, char*> (2, (char*)("west")));
+  temp.insert(pair<int, char*> (2, west));
   temp.insert(pair<int, char*> (12, (char*)("around")));
   outsideFront -> setExits(temp);
   outsideFront -> setItem(1);
   rooms -> push_back(outsideFront);
   temp.clear();
+  //Main Office
   Room* mainOffice = new Room();
   mainOffice -> setDescription((char*)("in the main office"));
   mainOffice -> setID(2);
-  temp.insert(pair<int, char*> (1, (char*)("east")));
-  temp.insert(pair<int, char*> (6, (char*)("west")));
-  temp.insert(pair<int, char*> (3, (char*)("north")));
-  temp.insert(pair<int, char*> (4, (char*)("south")));
+  temp.insert(pair<int, char*> (1, east));
+  temp.insert(pair<int, char*> (6, west));
+  temp.insert(pair<int, char*> (3, north));
+  temp.insert(pair<int, char*> (4, south));
   mainOffice -> setExits(temp);
   mainOffice -> setItem(0);
   rooms -> push_back(mainOffice);
+  temp.clear();
+  //Attendance Office
+  Room* attendance = new Room();
+  attendance -> setDescription((char*)("in the attendance office"));
+  attendance -> setID(3);
+  temp.insert(pair<int, char*> (2, south));
+  attendance -> setExits(temp);
+  attendance -> setItem(5);
+  rooms -> push_back(attendance);
+  temp.clear();
+  //Principal's Office
+  Room* principal = new Room();
+  principal -> setDescription((char*)("in the principal's office"));
+  principal -> setID(4);
+  temp.insert(pair<int, char*> (2, north));
+  principal -> setExits(temp);
+  principal -> setItem(0);
+  rooms -> push_back(principal);
+  temp.clear();
+  //Room D-8
+  Room* d8 = new Room();
+  d8 -> setDescription((char*)("in room D-8. The teacher asks if you need help finding your classroom"));
+  d8 -> setID(5);
+  temp.insert(pair<int, char*> (6, south));
+  d8 -> setExits(temp);
+  d8 -> setItem(0);
+  rooms -> push_back(d8);
+  temp.clear();
+  //Main Hall
+  Room* mainHall = new Room();
+  mainHall -> setDescription((char*)("in Main hall"));
+  mainHall -> setID(6);
+  temp.insert(pair<int, char*> (2, east));
+  temp.insert(pair<int, char*> (7, south));
+  temp.insert(pair<int, char*> (5, north));
+  mainHall -> setExits(temp);
+  mainHall -> setItem(4);
+  rooms -> push_back(mainHall);
+  temp.clear();
+  //1 Hall
+  Room* oneHall = new Room();
+  oneHall -> setDescription((char*)("in 1 hall"));
+  oneHall -> setID(7);
+  temp.insert(pair<int, char*> (6, north));
+  temp.insert(pair<int, char*> (8, south));
+  temp.insert(pair<int, char*> (15, east));
+  temp.insert(pair<int, char*> (11, west));
+  oneHall -> setExits(temp);
+  oneHall -> setItem(0);
+  rooms -> push_back(oneHall);
+  temp.clear();
+  //Cafeteria
+  Room* cafeteria = new Room();
+  cafeteria -> setDescription((char*)("in the cafeteria"));
+  cafeteria -> setID(8);
+  temp.insert(pair<int, char*> (7, north));
+  cafeteria -> setExits(temp);
+  cafeteria -> setItem(2);
+  rooms -> push_back(cafeteria);
+  temp.clear();
+  //Math Class
+  Room* math = new Room();
+  math -> setDescription((char*)("in your math classroom"));
+  math -> setID(9);
+  temp.insert(pair<int, char*> (11, north));
+  temp.insert(pair<int, char*> (10, east));
+  math -> setExits(temp);
+  math -> setItem(0);
+  rooms -> push_back(math);
+  temp.clear();
+  //Teacher's Office
+  Room* teacherOffice = new Room();
+  teacherOffice -> setDescription((char*)("in your math teacher's office"));
+  teacherOffice -> setID(10);
+  temp.insert(pair<int, char*> (9, west));
+  teacherOffice -> setExits(temp);
+  teacherOffice -> setItem(6);
+  rooms -> push_back(teacherOffice);
+  temp.clear();
+  //G Hall
+  Room* gHall = new Room();
+  gHall -> setDescription((char*)("in G hall"));
+  gHall -> setID(11);
+  temp.insert(pair<int, char*> (12, north));
+  temp.insert(pair<int, char*> (7, east));
+  temp.insert(pair<int, char*> (9, south));
+  temp.insert(pair<int, char*> (13, west));
+  gHall -> setExits(temp);
+  gHall -> setItem(3);
+  rooms -> push_back(gHall);
+  temp.clear();
   
   
   //printing rooms and ids for debugging
