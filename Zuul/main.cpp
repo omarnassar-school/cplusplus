@@ -73,10 +73,10 @@ void initializeRooms(vector<Room*>* rooms) {
   //printing rooms and ids for debugging
   vector<Room*>::iterator i;
   for (i = rooms -> begin(); i != rooms -> end(); i++) {
-    cout << (*i) -> getDescription() << endl;
+    cout << endl << (*i) -> getDescription() << endl;
     cout << (*i) -> getID() << endl;
     cout << (*i) -> getExits() << endl;
-    cout << (*i) -> getItem() << endl << endl;
+    cout << (*i) -> getItem() << endl;
   }
   
 }
@@ -127,8 +127,8 @@ void initializeItems(vector<Item*>* items) {
   //printing items and ids for debugging
   vector<Item*>::iterator i;
   for (i = items -> begin(); i != items -> end(); i++) {
-    cout << (*i) -> getName() << endl;
-    cout << (*i) -> getID() << endl << endl;
+    cout << endl << (*i) -> getName() << endl;
+    cout << (*i) -> getID() << endl;
   }
   
 }
