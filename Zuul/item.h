@@ -9,15 +9,14 @@ using namespace std;
 
 class Item {
  public:
-  Item() {
-    name = new char[10];
-    id = new id;
-  };
-  char*& getName();
-  int& getID();
+  Item();
+  char* getName();
+  int getID();
+  void setName(char*);
+  void setID(int);
  private:
   char* name;
-  int* id;
+  int id;
 };
 
 #endif

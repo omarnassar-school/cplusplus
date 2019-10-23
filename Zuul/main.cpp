@@ -21,7 +21,8 @@ int main() {
   vector<Item*> items;
   char input[10];
   initializeItems(&items);
-  cout << "You are late to school and are rushing to get to school when someone runs up from behind you and takes your things. You try to catch him but he is too fast. He drops your backpack but keeps running with a few of your things. He runs inside the school and hides somewhere. What you need to find along with your backpack is your pencil, eraser, late slip, calculator, and your graded test that your parents signed and you were supposed to return today." << endl;
+  initializeRooms(&rooms);
+  cout << endl << "You are late to school and are rushing to get to school when someone runs up from behind you and takes your things. You try to catch him but he is too fast. He drops your backpack but keeps running with a few of your things. He runs inside the school and hides somewhere. What you need to find along with your backpack is your pencil, eraser, late slip, calculator, and your graded test that your parents signed and you were supposed to return today." << endl;
 
   cout << endl << "Type 'help' if you need help." << endl << endl;
   while (true) {
@@ -46,13 +47,77 @@ int main() {
 }
 
 void initializeRooms(vector<Room*>* rooms) {
-  
+  map<int, char*> temp;
+  //Outside Front
+  Room* outsideFront = new Room();
+  outsideFront -> setDescription((char*)("outside in front of the school"));
+  outsideFront -> setID(1);
+  temp.insert(pair<int, char*> (2, (char*)("west")));
+  temp.insert(pair<int, char*> (12, (char*)("around")));
+  outsideFront -> setExits(temp);
+  outsideFront -> setItem(1);
+  rooms -> push_back(outsideFront);
+
+  /*
+  //printing rooms and ids for debugging
+  vector<Room*>::iterator i;
+  for (i = rooms -> begin(); i != rooms -> end(); i++) {
+    cout << (*i) -> getDescription() << endl;
+    cout << (*i) -> getID() << endl;
+    cout << (*i) -> getExits() -> at(2) << endl;
+    cout << (*i) -> getItem() << endl << endl;
+  }
+  */
 }
 
 void initializeItems(vector<Item*>* items) {
+  //Juul
   Item* juul = new Item();
-  juul -> getName() = "Juul";
-  cout << juul -> getName() << endl;
-  juul -> getID() = 1;
+  juul -> setName((char*)("Juul"));
+  juul -> setID(1);
   items -> push_back(juul);
+  //Apple
+  Item* apple = new Item();
+  apple -> setName((char*)("Apple"));
+  apple -> setID(2);
+  items -> push_back(apple);
+  //Eraser
+  Item* eraser = new Item();
+  eraser -> setName((char*)("Eraser"));
+  eraser -> setID(3);
+  items -> push_back(eraser);
+  //Pencil
+  Item* pencil = new Item();
+  pencil -> setName((char*)("Pencil"));
+  pencil -> setID(4);
+  items -> push_back(pencil);
+  //Late Slip
+  Item* lateSlip = new Item();
+  lateSlip -> setName((char*)("Late Slip"));
+  lateSlip -> setID(5);
+  items -> push_back(lateSlip);
+  //Test
+  Item* test = new Item();
+  test -> setName((char*)("Test"));
+  test -> setID(6);
+  items -> push_back(test);
+  //Backpack
+  Item* backpack = new Item();
+  backpack -> setName((char*)("Backpack"));
+  backpack -> setID(7);
+  items -> push_back(backpack);
+  //Calculator
+  Item* calculator = new Item();
+  calculator -> setName((char*)("Calculator"));
+  calculator -> setID(8);
+  items -> push_back(calculator);
+
+  /*
+  //printing items and ids for debugging
+  vector<Item*>::iterator i;
+  for (i = items -> begin(); i != items -> end(); i++) {
+    cout << (*i) -> getName() << endl;
+    cout << (*i) -> getID() << endl << endl;
+  }
+  */
 }

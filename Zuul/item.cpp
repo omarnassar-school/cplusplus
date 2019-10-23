@@ -4,15 +4,23 @@
 
 using namespace std;
 
-//Item::Item() {
+Item::Item() {
   
   
-//}
+}
 
-char*& Item::getName() {
+char* Item::getName() {
   return name;
 }
 
-int*& Item::getID() {
+int Item::getID() {
   return id;
+}
+
+void Item::setName(char* inName) {
+  name = inName;
+}
+
+void Item::setID(int inID) {
+  id = inID;
 }
