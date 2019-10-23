@@ -57,17 +57,28 @@ void initializeRooms(vector<Room*>* rooms) {
   outsideFront -> setExits(temp);
   outsideFront -> setItem(1);
   rooms -> push_back(outsideFront);
-
-  /*
+  temp.clear();
+  Room* mainOffice = new Room();
+  mainOffice -> setDescription((char*)("in the main office"));
+  mainOffice -> setID(2);
+  temp.insert(pair<int, char*> (1, (char*)("east")));
+  temp.insert(pair<int, char*> (6, (char*)("west")));
+  temp.insert(pair<int, char*> (3, (char*)("north")));
+  temp.insert(pair<int, char*> (4, (char*)("south")));
+  mainOffice -> setExits(temp);
+  mainOffice -> setItem(0);
+  rooms -> push_back(mainOffice);
+  
+  
   //printing rooms and ids for debugging
   vector<Room*>::iterator i;
   for (i = rooms -> begin(); i != rooms -> end(); i++) {
     cout << (*i) -> getDescription() << endl;
     cout << (*i) -> getID() << endl;
-    cout << (*i) -> getExits() -> at(2) << endl;
+    cout << (*i) -> getExits() << endl;
     cout << (*i) -> getItem() << endl << endl;
   }
-  */
+  
 }
 
 void initializeItems(vector<Item*>* items) {
@@ -112,12 +123,12 @@ void initializeItems(vector<Item*>* items) {
   calculator -> setID(8);
   items -> push_back(calculator);
 
-  /*
+  
   //printing items and ids for debugging
   vector<Item*>::iterator i;
   for (i = items -> begin(); i != items -> end(); i++) {
     cout << (*i) -> getName() << endl;
     cout << (*i) -> getID() << endl << endl;
   }
-  */
+  
 }
