@@ -164,7 +164,44 @@ void initializeRooms(vector<Room*>* rooms) {
   gHall -> setItem(3);
   rooms -> push_back(gHall);
   temp.clear();
-  
+  //Outside Back
+  Room* outsideBack = new Room();
+  outsideBack -> setDescription((char*)("outside behind the school"));
+  outsideBack -> setID(12);
+  temp.insert(pair<int, char*> (1, (char*)("around")));
+  temp.insert(pair<int, char*> (11, south));
+  outsideBack -> setExits(temp);
+  outsideBack -> setItem(0);;
+  rooms -> push_back(outsideBack);
+  temp.clear();
+  //Bathroom
+  Room* bathroom = new Room();
+  bathroom -> setDescription((char*)("in the G hall bathroom"));
+  bathroom -> setID(13);
+  temp.insert(pair<int, char*> (11, east));
+  temp.insert(pair<int, char*> (14, south));
+  bathroom -> setExits(temp);
+  bathroom -> setItem(0);
+  rooms -> push_back(bathroom);
+  temp.clear();
+  //Bathroom Stall
+  Room* stall = new Room();
+  stall -> setDescription((char*)("in the nearest stall"));
+  stall -> setID(14);
+  temp.insert(pair<int, char*> (13, north));
+  stall -> setExits(temp);
+  stall -> setItem(1);
+  rooms -> push_back(stall);
+  temp.clear();
+  //Room 1-20
+  Room* one20 = new Room();
+  one20 -> setDescription((char*)("in room 1-20. You are amazed by the rows upon rows of computers in the room"));
+  one20 -> setID(15);
+  temp.insert(pair<int, char*> (7, west));
+  one20 -> setExits(temp);
+  one20 -> setItem(8);
+  rooms -> push_back(one20);
+  temp.clear();
   
   //printing rooms and ids for debugging
   vector<Room*>::iterator i;
