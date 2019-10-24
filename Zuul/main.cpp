@@ -208,7 +208,10 @@ void initializeRooms(vector<Room*>* rooms) {
   for (i = rooms -> begin(); i != rooms -> end(); i++) {
     cout << endl << (*i) -> getDescription() << endl;
     cout << (*i) -> getID() << endl;
-    cout << (*i) -> getExits() << endl;
+    for (map<int, char*>::const_iterator it = (*i) -> getExits() -> begin(); it != (*i) -> getExits() -> end(); it++) {
+      cout << it -> first << ", " << it -> second << endl;
+    }
+    //cout << (*i) -> getExits() << endl;
     cout << (*i) -> getItem() << endl;
   }
   
