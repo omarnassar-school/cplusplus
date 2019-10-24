@@ -17,7 +17,8 @@ void initializeRooms(vector<Room*>* rooms);
 void initializeItems(vector<Item*>* items);
 void printRoom(vector<Room*>* rooms, vector<Item*>* items, int currentRoom);
 void printInventory(vector<Item*>* items, vector<int> invenctory);
-void getItem(vector<Room*>* rooms, vector<Item*>* items, vector<int> inventory, int currentRoom);
+void getItem(vector<Room*>* rooms, vector<Item*>* items, vector<int>* inventory, int currentRoom, char name[]); //int id);
+//int getID(char name[]);
 
 int main() {
   vector<Room*> rooms;
@@ -59,8 +60,10 @@ int main() {
     }
     else if (strcmp(input, "get") == 0) {
       cout << endl << "What would you like to get?" << endl << endl;
-      //inventory.push_back(1);
-      //cout << inventory.at(0) << endl << endl;
+      cin >> input;
+      cin.clear();
+      cin.ignore(1000000, '\n');
+      getItem(&rooms, &items, &inventory, currentRoom, input);
     }
     else if (strcmp(input, "drop") == 0) {
       cout << endl << "What would you like to drop?" << endl << endl;
@@ -326,6 +329,25 @@ void printInventory(vector<Item*>* items, vector<int> inventory) {
   cout << endl;
 }
 
-void getItem(vector<Room*>* rooms, vector<Item*>* items, vector <int> inventory, int currentRoom) {
+void getItem(vector<Room*>* rooms, vector<Item*>* items, vector <int>* inventory, int currentRoom, char name[]) { //int id) {
   
+  vector<Room*>::iterator i;
+  vector<Item*>::iterator j;
+  for (i = rooms -> begin(); i != rooms -> end(); i++) {
+    if (currentRoom == (*i) -> getID()) {
+      for (j = items -> begin(); j != items -> end(); j++) {
+	if (((*i) -> getItem() == (*j) -> getID()) && (strcmp((*j) -> getName(), name) == 0)) {
+	  inventory -> push_back((*j) -> getID());
+	  (*i) -> setItem(0);
+	  cout << "Got " << (*j) -> getName() << endl << endl;
+	  break;
+	}
+      }
+    }
+  }
 }
+
+/*int getID(char name[]) {
+  
+  return 0;
+  }*/
