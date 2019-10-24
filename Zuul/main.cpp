@@ -18,6 +18,7 @@ void initializeItems(vector<Item*>* items);
 void printRoom(vector<Room*>* rooms, vector<Item*>* items, int currentRoom);
 void printInventory(vector<Item*>* items, vector<int> invenctory);
 void getItem(vector<Room*>* rooms, vector<Item*>* items, vector<int>* inventory, int currentRoom, char name[]); //int id);
+void dropItem(vector<Room*>* rooms, vector<Item*>* items, vector<int>* inventory, int currentRoom, char name[]);
 //int getID(char name[]);
 
 int main() {
@@ -67,6 +68,10 @@ int main() {
     }
     else if (strcmp(input, "drop") == 0) {
       cout << endl << "What would you like to drop?" << endl << endl;
+      cin >> input;
+      cin.clear();
+      cin.ignore(1000000, '\n');
+      dropItem(&rooms, &items, &inventory, currentRoom, input);
     }
     else {
       cout << endl << "Invalid Input." << endl << endl;
@@ -329,8 +334,7 @@ void printInventory(vector<Item*>* items, vector<int> inventory) {
   cout << endl;
 }
 
-void getItem(vector<Room*>* rooms, vector<Item*>* items, vector <int>* inventory, int currentRoom, char name[]) { //int id) {
-  
+void getItem(vector<Room*>* rooms, vector<Item*>* items, vector <int>* inventory, int currentRoom, char name[]) { //int id) {  
   vector<Room*>::iterator i;
   vector<Item*>::iterator j;
   for (i = rooms -> begin(); i != rooms -> end(); i++) {
@@ -339,9 +343,34 @@ void getItem(vector<Room*>* rooms, vector<Item*>* items, vector <int>* inventory
 	if (((*i) -> getItem() == (*j) -> getID()) && (strcmp((*j) -> getName(), name) == 0)) {
 	  inventory -> push_back((*j) -> getID());
 	  (*i) -> setItem(0);
-	  cout << "Got " << (*j) -> getName() << endl << endl;
-	  break;
+	  cout << endl << "Got " << (*j) -> getName() << "." << endl << endl;
+	  return;
 	}
+      }
+    }
+  }
+  cout << endl <<  "That item is not here." << endl << endl;
+}
+
+void dropItem(vector<Room*>* rooms, vector <Item*>* items, vector <int>* inventory, int currentRoom, char name[]) {
+  vector<Room*>::iterator i;
+  vector<Item*>::iterator j;
+  vector<int>::iterator k;
+  for (i = rooms -> begin(); i != rooms -> end(); i++) {
+    if (currentRoom == (*i) -> getID()) {
+      if ((*i) -> getItem() == 0) {
+	for (j = items -> begin(); j != items -> end(); j++) {
+	  if ((strcmp((*j) -> getName(), name) == 0)) {
+	    for (k = inventory -> begin(); k != inventory -> end(); k++) {
+	      if ((*k) == (*j) -> getID()) {
+		cout << endl << "Item has been found" << endl << endl;
+	      }
+	    }
+	  }
+	}
+      }
+      else {
+	cout << endl << "There is already an item here." << endl << endl;
       }
     }
   }
