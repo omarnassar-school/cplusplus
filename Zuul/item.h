@@ -11,11 +11,14 @@ class Item {
  public:
   Item();
   char* getName();
+  //char* getDescription();
   int getID();
   void setName(char*);
+  void setDescription(char*);
   void setID(int);
  private:
   char* name;
+  //char* description;
   int id;
 };
 

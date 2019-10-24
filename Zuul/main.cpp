@@ -15,21 +15,27 @@ using namespace std;
 
 void initializeRooms(vector<Room*>* rooms);
 void initializeItems(vector<Item*>* items);
+void printRoom(vector<Room*>* rooms, vector<Item*>* items, int currentRoom);
+void printInventory(vector<Item*>* items, vector<int> invenctory);
+void getItem(vector<Room*>* rooms, vector<Item*>* items, vector<int> inventory, int currentRoom);
 
 int main() {
   vector<Room*> rooms;
   vector<Item*> items;
-  char input[10];
+  vector<int> inventory;
+  char input[20];
+  int currentRoom = 1;
   initializeItems(&items);
   initializeRooms(&rooms);
   cout << endl << "You are late to school and are rushing to get to school when someone runs up from behind you and takes your things. You try to catch him but he is too fast. He drops your backpack but keeps running with a few of your things. He runs inside the school and hides somewhere. What you need to find along with your backpack is your pencil, eraser, late slip, calculator, and your graded test that your parents signed and you were supposed to return today." << endl;
 
   cout << endl << "Type 'help' if you need help." << endl << endl;
   while (true) {
+    cout << "You are currently ";
+    printRoom(&rooms, &items, currentRoom);
     cin >> input;
     cin.clear();
     cin.ignore(1000000, '\n');
-    
     if (strcmp(input, "help") == 0) {
       cout << endl << "You are looking for your things that were stolen from you."  << endl;
       cout << "Your command words are:" << endl;
@@ -38,6 +44,26 @@ int main() {
     else if (strcmp(input, "quit") == 0) {
       cout << endl << "Thanks for playing!" << endl;
       break;
+    }
+    else if (strcmp(input, "go") == 0) {
+      cout << endl << "Go where?" << endl << endl;
+    }
+    else if (strcmp(input, "inventory") == 0) {
+      if (inventory.size() != 0) {
+	cout << endl << "You have: " << endl;
+	printInventory(&items, inventory);
+      }
+      else {
+	cout << endl << "There is nothing in your inventory." << endl << endl;
+      }
+    }
+    else if (strcmp(input, "get") == 0) {
+      cout << endl << "What would you like to get?" << endl << endl;
+      //inventory.push_back(1);
+      //cout << inventory.at(0) << endl << endl;
+    }
+    else if (strcmp(input, "drop") == 0) {
+      cout << endl << "What would you like to drop?" << endl << endl;
     }
     else {
       cout << endl << "Invalid Input." << endl << endl;
@@ -59,7 +85,7 @@ void initializeRooms(vector<Room*>* rooms) {
   temp.insert(pair<int, char*> (2, west));
   temp.insert(pair<int, char*> (12, (char*)("around")));
   outsideFront -> setExits(temp);
-  outsideFront -> setItem(1);
+  outsideFront -> setItem(7);
   rooms -> push_back(outsideFront);
   temp.clear();
   //Main Office
@@ -202,7 +228,7 @@ void initializeRooms(vector<Room*>* rooms) {
   one20 -> setItem(8);
   rooms -> push_back(one20);
   temp.clear();
-  
+  /*
   //printing rooms and ids for debugging
   vector<Room*>::iterator i;
   for (i = rooms -> begin(); i != rooms -> end(); i++) {
@@ -214,7 +240,7 @@ void initializeRooms(vector<Room*>* rooms) {
     //cout << (*i) -> getExits() << endl;
     cout << (*i) -> getItem() << endl;
   }
-  
+  */
 }
 
 void initializeItems(vector<Item*>* items) {
@@ -225,7 +251,7 @@ void initializeItems(vector<Item*>* items) {
   items -> push_back(juul);
   //Apple
   Item* apple = new Item();
-  apple -> setName((char*)("Apple"));
+  apple -> setName((char*)("Half-Eaten Apple"));
   apple -> setID(2);
   items -> push_back(apple);
   //Eraser
@@ -245,7 +271,7 @@ void initializeItems(vector<Item*>* items) {
   items -> push_back(lateSlip);
   //Test
   Item* test = new Item();
-  test -> setName((char*)("Test"));
+  test -> setName((char*)("Graded Test"));
   test -> setID(6);
   items -> push_back(test);
   //Backpack
@@ -259,12 +285,47 @@ void initializeItems(vector<Item*>* items) {
   calculator -> setID(8);
   items -> push_back(calculator);
 
-  
+  /*
   //printing items and ids for debugging
   vector<Item*>::iterator i;
   for (i = items -> begin(); i != items -> end(); i++) {
     cout << endl << (*i) -> getName() << endl;
     cout << (*i) -> getID() << endl;
   }
+  */
+}
+
+void printRoom(vector<Room*>* rooms, vector<Item*>* items, int currentRoom) {
+  vector<Room*>::iterator i;
+  vector<Item*>::iterator j;
+  for (i = rooms -> begin(); i != rooms -> end(); i++) {
+    if (currentRoom == (*i) -> getID()) {
+      cout << (*i) -> getDescription() << "." << endl;
+      cout << "Item in this room: " << endl;
+      for (j = items -> begin(); j != items -> end(); j++) {
+	if ((*i) -> getItem() == (*j) -> getID()) {
+	  cout << (*j) -> getName() << endl;
+	}
+      }
+      cout << endl;
+      break;
+    }
+  }
+}
+
+void printInventory(vector<Item*>* items, vector<int> inventory) {
+  vector<int>::iterator i;
+  vector<Item*>::iterator j;
+  for (i = inventory.begin(); i != inventory.end(); i++) {
+    for (j = items -> begin(); j != items -> end(); j++) {
+      if (*i == (*j) -> getID()) {
+	cout << (*j) -> getName() << endl;
+      }
+    }
+  }
+  cout << endl;
+}
+
+void getItem(vector<Room*>* rooms, vector<Item*>* items, vector <int> inventory, int currentRoom) {
   
 }

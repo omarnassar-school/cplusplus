@@ -13,6 +13,10 @@ char* Item::getName() {
   return name;
 }
 
+/*char* Item::getDescription() {
+  return description;
+  }*/
+
 int Item::getID() {
   return id;
 }
@@ -20,6 +24,10 @@ int Item::getID() {
 void Item::setName(char* inName) {
   name = inName;
 }
+
+/*void Item::setDescription(char* inDescription) {
+  description = inDescription;
+  }*/
 
 void Item::setID(int inID) {
   id = inID;
