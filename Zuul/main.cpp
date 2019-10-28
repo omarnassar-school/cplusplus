@@ -24,9 +24,9 @@ int move(vector<Room*>* rooms, int currentRoom, char direction[]);
 //int getID(char name[]);
 
 int main() {
-  vector<Room*> rooms;
-  vector<Item*> items;
-  vector<int> inventory;
+  vector<Room*> rooms; //vector for storing rooms
+  vector<Item*> items; //vector for storing items
+  vector<int> inventory; //vector for storing inventory (item IDs)
   char input[20];
   int currentRoom = 1;
   initializeItems(&items);
@@ -54,20 +54,20 @@ int main() {
       cin >> input;
       cin.clear();
       cin.ignore(1000000, '\n');
-      if (move(&rooms, currentRoom, input) == 0) {
+      if (move(&rooms, currentRoom, input) == 0) {//if there is no room that matches the input
 	cout << endl << "There is nothing in that direction." << endl << endl;
       }
       else {
-	currentRoom = move(&rooms, currentRoom, input);
+	currentRoom = move(&rooms, currentRoom, input); //changing current room to the new room
 	cout << endl;
       }
     }
     else if (strcmp(input, "inventory") == 0) {
-      if (inventory.size() != 0) {
+      if (inventory.size() != 0) {//if there is something in inventory
 	cout << endl << "You have: " << endl;
 	printInventory(&items, inventory);
       }
-      else {
+      else {//if inventory is empty
 	cout << endl << "There is nothing in your inventory." << endl << endl;
       }
     }
@@ -89,15 +89,15 @@ int main() {
       cout << endl << "Invalid Input." << endl << endl;
     }
 
-    if (find(inventory.begin(), inventory.end(), 1) != inventory.end()) {
+    if (find(inventory.begin(), inventory.end(), 1) != inventory.end()) {//first losing condition
       cout << endl << "Don't do drugs. You lose." << endl;
       break;
     }
-    if (find(inventory.begin(), inventory.end(), 2) != inventory.end()) {
+    if (find(inventory.begin(), inventory.end(), 2) != inventory.end()) {//second losing condition
       cout << endl<< "Don't pick up something someone else ate. It has germs. you lose." << endl;
       break;
     }
-    if ((currentRoom == 9) && (find(inventory.begin(), inventory.end(), 3) != inventory.end()) && (find(inventory.begin(), inventory.end(), 4) != inventory.end()) && (find(inventory.begin(), inventory.end(), 5) != inventory.end()) && (find(inventory.begin(), inventory.end(), 6) != inventory.end()) && (find(inventory.begin(), inventory.end(), 7) != inventory.end()) && find(inventory.begin(), inventory.end(), 8) != inventory.end()) {
+    if ((currentRoom == 9) && (find(inventory.begin(), inventory.end(), 3) != inventory.end()) && (find(inventory.begin(), inventory.end(), 4) != inventory.end()) && (find(inventory.begin(), inventory.end(), 5) != inventory.end()) && (find(inventory.begin(), inventory.end(), 6) != inventory.end()) && (find(inventory.begin(), inventory.end(), 7) != inventory.end()) && find(inventory.begin(), inventory.end(), 8) != inventory.end()) {//how to win
       cout << "Good job! You win" << endl << "Against all odds, you found everything you lost and got your test back for credit!" << endl << "Thank you for playing! Goodbye!" << endl;
       break;
     }
@@ -105,22 +105,24 @@ int main() {
   return 0;
 }
 
-void initializeRooms(vector<Room*>* rooms) {
+void initializeRooms(vector<Room*>* rooms) {//function for adding all the rooms to the vector
+  //making variables for each direction to save typing time
   char* west = (char*)("west");
   char* east = (char*)("east");
   char* north = (char*)("north");
   char* south = (char*)("south");
-  map<int, char*> temp;
+  map<int, char*> temp; //temporary map to store exits then be set as room exits
   //Outside Front
   Room* outsideFront = new Room();
-  outsideFront -> setDescription((char*)("outside in front of the school"));
-  outsideFront -> setID(1);
-  temp.insert(pair<int, char*> (2, west));
+  outsideFront -> setDescription((char*)("outside in front of the school")); //setting description
+  outsideFront -> setID(1); //setting room ID
+  //setting exits
+  temp.insert(pair<int, char*> (2, west)); 
   temp.insert(pair<int, char*> (12, (char*)("around")));
-  outsideFront -> setExits(temp);
-  outsideFront -> setItem(7);
-  rooms -> push_back(outsideFront);
-  temp.clear();
+  outsideFront -> setExits(temp); //pushing exits to class
+  outsideFront -> setItem(7); //setting initial item
+  rooms -> push_back(outsideFront); //pushing room to the vector
+  temp.clear(); //resetting the map
   //Main Office
   Room* mainOffice = new Room();
   mainOffice -> setDescription((char*)("in the main office"));
@@ -276,12 +278,12 @@ void initializeRooms(vector<Room*>* rooms) {
   */
 }
 
-void initializeItems(vector<Item*>* items) {
+void initializeItems(vector<Item*>* items) {//setting up item vector
   //Juul
   Item* juul = new Item();
-  juul -> setName((char*)("Juul"));
-  juul -> setID(1);
-  items -> push_back(juul);
+  juul -> setName((char*)("Juul")); //setting name
+  juul -> setID(1); //setting id
+  items -> push_back(juul); //pushing item back to vector
   //Apple
   Item* apple = new Item();
   apple -> setName((char*)("Half-Eaten_Apple"));
@@ -328,20 +330,20 @@ void initializeItems(vector<Item*>* items) {
   */
 }
 
-void printRoom(vector<Room*>* rooms, vector<Item*>* items, int currentRoom) {
+void printRoom(vector<Room*>* rooms, vector<Item*>* items, int currentRoom) {//printing the rooms and their exits and items
   vector<Room*>::iterator i;
   vector<Item*>::iterator j;
   for (i = rooms -> begin(); i != rooms -> end(); i++) {
-    if (currentRoom == (*i) -> getID()) {
+    if (currentRoom == (*i) -> getID()) {//getting the description of the current room
       cout << (*i) -> getDescription() << "." << endl;
       cout << "Exits: ";
-      for (map<int, char*>::const_iterator it = (*i) -> getExits() -> begin(); it != (*i) -> getExits() -> end(); it++) {
+      for (map<int, char*>::const_iterator it = (*i) -> getExits() -> begin(); it != (*i) -> getExits() -> end(); it++) {//printing exits
 	cout << it -> second << " ";
       }
       cout << endl;
       cout << "Item in this room: " << endl;
       for (j = items -> begin(); j != items -> end(); j++) {
-	if ((*i) -> getItem() == (*j) -> getID()) {
+	if ((*i) -> getItem() == (*j) -> getID()) {//printing item in the room
 	  cout << (*j) -> getName() << endl;
 	}
       }
@@ -351,12 +353,12 @@ void printRoom(vector<Room*>* rooms, vector<Item*>* items, int currentRoom) {
   }
 }
 
-void printInventory(vector<Item*>* items, vector<int> inventory) {
+void printInventory(vector<Item*>* items, vector<int> inventory) {//printing the items in inventory
   vector<int>::iterator i;
   vector<Item*>::iterator j;
   for (i = inventory.begin(); i != inventory.end(); i++) {
     for (j = items -> begin(); j != items -> end(); j++) {
-      if (*i == (*j) -> getID()) {
+      if (*i == (*j) -> getID()) {//printing the item if it matches the id stored in the inventory vector
 	cout << (*j) -> getName() << endl;
       }
     }
@@ -364,15 +366,15 @@ void printInventory(vector<Item*>* items, vector<int> inventory) {
   cout << endl;
 }
 
-void getItem(vector<Room*>* rooms, vector<Item*>* items, vector <int>* inventory, int currentRoom, char name[]) { //int id) {  
+void getItem(vector<Room*>* rooms, vector<Item*>* items, vector <int>* inventory, int currentRoom, char name[]) { //int id) {  //function for getting the item from the room
   vector<Room*>::iterator i;
   vector<Item*>::iterator j;
   for (i = rooms -> begin(); i != rooms -> end(); i++) {
     if (currentRoom == (*i) -> getID()) {
       for (j = items -> begin(); j != items -> end(); j++) {
-	if (((*i) -> getItem() == (*j) -> getID()) && (strcmp((*j) -> getName(), name) == 0)) {
-	  inventory -> push_back((*j) -> getID());
-	  (*i) -> setItem(0);
+	if (((*i) -> getItem() == (*j) -> getID()) && (strcmp((*j) -> getName(), name) == 0)) {//if the item name is in the room
+	  inventory -> push_back((*j) -> getID()); //adding item to inventory
+	  (*i) -> setItem(0); //setting room item to 0 (empty)
 	  cout << endl << "Got " << (*j) -> getName() << "." << endl << endl;
 	  return;
 	}
@@ -382,7 +384,8 @@ void getItem(vector<Room*>* rooms, vector<Item*>* items, vector <int>* inventory
   cout << endl <<  "That item is not here." << endl << endl;
 }
 
-void dropItem(vector<Room*>* rooms, vector <Item*>* items, vector <int>* inventory, int currentRoom, char name[]) {
+void dropItem(vector<Room*>* rooms, vector <Item*>* items, vector <int>* inventory, int currentRoom, char name[]) {//dropping items
+  int counter;
   vector<Room*>::iterator i;
   vector<Item*>::iterator j;
   vector<int>::iterator k;
@@ -392,24 +395,29 @@ void dropItem(vector<Room*>* rooms, vector <Item*>* items, vector <int>* invento
 	for (j = items -> begin(); j != items -> end(); j++) {
 	  if ((strcmp((*j) -> getName(), name) == 0)) {
 	    for (k = inventory -> begin(); k != inventory -> end(); k++) {
-	      if ((*k) == (*j) -> getID()) {
+	      if ((*k) == (*j) -> getID()) {//if room is empty and item that is being dropped is in the inventory
 		cout << endl << "Dropped " << (*j) -> getName() << "." << endl << endl;
-		(*i) -> setItem((*j) -> getID());
-		k = inventory -> erase(k);
+		(*i) -> setItem((*j) -> getID()); //setting the room item
+		k = inventory -> erase(k); //removing item from vector
 		return;
 	      }
 	    }
 	  }
+	  else if (counter == items -> size() - 1) {
+	    cout << endl << "That item is not in your inventory." << endl;
+	  }
+	  counter++;
 	}
       }
-      else {
-	cout << endl << "There is already an item here." << endl << endl;
+      else {//if there is already an item in the room
+	cout << endl << "There is already an item here." << endl;
       }
     }
   }
+  cout << endl;
 }
 
-int move(vector<Room*>* rooms, int currentRoom, char direction[]) {
+int move(vector<Room*>* rooms, int currentRoom, char direction[]) {//moving to another room
   vector<Room*>::iterator i;
   for (i = rooms -> begin(); i != rooms -> end(); i++) {
     if (currentRoom == (*i) -> getID()) {
@@ -417,7 +425,7 @@ int move(vector<Room*>* rooms, int currentRoom, char direction[]) {
       exits = *(*i) -> getExits();
       map<int, char*>::const_iterator j;
       for (j = exits.begin(); j != exits.end(); ++j) {
-	if (strcmp(j -> second, direction) == 0) {
+	if (strcmp(j -> second, direction) == 0) {//if the direction in the map matches the input, change the room to the ID of the room in that direction
 	  return j -> first;
 	}
       }
