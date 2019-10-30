@@ -1,0 +1,42 @@
+/*Author: Omar Nassar
+ *Date: 10/30/19
+ *This is a program that reverses the first two letters of every word
+ */
+
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+char* rephrase(char[100]);
+
+int main() {
+  char phrase[100];
+  char newPhrase[100];
+  cout << "Input a phrase." << endl << endl;
+  cin.get(phrase, 100);
+  cin.clear();
+  cin.ignore(1000000, '\n');
+  strcpy(newPhrase, rephrase(phrase));
+  cout << endl << newPhrase;
+  return 0;
+}
+
+char* rephrase(char phrase[100]) {
+  char temp = phrase[0];
+  phrase[0] = phrase[1];
+  phrase[1] = temp;
+  for (int i = 0; i < strlen(phrase); i++) {
+    if (phrase[i] == 32) {
+      if (phrase[i+1] == 32 || phrase[i+2] == 32) {
+      }
+      else {
+	//cout << "space" << endl;
+	temp = phrase[i + 1];
+	phrase[i + 1] = phrase[i + 2];
+	phrase[i + 2] = temp;	
+      }
+    }
+  }
+  return (char*)(phrase);
+}
