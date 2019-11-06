@@ -9,21 +9,20 @@ using namespace std;
 class Student {
  public:
   Student();
+  ~Student();
   char* getFirst();
   void setFirst(char*);
   char* getLast();
   void setLast(char*);
-  int ID();
+  int getID();
   void setID(int);
-  float GPA();
+  float getGPA();
   void setGPA(float);
-  Student* getStudent();
  private:
   char* first;
   char* last;
   int ID;
   float GPA;
-  Student* student;
 };
 
 #endif

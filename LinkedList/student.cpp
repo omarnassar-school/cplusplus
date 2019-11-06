@@ -8,11 +8,18 @@ Student::Student() {
   
 }
 
+Student::~Student() {
+  delete &first;
+  delete &last;
+  delete &ID;
+  delete &GPA;
+}
+
 char* Student::getFirst() {
   return first;
 }
 
-void Student::setName(char* inFirst) {
+void Student::setFirst(char* inFirst) {
   first = inFirst;
 }
 
@@ -40,6 +47,3 @@ void Student::setGPA(float inGPA) {
   GPA = inGPA;
 }
 
-void Student::getStudent() {
-  return student;
-}
