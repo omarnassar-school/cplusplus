@@ -11,16 +11,16 @@ class Student {
   Student();
   ~Student();
   char* getFirst();
-  void setFirst(char*);
+  //void setFirst(char*);
   char* getLast();
-  void setLast(char*);
-  int getID();
-  void setID(int);
-  float getGPA();
-  void setGPA(float);
+  //void setLast(char*);
+  int* getID();
+  //void setID(int);
+  float* getGPA();
+  //void setGPA(float);
  private:
-  char* first;
-  char* last;
+  char first[10];
+  char last[10];
   int ID;
   float GPA;
 };

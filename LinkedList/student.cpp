@@ -19,31 +19,31 @@ char* Student::getFirst() {
   return first;
 }
 
-void Student::setFirst(char* inFirst) {
+/*void Student::setFirst(char* inFirst) {
   first = inFirst;
-}
+  }*/
 
 char* Student::getLast() {
   return last;
 }
 
-void Student::setLast(char* inLast) {
+/*void Student::setLast(char* inLast) {
   last = inLast;
+  }*/
+
+int* Student::getID() {
+  return &ID;
 }
 
-int Student::getID() {
-  return ID;
-}
-
-void Student::setID(int inID) {
+/*void Student::setID(int inID) {
   ID = inID;
+  }*/
+
+float* Student::getGPA() {
+  return &GPA;
 }
 
-float Student::getGPA() {
-  return GPA;
-}
-
-void Student::setGPA(float inGPA) {
+/*void Student::setGPA(float inGPA) {
   GPA = inGPA;
-}
+  }*/
 

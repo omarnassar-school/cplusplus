@@ -7,37 +7,43 @@
 using namespace std;
 
 int main() {
-  char first[10];
-  char last[10];
-  int ID;
-  float GPA;
   Student* student = new Student;
   cout << "Enter a first name: ";
-  cin.get(first, 10);
+  cin.get(student -> getFirst(), 10);
   cin.clear();
   cin.ignore(1000000, '\n');
-  student -> setFirst((char*)(first));
+  //student -> setFirst((char*)(first));
   cout << "Enter a last name: ";
-  cin.get(last, 10);
+  cin.get(student -> getLast(), 10);
   cin.clear();
   cin.ignore(1000000, '\n');
-  student -> setLast((char*)(last));
+  //student -> setLast((char*)(last));
   cout << "Enter an ID number: ";
-  cin >> ID;
+  cin >> *student -> getID();
   cin.clear();
   cin.ignore(1000000, '\n');
-  student -> setID(ID);
+  //student -> setID(ID);
   cout << "Enter a GPA: ";
-  cin >> GPA;
+  cin >> *student -> getGPA();
   cin.clear();
   cin.ignore(1000000, '\n');
-  student -> setGPA(GPA);
+  //student -> setGPA(GPA);
+  cout << endl;
   cout << student -> getFirst() << " " << student -> getLast() << endl;
-  cout << student -> getID() << endl;
-  printf("%.2f\n", student->getGPA());
-
-  Student* student2 = new Student;
+  cout << *student -> getID() << endl;
+  printf("%.2f\n", *student -> getGPA());
+  cout << endl;
   
   
+  
+  Node* firstNode = new Node;
+  Node* secondNode = new Node;
+  firstNode -> setStudent(student);
+  firstNode -> setNext(secondNode);
+  secondNode -> setStudent(student2);
+  
+  cout << firstNode -> getStudent() -> getFirst() << firstNode -> getStudent() -> getLast() << endl;
+  //cout << firstNode -> getNext() -> *getStudent() -> getFirst() << firstNode -> getNext() -> *getStudent -> getLast() << endl;
+  */
   return 0;
 }
