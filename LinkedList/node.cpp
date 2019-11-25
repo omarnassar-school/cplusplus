@@ -5,8 +5,8 @@
 
 using namespace std;
 
-Node::Node() {
-  student = NULL;
+Node::Node(Student* inStudent) {
+  student = inStudent;
   next = NULL;
 }
 
