@@ -1,7 +1,7 @@
 /* Author: Omar Nassar
  * Date: 12/5/2019
  * This is a program that can translate infix to postfix and create an expression tree.
- * This can then be outputted as either infix, prefix, or postfix
+ * This can then be outputted as either infix, prefix, or postfix.
  */
 
 #include <iostream>
