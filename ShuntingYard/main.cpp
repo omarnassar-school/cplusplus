@@ -6,18 +6,22 @@
 
 #include <iostream>
 #include <cstring>
+#include <vector>
 #include "node.h"
 
 
 using namespace std;
 
+void parseInput(vector<char*> &parsedInput, char input[100]);
+
 int main() {
   char input[100];
+  vector<char*> parsedInput;
   cout << "Enter an infix expression" << endl << endl;
   cin.get(input, 100);
   cin.clear();
   cin.ignore(1000000, '\n');
-
+  parseInput(parsedInput, input);
   char method[7];
   while (true) {
     cout << endl << "What way would you like to output this expression? (Infix, Prefix, Postfix)" << endl << endl;
@@ -42,4 +46,8 @@ int main() {
   }
   
   return 0;
+}
+
+void parseInput(vector<char*> &parsedInput, char input[100]) {
+  cout << "works" << endl;
 }
