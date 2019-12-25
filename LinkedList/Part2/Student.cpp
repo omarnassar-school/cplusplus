@@ -31,16 +31,16 @@ char* Student::getLast() {
   last = inLast;
   }*/
 
-int* Student::getID() {
-  return &ID;
+int Student::getID() {
+  return ID;
 }
 
 void Student::setID(int inID) {
   ID = inID;
 }
 
-float* Student::getGPA() {
-  return &GPA;
+float Student::getGPA() {
+  return GPA;
 }
 
 void Student::setGPA(float inGPA) {

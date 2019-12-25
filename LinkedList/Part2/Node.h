@@ -1,25 +1,23 @@
-//define
-#ifndef NODE_H
-#define NODE_H
-//imports
+#ifndef node_h
+#define node_h
+
 #include <iostream>
 #include <cstring>
 #include "Student.h"
 
 using namespace std;
 
-class Node { //class for nodes in the list
+class Node {
  public:
-  Node(Student*); //constructor for node with pointer to student class
-  ~Node(); //destructor
-  //getters and setters
-  void setStudent(Student* newstudent); //set the student
-  Student* getStudent(); //return student pointer
-  void setNext(Node* newnext); //set next node
-  Node* getNext(); //returns next node
+  Node(Student*);
+  ~Node();
+  Student* getStudent();
+  void setStudent(Student*);
+  Node* getNext();
+  void setNext(Node*);
  private:
-  Student* student; //student held in node
-  Node* next; //next node in list
+  Student* student;
+  Node* next;
 };
 
 #endif

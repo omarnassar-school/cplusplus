@@ -14,9 +14,9 @@ class Student {
   //void setFirst(char*);
   char* getLast();
   //void setLast(char*);
-  int* getID();
+  int getID();
   void setID(int);
-  float* getGPA();
+  float getGPA();
   void setGPA(float);
  private:
   char first[10];

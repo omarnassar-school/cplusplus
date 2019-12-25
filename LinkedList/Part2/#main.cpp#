@@ -156,13 +156,12 @@ void remove(Node* next, Node* previous, char name[]) {
       else {
 	first = next -> getNext();
 	next -> ~Node();
-	remove(first, NULL, name);
       }
     }
     else if (yesno == 'n') {
       cout << "Student will not be deleted" << endl << endl;
       if (next -> getNext() != NULL) {
-	remove(next -> getNext(), next, name);
+	remove(next ->
       }
     }
     else {
