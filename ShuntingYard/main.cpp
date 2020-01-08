@@ -22,10 +22,10 @@ int main() {
   cin.clear();
   cin.ignore(1000000, '\n');
   parseInput(parsedInput, input);
-  char method[7];
+  char method[8];
   while (true) {
     cout << endl << "What way would you like to output this expression? (Infix, Prefix, Postfix)" << endl << endl;
-    cin.get(method, 7);
+    cin.get(method, 8);
     cin.clear();
     cin.ignore(1000000, '\n');
     if (strcmp(method, "Infix") == 0 || strcmp(method, "infix") == 0) {
@@ -50,4 +50,11 @@ int main() {
 
 void parseInput(vector<char*> &parsedInput, char input[100]) {
   cout << "works" << endl;
+  int pointers[2];
+  pointers[0] = -1;
+  char* newArray = new char[strlen(input)];
+  for (int i = 0; i < strlen(input); i++) {
+    
+  }
+  parsedInput.push_back(newArray);
 }
