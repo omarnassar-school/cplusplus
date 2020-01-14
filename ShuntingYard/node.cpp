@@ -8,6 +8,12 @@ Node::Node() {
   right = NULL;
 }
 
+Node::~Node() {
+  delete &value;
+  left = NULL;
+  right = NULL;
+}
+
 //Getters
 
 Node* Node::getLeft() {

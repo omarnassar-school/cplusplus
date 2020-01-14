@@ -8,6 +8,7 @@ using namespace std;
 class Node {
  public:
   Node();
+  ~Node();
   //Getters
   Node* getLeft();
   Node* getRight();
