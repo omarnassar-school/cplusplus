@@ -17,6 +17,10 @@ using namespace std;
 void parseInput(vector<char*> &parsedInput, char input[100]);
 void printVector(vector<char*>);
 void intopost(vector<char*>& parsedInput, queue<char*>& Queue);
+void printQueue(queue<char*> Queue);
+int precedence(char* op);
+bool isOperand(char* op);
+void constructTree(stack<Node*>& Tree, queue <char*>& Queue);
 
 int main() {
   char input[100];
@@ -27,6 +31,11 @@ int main() {
   cin.clear();
   cin.ignore(1000000, '\n');
   parseInput(parsedInput, input);
+  intopost(parsedInput, Queue);
+  //printQueue(Queue);
+  stack <Node*> ExpressionTree;
+  constructTree(ExpressionTree, Queue);
+  
   char method[8];
   while (true) {
     cout << endl << "What way would you like to output this expression? (Infix, Prefix, Postfix)" << endl << endl;
@@ -79,7 +88,7 @@ void parseInput(vector<char*> &parsedInput, char input[100]) {
   }
   newArray[j] = '\0';
   parsedInput.push_back(newArray);
-  printVector(parsedInput);
+  //printVector(parsedInput);
 }
 
 void printVector(vector<char*> parsedInput) {
@@ -89,10 +98,75 @@ void printVector(vector<char*> parsedInput) {
   cout << endl;
 }
 
+void printQueue(queue<char*> Queue) {
+  cout << endl;
+  while (!Queue.empty()) {
+    cout << Queue.front() << " ";
+    Queue.pop();
+  }
+  cout << endl;
+}
+
 void intopost(vector<char*>& parsedInput, queue<char*>& Queue) {
   stack<char*> Stack;
   int i = 0;
   while (i < parsedInput.size()) {
-    
+    if (strlen(parsedInput[i]) != 1 || isOperand(parsedInput[i])) {
+      Queue.push(parsedInput[i]);
+    }
+    else if (strcmp(parsedInput[i], "(") == 0) {
+      Stack.push(parsedInput[i]);
+    }
+    else if (strcmp(parsedInput[i], ")") == 0) {
+      while (strcmp(Stack.top(), "(") != 0) {
+	Queue.push(Stack.top());
+	Stack.pop();
+	if (Stack.empty()) {
+	  break;
+	}
+      }
+      Stack.pop();
+    }
+    else {
+      if (!Stack.empty()) {
+	while ( (precedence(Stack.top()) > precedence(parsedInput[i]) || ( (precedence(Stack.top()) == precedence(parsedInput[i])) && (strcmp(Stack.top(),"^") != 0) ) ) && (strcmp(Stack.top(),"(") != 0)){
+	  Queue.push(Stack.top());
+	  Stack.pop();
+	  if (Stack.empty()) {
+	    break;
+	  }
+	}
+      }
+      Stack.push(parsedInput[i]);
+    }
+    i = i + 1;
   }
+  while (!Stack.empty()){
+    Queue.push(Stack.top());
+    Stack.pop();
+  }
+}
+
+int precedence(char* op) {
+  if (strcmp(op, "^") == 0) {
+    return 3;
+  }
+  else if (strcmp(op, "*") == 0 || strcmp(op, "/") == 0) {
+    return 2;
+  }
+  else if (strcmp(op, "+") == 0 || strcmp(op, "-") == 0) {
+    return 1;
+  }
+  return 0;
+}
+
+bool isOperand(char* op) {
+  if (isalnum(op[0])) {
+    return true;
+  }
+  return false;
+}
+
+void constructTree(stack<Node*>& ExpressionTree, queue<char*>& Queue) {
+  
 }
