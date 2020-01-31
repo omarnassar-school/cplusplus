@@ -12,11 +12,11 @@ class Node {
   //Getters
   Node* getLeft();
   Node* getRight();
-  char* getValue();
+  char getValue();
   //Setters
   void setLeft(Node*);
   void setRight(Node*);
-  void setValue(char*);
+  void setValue(char);
  private:
   Node* left;
   Node* right;

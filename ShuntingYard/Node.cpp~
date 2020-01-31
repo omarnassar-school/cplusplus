@@ -24,7 +24,7 @@ Node* Node::getRight() {
   return right;
 }
 
-char* Node::getValue() {
+char Node::getValue() {
   return value;
 }
 

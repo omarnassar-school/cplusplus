@@ -21,6 +21,9 @@ void printQueue(queue<char*> Queue);
 int precedence(char* op);
 bool isOperand(char* op);
 void constructTree(stack<Node*>& Tree, queue <char*>& Queue);
+void infix(Node* Root);
+void postfix(Node* Root);
+void prefix(Node* Root);
 
 int main() {
   char input[100];
@@ -43,15 +46,18 @@ int main() {
     cin.clear();
     cin.ignore(1000000, '\n');
     if (strcmp(method, "Infix") == 0 || strcmp(method, "infix") == 0) {
-      cout << endl << "Infix" << endl;
+      cout << endl; // << "Infix" << endl;
+      infix(ExpressionTree.top());
       break;
     }
     else if (strcmp(method, "Prefix") == 0 || strcmp(method, "prefix") == 0) {
-      cout << endl << "Prefix" << endl;
+      cout << endl; // << "Prefix" << endl;
+      prefix(ExpressionTree.top());
       break;
     }
     else if (strcmp(method, "Postfix") == 0 || strcmp(method, "postfix") == 0) {
-      cout << endl << "Postfix" << endl;
+      cout << endl; // << "Postfix" << endl;
+      postfix(ExpressionTree.top());
       break;
     }
     else {
@@ -167,6 +173,53 @@ bool isOperand(char* op) {
   return false;
 }
 
-void constructTree(stack<Node*>& ExpressionTree, queue<char*>& Queue) {
-  
+void constructTree(stack<Node*>& Tree, queue<char*>& Queue) {
+  while (!Queue.empty()) {
+    if (isOperand(Queue.front())) {
+      Node* newNode = new Node();
+      newNode -> setValue(Queue.front());
+      Queue.pop();
+      Tree.push(newNode);
+    }
+    else {
+      Node* newNode = new Node();
+      newNode -> setValue(Queue.front());
+      Queue.pop();
+      newNode -> setRight(Tree.top());
+      Tree.pop();
+      newNode -> setLeft(Tree.top());
+      Tree.pop();
+      Tree.push(newNode);
+    }
+  }
+}
+
+void infix(Node* Root) {
+  if (Root != NULL) {
+    if (!isOperand(Root -> getValue())) {
+      cout << "( ";
+    }
+    infix(Root -> getLeft());
+    cout << Root -> getValue() << " ";
+    infix(Root -> getRight());
+    if (!isOperand(Root -> getValue())) {
+      cout << ") ";
+    }   
+  }
+}
+
+void postfix(Node* Root) {
+  if (Root != NULL) {
+    postfix(Root -> getLeft());
+    postfix(Root -> getRight());
+    cout << Root -> getValue() << " ";
+  }
+}
+
+void prefix(Node* Root) {
+  if (Root != NULL) {
+    cout << Root -> getValue() << " ";
+    prefix(Root -> getLeft());
+    prefix(Root -> getRight());				  
+  }
 }
