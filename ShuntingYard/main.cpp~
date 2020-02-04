@@ -173,7 +173,7 @@ bool isOperand(char* op) { //determines whether something is alphanumeric
   return false;
 }
 
-void constructTree(stack<Node*>& Tree, queue<char*>& Queue) { //function to create a tree from postfix notation from wikipedia
+void constructTree(stack<Node*>& Tree, queue<char*>& Queue) {
   while (!Queue.empty()) {
     if (isOperand(Queue.front())) { //if the front of the queue is a number/variable
       Node* newNode = new Node();
@@ -194,32 +194,32 @@ void constructTree(stack<Node*>& Tree, queue<char*>& Queue) { //function to crea
   }
 }
 
-void infix(Node* Root) { //function to get infix notation using a tree from wikipedia
+void infix(Node* Root) {
   if (Root != NULL) { //if the node exists and has a value
     if (!isOperand(Root -> getValue())) { //if the value is an operator
       cout << "( ";
     }
     infix(Root -> getLeft()); //call this function with the value to the left
-    cout << Root -> getValue() << " "; //print the value
+    cout << Root -> getValue() << " "; 
     infix(Root -> getRight()); //call this function with the value to the right
-    if (!isOperand(Root -> getValue())) { //if the value is an operator and this is the very right
+    if (!isOperand(Root -> getValue())) { //if the value is an operator and this is th
       cout << ") ";
     }   
   }
 }
 
-void postfix(Node* Root) { //function to get postfix notation using a tree from wikipedia
-  if (Root != NULL) { //if the node exists and has a value
-    postfix(Root -> getLeft()); //call this function with the left value
-    postfix(Root -> getRight()); //call this function with the right value
-    cout << Root -> getValue() << " "; //print the value
+void postfix(Node* Root) {
+  if (Root != NULL) {
+    postfix(Root -> getLeft());
+    postfix(Root -> getRight());
+    cout << Root -> getValue() << " ";
   }
 }
 
-void prefix(Node* Root) { //function to get prefix notation using a tree from wikipedia
-  if (Root != NULL) { //if the node exists and has a value
-    cout << Root -> getValue() << " "; //print the value
-    prefix(Root -> getLeft()); //call this function with the left value
-    prefix(Root -> getRight()); //call this function with the right value
+void prefix(Node* Root) {
+  if (Root != NULL) {
+    cout << Root -> getValue() << " ";
+    prefix(Root -> getLeft());
+    prefix(Root -> getRight());				  
   }
 }
