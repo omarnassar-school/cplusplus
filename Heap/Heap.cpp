@@ -41,7 +41,7 @@ Node* parseInput(char input[]) {
   Node* head;
   Node* current;
   current = head;
-  cout << "works so far";
+  //cout << "works so far";
   int pointers[2];
   int value;
   pointers[0] = -1;
@@ -54,8 +54,9 @@ Node* parseInput(char input[]) {
 	newArray[j] = input[i];
 	j = j + 1;
       }
-      newArray[j] = '\0';
+      cout << "check1" << endl;
       current -> setValue(atoi(newArray));
+      cout << "check2" << endl;
       current = current -> getNext();
       pointers[0] = pointers[1];
     }
@@ -66,7 +67,8 @@ Node* parseInput(char input[]) {
     newArray[j] = input[i];
     j = j + 1;
   }
-  newArray[j] = '\0';
+  cout << "check3" << endl;
   current -> setValue(atoi(newArray));
-  return head;*/
+  cout << "check4" << endl;
+  return head;
 }
