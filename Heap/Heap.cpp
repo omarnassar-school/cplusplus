@@ -6,16 +6,17 @@
 #include <iostream>
 #include <cstring>
 #include <stdlib.h>
-#include "Node.h"
+//#include "Node.h"
 
 using namespace std;
 
-Node* parseInput(char input[]);
+void parseInput(int*& parsed, char input[], int &counter);
 
 int main() {
   int method;
   char input[1000];
-  Node* head;
+  int* parsed;
+  int parsedSize;
   cout << endl << "How would you like to input your numbers? (1 for console, 2 for file)" << endl << ">> ";
   cin >> method;
   cin.clear();
@@ -32,18 +33,19 @@ int main() {
   else {
     return 0;
   }
-  head = parseInput(input);
-  
+  parseInput(parsed, input, parsedSize);
+  /*for (int i = 0; i < sizeof(parsed)/sizeof(parsed[0]); i++) {
+    cout << parsed[i] << " ";
+  }*/
+  cout << parsed[0];
   return 0;
 }
 
-Node* parseInput(char input[]) {
-  Node* head;
-  Node* current;
-  current = head;
+void parseInput(int*& parsed, char input[], int &counter) {
   //cout << "works so far";
   int pointers[2];
   int value;
+  counter = 1;
   pointers[0] = -1;
   for (int i = 0; i < strlen(input); i++) {
     if (input[i] == ' ') {
@@ -54,10 +56,32 @@ Node* parseInput(char input[]) {
 	newArray[j] = input[i];
 	j = j + 1;
       }
-      cout << "check1" << endl;
-      current -> setValue(atoi(newArray));
-      cout << "check2" << endl;
-      current = current -> getNext();
+      /*int temp[counter];
+      for (int i = 0; i < counter; i++) {
+	temp[i] = parsed[i];
+      }
+      counter++;
+      //cout << "check1" << endl;
+      value = atoi(newArray);
+      //cout << "check2" << endl;
+      parsed = new int[counter + 1];
+      for (int i = 0; i < counter; i++) {
+	parsed[i] = temp[i];
+      }
+      //cout << "check3" << endl;
+      parsed[counter] = value;
+      //cout << "check4" << endl;
+      //cout << parsed[counter] << endl;*/
+      int* temp;
+      temp = parsed;
+      parsed = new int[counter];
+      if (counter > 1) {
+	for (int i = 0; i < counter - 2; i++) {
+	  parsed[i] = temp[i];
+	}
+      }
+      parsed[counter - 1] = atoi(newArray);
+      counter++;
       pointers[0] = pointers[1];
     }
   }
@@ -67,8 +91,42 @@ Node* parseInput(char input[]) {
     newArray[j] = input[i];
     j = j + 1;
   }
-  cout << "check3" << endl;
-  current -> setValue(atoi(newArray));
-  cout << "check4" << endl;
-  return head;
+  int* temp;
+  temp = parsed;
+  parsed = new int[counter];
+  if (counter > 1) {
+    for (int i = 0; i < counter - 2; i++) {
+      parsed[i] = temp[i];
+    }
+  }
+  parsed[counter - 1] = atoi(newArray);
+  counter++;
+  /*int temp[counter];
+  for (int i = 0; i < counter; i++) {
+    temp[i] = parsed[i];
+  }
+  counter++;
+  //cout << "check5" << endl;
+  value = atoi(newArray);
+  //cout << "check6" << endl;
+  parsed = new int[counter + 1];
+  for (int i = 0; i < counter - 1; i++) {
+    parsed[i] = temp[i];
+  }
+  //cout << "check7" << endl;
+  parsed[counter] = value;
+  //cout << "check8" << endl;
+  //cout << "got it" << endl;
+  //cout << parsed[counter] << endl;*/
+  parsed[counter] = atoi(newArray);
+  cout << parsed[0] << endl;
+  cout << parsed[1] << endl;
+  cout << parsed[2] << endl;
+  cout << parsed[3] << endl;
+  cout << parsed[4] << endl;
+  cout << parsed[counter] << endl;
+  cout << counter << endl;
+  /*for (int i = 0; i < sizeof(parsed)/sizeof(parsed[0]); i++) {
+    cout << parsed[i] << " ";
+    }*/
 }
