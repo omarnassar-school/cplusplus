@@ -172,5 +172,12 @@ void sortHeap(int*& arr, int n) {
   for (int i = n - 1; i >= 0; i--) {
     swap(arr[0], arr[i]);
     heapify(arr, i, 0);
-  } 
+  }
+  int counter = 0;
+  int* temp = new int[n];
+  for (int i = n - 1; i >= 0; i--) {
+    temp[i] = arr[counter];
+    counter++;
+  }
+  arr = temp;
 }
