@@ -17,6 +17,7 @@ void heapify(int*& arr, int n, int i);
 void buildHeap(int*& arr, int n);
 void printHeap(int*& arr, int n);
 void sortHeap(int*& arr, int n);
+void visualPrint(int*& arr, int n);
 
 int main() {
   int method;
@@ -61,6 +62,7 @@ int main() {
   cout << endl;*/
   buildHeap(parsed, parsedSize);
   printHeap(parsed, parsedSize);
+  //visualPrint(parsed, parsedSize);
   sortHeap(parsed, parsedSize);
   printHeap(parsed, parsedSize);
   return 0;
@@ -164,11 +166,10 @@ void sortHeap(int*& arr, int n) {
     heapify(arr, i, 0);
   }
 
-  // Build heap (rearrange array)
-  for (int i = n / 2 - 1; i >= 0; i--)
+  for (int i = n / 2 - 1; i >= 0; i--) {
     heapify(arr, n, i);
-
-  // One by one extract an element from heap
+  }
+  
   for (int i = n - 1; i >= 0; i--) {
     swap(arr[0], arr[i]);
     heapify(arr, i, 0);
@@ -180,4 +181,8 @@ void sortHeap(int*& arr, int n) {
     counter++;
   }
   arr = temp;
+}
+
+void visualPrint(int*& parsed, int n) {
+  
 }
