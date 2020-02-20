@@ -13,6 +13,10 @@
 using namespace std;
 
 void parseInput(int*& parsed, char input[], int &counter);
+void heapify(int*& arr, int n, int i);
+void buildHeap(int*& arr, int n);
+void printHeap(int*& arr, int n);
+void sortHeap(int*& arr, int n);
 
 int main() {
   int method;
@@ -37,24 +41,28 @@ int main() {
     cin.clear();
     cin.ignore(1000000, '\n');
     streampos size;
-    ifstream file(fileName, ios::in | ios::binary |ios::ate);
+    ifstream file(fileName, ios::in | ios::binary | ios::ate);
     if (file.is_open()) {
       size = file.tellg();
       file.seekg(0, ios::beg);
       file.read(input, size);
       file.close();
+      //cout << input << endl;
     }
   }
   else {
     return 0;
   }
   parseInput(parsed, input, parsedSize);
-  cout << endl << "There are: " << parsedSize << " numbers." << endl;
+  /*cout << endl << "There are: " << parsedSize << " numbers." << endl;
   for (int i = 0; i < parsedSize; i++) {
     cout << parsed[i] << " ";
   }
-  cout << endl;
-  
+  cout << endl;*/
+  buildHeap(parsed, parsedSize);
+  printHeap(parsed, parsedSize);
+  sortHeap(parsed, parsedSize);
+  printHeap(parsed, parsedSize);
   return 0;
 }
 
@@ -68,16 +76,19 @@ void parseInput(int*& parsed, char input[], int &counter) {
     if (input[i] == ' ') {
       pointers[1] = i;
       int j = 0;
-      char* newArray = new char[pointers[1] - pointers[0] - 1];
+      char* newArray = new char[pointers[1] - pointers[0]];
       for (int i = pointers[0] + 1; i < pointers[1]; i++) {
 	newArray[j] = input[i];
+	//cout << newArray[i] << endl;
 	j = j + 1;
       }
+      newArray[j] = '\0';
       temp = parsed;
       parsed = new int[counter];
       if (counter > 1) {
 	for (int i = 0; i < counter - 1; i++) {
 	  parsed[i] = temp[i];
+	  //cout << parsed[i] << endl;
 	}
       }
       parsed[counter - 1] = atoi(newArray);
@@ -88,21 +99,78 @@ void parseInput(int*& parsed, char input[], int &counter) {
       pointers[0] = pointers[1];
     }
   }
-  char* newArray = new char[strlen(input) - pointers[0] - 1];
+  char* newArray = new char[strlen(input) - pointers[0]];
   int j = 0;
   for (int i = pointers[0] + 1; i < strlen(input); i++) {
     newArray[j] = input[i];
+    //cout << newArray[j];
     j = j + 1;
   }
+  newArray[j] = '\0';
   temp = parsed;
   parsed = new int[counter];
   if (counter > 1) {
     for (int i = 0; i < counter - 1; i++) {
       parsed[i] = temp[i];
+      //cout << parsed[i] << endl;
     }
   }
   parsed[counter - 1] = atoi(newArray);
   /*for (int i = 0; i < counter; i++) {
     cout << endl << parsed[i] << endl;
     }*/
+
+}
+
+void heapify(int*& arr, int n, int i) {
+  int largest = i;
+  int l = 2 * i + 1;
+  int r = 2 * i + 2;
+
+  if (l < n && arr[l] > arr[largest]) {
+    largest = l;
+  }
+  if (r < n && arr[r] > arr[largest]) {
+    largest = r;
+  }
+  if (largest != i) {
+    swap(arr[i], arr[largest]);
+    heapify(arr, n, largest);
+  }
+}
+
+void buildHeap(int*& arr, int n) {
+  int startIdx = (n / 2) - 1;
+
+  for (int i = startIdx; i >= 0; i--) {
+    heapify(arr, n, i);
+  }
+}
+
+void printHeap(int*& arr, int n) {
+  for (int i = 0; i < n; ++i) {
+    cout << arr[i] << " ";
+  }
+  cout << endl;
+}
+
+void sortHeap(int*& arr, int n) {
+  for (int i = n / 2 - 1; i >= 0; i--) {
+    heapify(arr, n, i);
+  }
+  
+  for (int i = n - 1; i >= 0; i--) {
+    swap(arr[0], arr[i]);
+    heapify(arr, i, 0);
+  }
+
+  // Build heap (rearrange array)
+  for (int i = n / 2 - 1; i >= 0; i--)
+    heapify(arr, n, i);
+
+  // One by one extract an element from heap
+  for (int i = n - 1; i >= 0; i--) {
+    swap(arr[0], arr[i]);
+    heapify(arr, i, 0);
+  } 
 }
