@@ -7,6 +7,7 @@
 #include <cstring>
 #include <stdlib.h>
 #include <fstream>
+#include <cmath>
 
 //#include "Node.h"
 
@@ -15,11 +16,12 @@ using namespace std;
 void parseInput(int*& parsed, char input[], int &counter);
 void heapify(int*& arr, int n, int i);
 void buildHeap(int*& arr, int n);
-void printHeap(int*& arr, int n);
-void sortHeap(int*& arr, int n);
-void visualPrint(int*& arr, int n);
+void printHeap(int* arr, int n);
+void sortHeap(int* arr, int n);
+void visualPrint(int* arr, int n);
 
 int main() {
+  //cout << pow(2, 0);
   int method;
   char fileName[20];
   char input[1000];
@@ -62,9 +64,10 @@ int main() {
   cout << endl;*/
   buildHeap(parsed, parsedSize);
   printHeap(parsed, parsedSize);
-  //visualPrint(parsed, parsedSize);
+  cout << endl << endl;
+  visualPrint(parsed, parsedSize);
   sortHeap(parsed, parsedSize);
-  printHeap(parsed, parsedSize);
+  //printHeap(parsed, parsedSize);
   return 0;
 }
 
@@ -149,14 +152,14 @@ void buildHeap(int*& arr, int n) {
   }
 }
 
-void printHeap(int*& arr, int n) {
+void printHeap(int* arr, int n) {
   for (int i = 0; i < n; ++i) {
     cout << arr[i] << " ";
   }
   cout << endl;
 }
 
-void sortHeap(int*& arr, int n) {
+void sortHeap(int* arr, int n) {
   for (int i = n / 2 - 1; i >= 0; i--) {
     heapify(arr, n, i);
   }
@@ -183,6 +186,38 @@ void sortHeap(int*& arr, int n) {
   arr = temp;
 }
 
-void visualPrint(int*& parsed, int n) {
-  
+void visualPrint(int* parsed, int n) {
+  //bool whichSlash = true;
+  int levels = ceil(log2(n));
+  for (int i = 0; i < n; i++) {
+    /*while (true) {
+      cout << parsed[i] << " ";
+      if (floor(log2(i)) == log2(i)) {
+	cout << endl;
+	break;
+      }
+      i = i + 1;
+      }*/
+    
+    int x = i;
+    for (int j = 0; j < pow(2, x); j++) {
+      cout << parsed[i] << " ";
+      i = i + 1;
+    }
+    i = i - 1;
+    cout << endl;
+    
+    for (int k = 0; k < log2(x + 1); k++) {
+      //if (whichSlash == true) {
+	cout << "/";
+	//whichSlash = false;
+	//}
+	//else if (whichSlash == false) {
+	cout << "\\";
+	//whichSlash = true;
+	//}
+    }
+    cout << endl;
+    //whichSlash = true;
+  }
 }
