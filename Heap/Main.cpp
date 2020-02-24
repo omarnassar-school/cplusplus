@@ -188,8 +188,31 @@ void sortHeap(int* arr, int n) {
 
 void visualPrint(int* parsed, int n) {
   //bool whichSlash = true;
-  int levels = ceil(log2(n));
+  int* temp = parsed;
+  parsed = new int[n + 1];
   for (int i = 0; i < n; i++) {
+    parsed[i + 1] = temp[i];
+  }  
+  int levels = ceil(log2(n));
+  int index = 1;
+  for (int i = 0; i < levels; i++) {
+    int num = index;
+    for (int j = 0; j < num; j++) {
+      if (index <= n) {
+	cout << parsed[index] << " ";
+	index = index + 1;
+      }
+    }
+    cout << endl;
+    if (i < levels - 1) {
+      for (int k = 0; k < pow(2, i); k++) {
+	cout << "/\\";
+      }
+      cout << endl;
+    }
+  }
+  
+  /*for (int i = 0; i < n; i++) {
     /*while (true) {
       cout << parsed[i] << " ";
       if (floor(log2(i)) == log2(i)) {
@@ -197,7 +220,7 @@ void visualPrint(int* parsed, int n) {
 	break;
       }
       i = i + 1;
-      }*/
+      }
     
     int x = i;
     for (int j = 0; j < pow(2, x); j++) {
@@ -219,5 +242,5 @@ void visualPrint(int* parsed, int n) {
     }
     cout << endl;
     //whichSlash = true;
-  }
+  }*/
 }
