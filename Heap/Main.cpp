@@ -63,11 +63,13 @@ int main() {
   }
   cout << endl;*/
   buildHeap(parsed, parsedSize);
+  cout << endl << "The heap in array form: ";
   printHeap(parsed, parsedSize);
-  cout << endl << endl;
+  cout << endl << "Visual printing of the heap: " << endl;
   visualPrint(parsed, parsedSize);
+  cout << endl << "The input sorted from greatest to least: ";
   sortHeap(parsed, parsedSize);
-  printHeap(parsed, parsedSize);
+  //printHeap(parsed, parsedSize);
   return 0;
 }
 
@@ -184,20 +186,24 @@ void sortHeap(int* arr, int n) {
     counter++;
   }
   arr = temp;*/
+  //printHeap(arr, n);
   int counter = n;
   int* temp = arr;
   arr = new int[n];
   for (int i = 0; i < n; i++) {
     arr[i] = temp[0];
-    cout << arr[i] << endl;
-    int* temp2 = temp;
-    int* temp = new int[counter - 1];
+    //cout << arr[i] << endl;
+    int* temp2 = new int[counter - 1];
     for (int j = 0; j < counter - 1; j++) {
-      temp[j] = temp2[j + 1];
+      temp2[j] = temp[j + 1];
+      //cout << temp2[j] << " ";
     }
+    //cout << endl;
     counter = counter - 1;
-    heapify(temp, counter, counter);
+    temp = temp2;
+    buildHeap(temp, counter);
   }
+  printHeap(arr, n);
 }
 
 void visualPrint(int* parsed, int n) {
