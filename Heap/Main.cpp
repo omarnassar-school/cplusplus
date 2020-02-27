@@ -31,14 +31,14 @@ int main() {
   cin >> method;
   cin.clear();
   cin.ignore(1000000, '\n');
-  if (method == 1) {
+  if (method == 1) {//getting input from console, store in char array
     cout << endl << "Please input your numbers with spaces in between them here: " << endl << ">> ";
     cin.get(input, 1000);
     cin.clear();
     cin.ignore(1000000, '\n');
     //cout << input << endl;
   }
-  else if (method == 2) {
+  else if (method == 2) {//getting input from file, store in char array
     cout << endl << "What is the name of the file?" << endl << ">> ";
     cin.get(fileName, 20);
     cin.clear();
@@ -67,13 +67,18 @@ int main() {
   printHeap(parsed, parsedSize);
   cout << endl << "Visual printing of the heap: " << endl;
   visualPrint(parsed, parsedSize);
-  cout << endl << "The input sorted from greatest to least: ";
+  cout << "The input sorted from greatest to least: ";
   sortHeap(parsed, parsedSize);
   //printHeap(parsed, parsedSize);
   return 0;
 }
 
-void parseInput(int*& parsed, char input[], int &counter) {
+void parseInput(int*& parsed, char input[], int &counter) {//remove spaces between the chars, make int pointer (array)
+  /*This works by finding a space and adding a pointer, then moving forward in the array until it finds another
+   *space. It then adds another pointer and adds the characters between the spaces to a new char array, which is then
+   *turned to an int and added to the int pointer. This method was originally created by Zareef Amyeen, but I modified
+   *it for use with an int pointer instead of a vector. 
+   */
   int pointers[2];
   int value;
   int* temp;
@@ -129,24 +134,29 @@ void parseInput(int*& parsed, char input[], int &counter) {
 
 }
 
-void heapify(int*& arr, int n, int i) {
-  int largest = i;
-  int l = 2 * i + 1;
-  int r = 2 * i + 2;
+void heapify(int*& arr, int n, int i) {//heapifying a subtree rooted with node i which is an index in arr[], n is size
+  int largest = i; //initialize largest as root
+  int l = 2 * i + 1; //left child
+  int r = 2 * i + 2; //right child
 
+  //if left is larger than root
   if (l < n && arr[l] > arr[largest]) {
     largest = l;
   }
+
+  //if right is larger than root
   if (r < n && arr[r] > arr[largest]) {
     largest = r;
   }
+
+  //if largest is not root
   if (largest != i) {
     swap(arr[i], arr[largest]);
     heapify(arr, n, largest);
   }
 }
 
-void buildHeap(int*& arr, int n) {
+void buildHeap(int*& arr, int n) {//building the heap
   int startIdx = (n / 2) - 1;
 
   for (int i = startIdx; i >= 0; i--) {
@@ -154,14 +164,14 @@ void buildHeap(int*& arr, int n) {
   }
 }
 
-void printHeap(int* arr, int n) {
+void printHeap(int* arr, int n) {//printing the heap as an array
   for (int i = 0; i < n; ++i) {
     cout << arr[i] << " ";
   }
   cout << endl;
 }
 
-void sortHeap(int* arr, int n) {
+void sortHeap(int* arr, int n) {//sorting the heap from greatest to least
   /*for (int i = n / 2 - 1; i >= 0; i--) {
     heapify(arr, n, i);
   }
@@ -190,9 +200,11 @@ void sortHeap(int* arr, int n) {
   int counter = n;
   int* temp = arr;
   arr = new int[n];
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i < n; i++) {//taking the head of the array and adding it to the final array
     arr[i] = temp[0];
     //cout << arr[i] << endl;
+
+    //removing the head
     int* temp2 = new int[counter - 1];
     for (int j = 0; j < counter - 1; j++) {
       temp2[j] = temp[j + 1];
@@ -201,23 +213,25 @@ void sortHeap(int* arr, int n) {
     //cout << endl;
     counter = counter - 1;
     temp = temp2;
+    //rebuilding heap so the largest number will be the head
     buildHeap(temp, counter);
   }
   printHeap(arr, n);
 }
 
-void visualPrint(int* parsed, int n) {
+void visualPrint(int* parsed, int n) {//printing the array visually (would add spaces but haven't fully figured it out)
   //bool whichSlash = true;
   int* temp = parsed;
+  //moving indexes one spot over for calculatiosn
   parsed = new int[n + 1];
   for (int i = 0; i < n; i++) {
     parsed[i + 1] = temp[i];
   }  
-  int levels = ceil(log2(n));
+  int levels = ceil(log2(n)); //how many levels are in the array
   int index = 1;
   for (int i = 0; i < levels; i++) {
     int num = index;
-    for (int j = 0; j < num; j++) {
+    for (int j = 0; j < num; j++) {//the index of the first value of each level is the amount of numbers in that level
       if (index <= n) {
 	cout << parsed[index] << " ";
 	index = index + 1;
@@ -225,7 +239,7 @@ void visualPrint(int* parsed, int n) {
     }
     cout << endl;
     if (i < levels - 1) {
-      for (int k = 0; k < pow(2, i); k++) {
+      for (int k = 0; k < pow(2, i); k++) {//add slashes between each level except last
 	cout << "/\\";
       }
       cout << endl;
