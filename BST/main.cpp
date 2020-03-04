@@ -21,6 +21,8 @@ void parseInput(char input[]);
 void addNode(int value, Node* current);
 void printTree(Node* root, Trunk *prev, bool isLeft);
 void showTrunks(Trunk *p);
+bool search(int value, Node* current);
+void remove(int value, Node* current);
 
 Node* head = NULL;
 
@@ -29,6 +31,7 @@ int main() {
   char fileName[20];
   char input[1000];
   int* parsed;
+  int value;
   cout << endl << "How would you like to initially input your numbers? (1 for console, 2 for file)" << endl << ">> ";
   cin >> method;
   cin.clear();
@@ -55,9 +58,51 @@ int main() {
       //cout << input << endl;
     }
   }
+  else {
+    cout << "Invalid Input.";
+    return 0;
+  }
   parseInput(input);
   printTree(head, NULL, false);
-  
+  while (true) {
+    method = NULL;
+    value = NULL;
+    cout << endl << "What would you like to do?";
+    cout << endl << "(1 for insert, 2 for delete, 3 to search, 4 to quit)" << endl << ">> ";
+    cin >> method;
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    if (method == 1) {
+      cout << "Please enter a value: ";
+      cin >> value;
+      cin.clear();
+      cin.ignore(1000000, '\n');
+      addNode(value, head);
+    }
+    else if (method == 2) {
+      cout << "Please enter a value: ";
+      cin >> value;
+      cin.ignore(100000, '\n');
+      remove(value, head);
+    }
+    else if (method == 3) {
+      cout << "Please enter a value: ";
+      cin >> value;
+      cin.ignore(1000000, '\n');
+      if (search(value, head))
+	cout << endl << value << " is in the tree." << endl << endl;
+      else
+	cout << endl << value << " is not in the tree." << endl << endl;
+    }
+    else if (method == 4) {
+      break;
+    }
+    else {
+      cout << endl << "Invalid Input." << endl;
+      break;
+    }
+    printTree(head, NULL, false);
+  }
   return 0;
 }
 
@@ -152,7 +197,7 @@ void addNode(int value, Node* current) {
 	addNode(value, current -> getLeft());
     }
     else {
-      cout << "You cannot have duplicate values." << endl;
+      //cout << "You cannot have duplicate values." << endl;
     }
   }
 }
@@ -192,4 +237,31 @@ void printTree(Node* root, Trunk *prev, bool isLeft) {
     prev -> str = prev_str;
   trunk -> str = (char*)("   |");
   printTree(root -> getRight(), trunk, false);
+}
+
+void remove(int value, Node* current) {
+  
+}
+
+bool search(int value, Node* current) {
+  if (value == current -> getValue())
+    return true;
+
+  else if (value > current -> getValue()) {
+    if (current -> getRight() == NULL)
+      return false;
+    else
+      search(value, current -> getRight());
+  }
+  
+  else if (value < current -> getValue()) {
+    if (current -> getLeft() == NULL)
+      return false;
+    else
+      search(value, current -> getLeft());
+  }
+
+  else {
+    return false;
+  }
 }
