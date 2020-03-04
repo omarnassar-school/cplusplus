@@ -1,27 +1,27 @@
 #include <iostream>
-#include "Node.h"
+#include "node.h"
 
 using namespace std;
 
 Node::Node() {
-  previous = NULL;
-  next = NULL;
+  left = NULL;
+  right = NULL;
 }
 
 Node::~Node() {
   delete &value;
-  previous = NULL;
-  next = NULL;
+  left = NULL;
+  right = NULL;
 }
 
 //Getters
 
-Node* Node::getPrevious() {
-  return previous;
+Node* Node::getLeft() {
+  return left;
 }
 
-Node* Node::getNext() {
-  return next;
+Node* Node::getRight() {
+  return right;
 }
 
 int Node::getValue() {
@@ -30,12 +30,12 @@ int Node::getValue() {
 
 //Setters
 
-void Node::setPrevious(Node* inPrevious) {
-  previous = inPrevious;
+void Node::setLeft(Node* inLeft) {
+  left = inLeft;
 }
 
-void Node::setNext(Node* inNext) {
-  next = inNext;
+void Node::setRight(Node* inRight) {
+  right = inRight;
 }
 
 void Node::setValue(int inValue) {

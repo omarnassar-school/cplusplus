@@ -10,16 +10,16 @@ class Node {
   Node();
   ~Node();
   //Getters
-  Node* getPrevious();
-  Node* getNext();
+  Node* getLeft();
+  Node* getRight();
   int getValue();
   //Setters
-  void setPrevious(Node*);
-  void setNext(Node*);
+  void setLeft(Node*);
+  void setRight(Node*);
   void setValue(int);
  private:
-  Node* previous;
-  Node* next;
+  Node* left;
+  Node* right;
   int value;
 };
 

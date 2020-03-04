@@ -1,14 +1,29 @@
-#include <node.h>
 #include <cstring>
 #include <iostream>
+#include <stdlib.h>
+#include <fstream>
+#include <cmath>
+#include "node.h"
 
 using namespace std;
 
+struct Trunk {
+  Trunk *prev;
+  char* str;
+
+  Trunk(Trunk *prev, char* str) {
+    this -> prev = prev;
+    this -> str = str;
+  }
+};
+
 void parseInput(char input[]);
 void addNode(int value, Node* current);
-void printTree();
+void printTree(Node* root, Trunk *prev, bool isLeft);
+void showTrunks(Trunk *p);
 
 Node* head = NULL;
+
 
 int main() {
   int method;
@@ -41,10 +56,8 @@ int main() {
       //cout << input << endl;
     }
   }
-  else {
-    return 0;
-  }
-  
+  parseInput(input);
+  printTree(head, NULL, false);
   
   return 0;
 }
@@ -109,12 +122,15 @@ void parseInput(char input[]) {//remove spaces between the chars, make int point
   /*for (int i = 0; i < counter; i++) {
     cout << endl << parsed[i] << endl;
     }*/
+  cout << "works" << endl;
   for (int i = 0; i < counter; i++) {
+    cout << "fault?" << endl;
     addNode(parsed[i], head);
   }
 }
 
 void addNode(int value, Node* current) {
+  cout << "Works?" << endl;
   if (head == NULL) {
     head -> setValue(value);
   }
@@ -137,6 +153,39 @@ void addNode(int value, Node* current) {
   }
 }
 
-void printTree() {
-  
+//https://www.techiedelight.com/c-program-print-binary-tree/
+void showTrunks(Trunk *p) {
+  if (p == NULL)
+    return;
+
+  showTrunks(p -> prev);
+
+  cout << p -> str;
+}
+
+//https://www.techiedelight.com/c-program-print-binary-tree
+void printTree(Node* root, Trunk *prev, bool isLeft) {
+  if (root == NULL)
+    return;
+
+  char* prev_str = "    ";
+  Trunk *trunk = new Trunk(prev, prev_str);
+  printTree(root -> getLeft(), trunk, true);
+  if (!prev)
+    trunk -> str = "---";
+  else if (isLeft) {
+    trunk -> str = ".---";
+    prev_str = "   |";
+  }
+  else {
+    trunk -> str = "`---";
+    prev -> str = prev_str;
+  }
+  showTrunks(trunk);
+  cout << root -> getValue() << endl;
+
+  if (prev)
+    prev -> str = prev_str;
+  trunk -> str = "   |";
+  printTree(root -> getRight(), trunk, false);
 }
