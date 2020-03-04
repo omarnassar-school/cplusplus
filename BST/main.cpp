@@ -121,28 +121,33 @@ void parseInput(char input[]) {//remove spaces between the chars, make int point
   /*for (int i = 0; i < counter; i++) {
     cout << endl << parsed[i] << endl;
     }*/
-  cout << "works" << endl;
+  //cout << "works" << endl;
   for (int i = 0; i < counter; i++) {
-    cout << "fault?" << endl;
+    //cout << "fault?" << endl;
     addNode(parsed[i], head);
   }
 }
 
 void addNode(int value, Node* current) {
-  cout << "Works?" << endl;
+  //cout << "Works?" << endl;
   if (head == NULL) {
-    head -> setValue(value);
+    head = new Node();
+    head-> setValue(value);
   }
   else {
     if (value > current -> getValue()) {
-      if (current -> getRight() == NULL)
+      if (current -> getRight() == NULL) {
+	current -> setRight(new Node());
 	current -> getRight() -> setValue(value);
+      }
       else
 	addNode(value, current -> getRight());
     }
     else if (value < current -> getValue()) {
-      if (current -> getLeft() == NULL)
+      if (current -> getLeft() == NULL) {
+	current -> setLeft(new Node());
 	current -> getLeft() -> setValue(value);
+      }
       else
 	addNode(value, current -> getLeft());
     }
