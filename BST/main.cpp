@@ -24,7 +24,6 @@ void showTrunks(Trunk *p);
 
 Node* head = NULL;
 
-
 int main() {
   int method;
   char fileName[20];
@@ -168,17 +167,17 @@ void printTree(Node* root, Trunk *prev, bool isLeft) {
   if (root == NULL)
     return;
 
-  char* prev_str = "    ";
+  char* prev_str = (char*)("    ");
   Trunk *trunk = new Trunk(prev, prev_str);
   printTree(root -> getLeft(), trunk, true);
   if (!prev)
-    trunk -> str = "---";
+    trunk -> str = (char*)("---");
   else if (isLeft) {
-    trunk -> str = ".---";
-    prev_str = "   |";
+    trunk -> str = (char*)(".---");
+    prev_str = (char*)("   |");
   }
   else {
-    trunk -> str = "`---";
+    trunk -> str = (char*)("`---");
     prev -> str = prev_str;
   }
   showTrunks(trunk);
@@ -186,6 +185,6 @@ void printTree(Node* root, Trunk *prev, bool isLeft) {
 
   if (prev)
     prev -> str = prev_str;
-  trunk -> str = "   |";
+  trunk -> str = (char*)("   |");
   printTree(root -> getRight(), trunk, false);
 }
