@@ -23,6 +23,7 @@ void printTree(Node* root, Trunk *prev, bool isLeft);
 void showTrunks(Trunk *p);
 Node* search(int value, Node* current);
 void remove(int value, Node* current);
+void shiftUp(Node* current);
 
 Node* head = NULL;
 
@@ -85,7 +86,15 @@ int main() {
       cout << "Please enter a value: ";
       cin >> value;
       cin.ignore(100000, '\n');
-      remove(value, head);
+      cout << endl;
+      Node* temp = search(value, head);
+      if (temp != NULL) {
+	cout << endl << value << " has been deleted." << endl << endl;
+	remove(value, head);
+      }
+      else
+	cout << endl << value << " is not in the tree." << endl << endl;
+      temp -> ~Node();
     }
     else if (method == 3) {
       cout << "Please enter a value: ";
@@ -97,6 +106,7 @@ int main() {
 	cout << endl << value << " is in the tree." << endl << endl;
       else
 	cout << endl << value << " is not in the tree." << endl << endl;
+      temp -> ~Node();
     }
     else if (method == 4) {
       break;
@@ -285,11 +295,23 @@ void remove(int value, Node* current) {
 	current -> ~Node();
       }
     }
-    else {
-      while (current -> getRight() != NULL) {
-	//shift everything to the right up and leave the left
-      }
+    else { 
+      shiftUp(current);
+      current -> ~Node();
     }
+  }
+}
+
+void shiftUp(Node* current) {
+  if (current -> getParent() != NULL) {
+    current -> getParent() -> setValue(current -> getValue());
+  }
+  
+  if (current -> getRight() != NULL) {
+    shiftUp(current -> getRight());
+  }
+  else {
+    current -> getParent() -> setRight(NULL);
   }
 }
 
