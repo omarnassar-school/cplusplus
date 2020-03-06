@@ -297,14 +297,13 @@ void remove(int value, Node* current) {
     }
     else { 
       shiftUp(current);
-      current -> ~Node();
     }
   }
 }
 
 void shiftUp(Node* current) {
   if (current -> getParent() != NULL) {
-    current -> getParent() -> setValue(current -> getValue());
+    current -> setValue(current -> getRight() -> getValue());
   }
   
   if (current -> getRight() != NULL) {
@@ -313,6 +312,7 @@ void shiftUp(Node* current) {
   else {
     current -> getParent() -> setRight(NULL);
   }
+  current -> getRight() -> ~Node();
 }
 
 Node* search(int value, Node* current) {
