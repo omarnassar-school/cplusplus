@@ -21,7 +21,7 @@ void parseInput(char input[]);
 void addNode(int value, Node* current);
 void printTree(Node* root, Trunk *prev, bool isLeft);
 void showTrunks(Trunk *p);
-bool search(int value, Node* current);
+Node* search(int value, Node* current);
 void remove(int value, Node* current);
 
 Node* head = NULL;
@@ -63,12 +63,13 @@ int main() {
     return 0;
   }
   parseInput(input);
+  cout << endl;
   printTree(head, NULL, false);
   while (true) {
     method = NULL;
     value = NULL;
     cout << endl << "What would you like to do?";
-    cout << endl << "(1 for insert, 2 for delete, 3 to search, 4 to quit)" << endl << ">> ";
+    cout << endl << "(1 for add, 2 for delete, 3 to search, 4 to quit)" << endl << ">> ";
     cin >> method;
     cin.clear();
     cin.ignore(1000000, '\n');
@@ -77,6 +78,7 @@ int main() {
       cin >> value;
       cin.clear();
       cin.ignore(1000000, '\n');
+      cout << endl;
       addNode(value, head);
     }
     else if (method == 2) {
@@ -89,7 +91,9 @@ int main() {
       cout << "Please enter a value: ";
       cin >> value;
       cin.ignore(1000000, '\n');
-      if (search(value, head))
+      cout << endl;
+      Node* temp = search(value, head);
+      if (temp != NULL)
 	cout << endl << value << " is in the tree." << endl << endl;
       else
 	cout << endl << value << " is not in the tree." << endl << endl;
@@ -101,7 +105,9 @@ int main() {
       cout << endl << "Invalid Input." << endl;
       break;
     }
-    printTree(head, NULL, false);
+    
+    if (head != NULL)
+      printTree(head, NULL, false);
   }
   return 0;
 }
@@ -183,6 +189,7 @@ void addNode(int value, Node* current) {
     if (value > current -> getValue()) {
       if (current -> getRight() == NULL) {
 	current -> setRight(new Node());
+	current -> getRight() -> setParent(current);
 	current -> getRight() -> setValue(value);
       }
       else
@@ -191,6 +198,7 @@ void addNode(int value, Node* current) {
     else if (value < current -> getValue()) {
       if (current -> getLeft() == NULL) {
 	current -> setLeft(new Node());
+	current-> getLeft() -> setParent(current);
 	current -> getLeft() -> setValue(value);
       }
       else
@@ -240,28 +248,70 @@ void printTree(Node* root, Trunk *prev, bool isLeft) {
 }
 
 void remove(int value, Node* current) {
+  current = search(value, current);
+
+  //if the tree only has a head
+  if (current -> getParent() == NULL && current -> getLeft() == NULL && current -> getRight() == NULL)
+    head = NULL;
   
+  if (current -> getLeft() == NULL && current -> getRight() == NULL) {
+    if (current -> getParent() -> getLeft() == current) {
+      current -> getParent() -> setLeft(NULL);
+      current -> ~Node();
+    }
+    else if (current -> getParent() -> getRight() == current) {
+      current -> getParent() -> setRight(NULL);
+      current -> ~Node();
+    }
+  }
+  else {
+    if (current -> getLeft() == NULL) {
+      if (current -> getParent() -> getLeft() == current) {
+	current -> getParent() -> setLeft(current -> getRight());
+	current -> ~Node();
+      }
+      else if (current -> getParent() -> getRight() == current) {
+	current -> getParent() -> setRight(current -> getRight());
+	current -> ~Node();
+      }
+    }
+    else if (current -> getRight() == NULL) {
+      if (current -> getParent() -> getLeft() == current) {
+	current -> getParent() -> setLeft(current -> getLeft());
+	current -> ~Node();
+      }
+      else if (current -> getParent() -> getRight() == current) {
+	current -> getParent() -> setRight(current -> getLeft());
+	current -> ~Node();
+      }
+    }
+    else {
+      while (current -> getRight() != NULL) {
+	//shift everything to the right up and leave the left
+      }
+    }
+  }
 }
 
-bool search(int value, Node* current) {
+Node* search(int value, Node* current) {
   if (value == current -> getValue())
-    return true;
+    return current;
 
   else if (value > current -> getValue()) {
     if (current -> getRight() == NULL)
-      return false;
+      return NULL;
     else
       search(value, current -> getRight());
   }
   
   else if (value < current -> getValue()) {
     if (current -> getLeft() == NULL)
-      return false;
+      return NULL;
     else
       search(value, current -> getLeft());
   }
 
   else {
-    return false;
+    return NULL;
   }
 }

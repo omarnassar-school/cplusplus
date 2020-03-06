@@ -4,17 +4,23 @@
 using namespace std;
 
 Node::Node() {
+  parent = NULL;
   left = NULL;
   right = NULL;
 }
 
 Node::~Node() {
   delete &value;
+  parent = NULL;
   left = NULL;
   right = NULL;
 }
 
 //Getters
+
+Node* Node::getParent() {
+  return parent;
+}
 
 Node* Node::getLeft() {
   return left;
@@ -29,6 +35,10 @@ int Node::getValue() {
 }
 
 //Setters
+
+void Node::setParent(Node* inParent) {
+  parent = inParent;
+}
 
 void Node::setLeft(Node* inLeft) {
   left = inLeft;
