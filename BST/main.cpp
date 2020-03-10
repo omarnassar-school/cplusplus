@@ -23,7 +23,7 @@ void printTree(Node* root, Trunk *prev, bool isLeft);
 void showTrunks(Trunk *p);
 Node* search(int value, Node* current);
 void remove(int value, Node* current);
-void shiftUp(Node* current);
+void shiftUp(Node* current, bool LR);
 Node* findLeast(Node* current, bool LR);
 
 Node* head = NULL;
@@ -310,12 +310,14 @@ void remove(int value, Node* current) {
       if (temp -> getRight() -> getLeft() != NULL) {//min in right subtree
 	Node* temp2 = findLeast(temp -> getRight(), true);
 	temp -> setValue(temp2 -> getValue());
+	shiftUp(temp2, true);
 	temp2 -> getParent() -> setLeft(NULL);
 	temp2 -> ~Node();
       }
       else if (temp -> getLeft() -> getRight() != NULL) {//max in left subtree
 	Node* temp2 = findLeast(temp -> getLeft(), false);
 	temp -> setValue(temp2 -> getValue());
+	shiftUp(temp2, false);
 	temp2 -> getParent() -> setLeft(NULL);
 	temp2 -> ~Node();
       }
@@ -329,18 +331,8 @@ void remove(int value, Node* current) {
   }
 }
 
-void shiftUp(Node* current) {  
-  if (current -> getParent() != NULL) {
-    current -> setValue(current -> getRight() -> getValue());
-  }
-  
-  if (current -> getRight() != NULL) {
-    shiftUp(current -> getRight());
-  }
-  else {
-    current -> getParent() -> setRight(NULL);
-  }
-  current -> getRight() -> ~Node();
+void shiftUp(Node* current, bool LR) {//true is shift left, false is shift right  
+  return;
 }
 
  Node* findLeast(Node* current, bool LR) {//true for left min, false for right max
