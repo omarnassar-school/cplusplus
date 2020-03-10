@@ -305,16 +305,24 @@ void remove(int value, Node* current) {
 	return;
       }
     }
-    else {
+    else {//need to still move the rest of the subtree
       //cout << "two children" << endl << endl;
       if (temp -> getRight() -> getLeft() != NULL) {//min in right subtree
-	
+	Node* temp2 = findLeast(temp -> getRight(), true);
+	temp -> setValue(temp2 -> getValue());
+	temp2 -> getParent() -> setLeft(NULL);
+	temp2 -> ~Node();
       }
       else if (temp -> getLeft() -> getRight() != NULL) {//max in left subtree
-	
+	Node* temp2 = findLeast(temp -> getLeft(), false);
+	temp -> setValue(temp2 -> getValue());
+	temp2 -> getParent() -> setLeft(NULL);
+	temp2 -> ~Node();
       }
       else {
-	
+	temp -> setValue(temp -> getRight() -> getValue());
+	temp -> getRight() -> ~Node();
+	temp -> setRight(NULL);
       }
       return;
     }
@@ -335,14 +343,17 @@ void shiftUp(Node* current) {
   current -> getRight() -> ~Node();
 }
 
-Node* findLeast(Node* current, bool LR) {
-  if (current -> getLeft != NULL) {
-    while (current -> getLeft() != NULL) {
-      current = current -> getLeft();
-    }
-    return current; //-> getValue();
-  }
-}
+ Node* findLeast(Node* current, bool LR) {//true for left min, false for right max
+   if (LR) {
+     while (current -> getLeft() != NULL)
+       current = current -> getLeft();
+   }
+   else {
+     while (current -> getRight() != NULL)
+       current = current -> getRight();
+   }
+   return current;
+ }
 
 Node* search(int value, Node* current) {
   if (value == current -> getValue())
