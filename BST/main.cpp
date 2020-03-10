@@ -311,14 +311,14 @@ void remove(int value, Node* current) {
 	Node* temp2 = findLeast(temp -> getRight(), true);
 	temp -> setValue(temp2 -> getValue());
 	shiftUp(temp2, true);
-	temp2 -> getParent() -> setLeft(NULL);
+	//temp2 -> getParent() -> setLeft(NULL);
 	temp2 -> ~Node();
       }
       else if (temp -> getLeft() -> getRight() != NULL) {//max in left subtree
 	Node* temp2 = findLeast(temp -> getLeft(), false);
 	temp -> setValue(temp2 -> getValue());
 	shiftUp(temp2, false);
-	temp2 -> getParent() -> setLeft(NULL);
+	//temp2 -> getParent() -> setLeft(NULL);
 	temp2 -> ~Node();
       }
       else {
@@ -332,6 +332,12 @@ void remove(int value, Node* current) {
 }
 
 void shiftUp(Node* current, bool LR) {//true is shift left, false is shift right  
+  if (LR) {
+    current -> getParent() -> setLeft(current -> getRight());
+  }
+  else {
+    current -> getParent() -> setRight(current -> getLeft());
+  }
   return;
 }
 
