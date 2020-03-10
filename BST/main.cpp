@@ -52,7 +52,7 @@ int main() {
     cin.ignore(1000000, '\n');
     streampos size;
     ifstream file(fileName, ios::in | ios::binary | ios::ate);
-    if (file.is_open()) {
+    if (file.is_open()) {//same file reading method from shunting yard and heap
       size = file.tellg();
       file.seekg(0, ios::beg);
       file.read(input, size);
@@ -185,45 +185,45 @@ void parseInput(char input[]) {//remove spaces between the chars, make int point
     cout << endl << parsed[i] << endl;
     }*/
   //cout << "works" << endl;
-  for (int i = 0; i < counter; i++) {
+  for (int i = 0; i < counter; i++) {//add all input to the tree
     //cout << "fault?" << endl;
     addNode(parsed[i], head);
   }
 }
 
-void addNode(int value, Node* current) {
+void addNode(int value, Node* current) {//method for adding nodes
   //cout << "Works?" << endl;
-  if (head == NULL) {
+  if (head == NULL) {//if the tree doesn't exist
     head = new Node();
     head-> setValue(value);
   }
-  else {
-    if (value > current -> getValue()) {
-      if (current -> getRight() == NULL) {
+  else {//if it does exist
+    if (value > current -> getValue()) {//if the value is larger than the current node
+      if (current -> getRight() == NULL) {//if the node doesn't have a right child
 	current -> setRight(new Node());
 	current -> getRight() -> setParent(current);
 	current -> getRight() -> setValue(value);
       }
-      else
+      else //if not null, recursively call next right
 	addNode(value, current -> getRight());
     }
-    else if (value < current -> getValue()) {
-      if (current -> getLeft() == NULL) {
+    else if (value < current -> getValue()) {//if the value is less than the current node
+      if (current -> getLeft() == NULL) {//if the node doesn't have a left child
 	current -> setLeft(new Node());
 	current-> getLeft() -> setParent(current);
 	current -> getLeft() -> setValue(value);
       }
-      else
+      else //if not null, recursively call next left
 	addNode(value, current -> getLeft());
     }
-    else {
+    else {//if the value is a duplicate
       //cout << "You cannot have duplicate values." << endl;
     }
   }
 }
 
 //https://www.techiedelight.com/c-program-print-binary-tree/
-void showTrunks(Trunk *p) {
+void showTrunks(Trunk *p) {//helper method for printing
   if (p == NULL)
     return;
 
@@ -234,7 +234,10 @@ void showTrunks(Trunk *p) {
 
 //https://www.techiedelight.com/c-program-print-binary-tree
 void printTree(Node* root, Trunk *prev, bool isLeft) {
-  if (root == NULL)
+  /*what this method does is start out with the leftmost node and then print until the right most
+   *i chose to use this method from this site because it was visually appealing :)
+   */
+  if (root == NULL) //don't print if the tree is nonexistant
     return;
 
   char* prev_str = (char*)("    ");
@@ -268,7 +271,7 @@ void remove(int value, Node* current) {
   
   Node* temp = search(value, current);  
   
-  if (temp -> getLeft() == NULL && temp -> getRight() == NULL) {
+  if (temp -> getLeft() == NULL && temp -> getRight() == NULL) {//if there are no childtren
     if (temp -> getParent() -> getLeft() == temp) {
       temp -> getParent() -> setLeft(NULL);
       temp -> ~Node();
@@ -281,7 +284,7 @@ void remove(int value, Node* current) {
     }
   }
   else {
-    if (temp -> getLeft() == NULL) {
+    if (temp -> getLeft() == NULL) {//if there is only a right child
       if (temp -> getParent() -> getLeft() == temp) {
 	temp -> getParent() -> setLeft(temp -> getRight());
 	temp -> ~Node();
@@ -293,7 +296,7 @@ void remove(int value, Node* current) {
 	return;
       }
     }
-    else if (temp -> getRight() == NULL) {
+    else if (temp -> getRight() == NULL) {//if there is only aleft child
       if (temp -> getParent() -> getLeft() == temp) {
 	temp -> getParent() -> setLeft(temp -> getLeft());
 	temp -> ~Node();
@@ -305,7 +308,8 @@ void remove(int value, Node* current) {
 	return;
       }
     }
-    else {//need to still move the rest of the subtree
+    else {//if there are two children
+      //need to still move the rest of the subtree (finished)
       //cout << "two children" << endl << endl;
       if (temp -> getRight() -> getLeft() != NULL) {//min in right subtree
 	Node* temp2 = findLeast(temp -> getRight(), true);
@@ -321,7 +325,7 @@ void remove(int value, Node* current) {
 	//temp2 -> getParent() -> setLeft(NULL);
 	temp2 -> ~Node();
       }
-      else {
+      else {//if none of the subtrees have children
 	temp -> setValue(temp -> getRight() -> getValue());
 	temp -> getRight() -> ~Node();
 	temp -> setRight(NULL);
@@ -331,7 +335,7 @@ void remove(int value, Node* current) {
   }
 }
 
-void shiftUp(Node* current, bool LR) {//true is shift left, false is shift right  
+void shiftUp(Node* current, bool LR) {//true is shift left, false is shift right 
   if (LR) {
     current -> getParent() -> setLeft(current -> getRight());
   }
@@ -353,7 +357,7 @@ void shiftUp(Node* current, bool LR) {//true is shift left, false is shift right
    return current;
  }
 
-Node* search(int value, Node* current) {
+Node* search(int value, Node* current) {//searching for a node with a certain value
   if (value == current -> getValue())
     return current;
 
