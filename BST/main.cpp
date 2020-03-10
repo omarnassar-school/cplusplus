@@ -24,6 +24,7 @@ void showTrunks(Trunk *p);
 Node* search(int value, Node* current);
 void remove(int value, Node* current);
 void shiftUp(Node* current);
+Node* findLeast(Node* current, bool LR);
 
 Node* head = NULL;
 
@@ -94,7 +95,8 @@ int main() {
       }
       else
 	cout << endl << value << " is not in the tree." << endl << endl;
-      temp -> ~Node();
+      temp = NULL;
+      delete temp;
     }
     else if (method == 3) {
       cout << "Please enter a value: ";
@@ -258,50 +260,68 @@ void printTree(Node* root, Trunk *prev, bool isLeft) {
 }
 
 void remove(int value, Node* current) {
-  current = search(value, current);
-
   //if the tree only has a head
-  if (current -> getParent() == NULL && current -> getLeft() == NULL && current -> getRight() == NULL)
+  if (current -> getParent() == NULL && current -> getLeft() == NULL && current -> getRight() == NULL) {
     head = NULL;
+    return;
+  }
   
-  if (current -> getLeft() == NULL && current -> getRight() == NULL) {
-    if (current -> getParent() -> getLeft() == current) {
-      current -> getParent() -> setLeft(NULL);
-      current -> ~Node();
+  Node* temp = search(value, current);  
+  
+  if (temp -> getLeft() == NULL && temp -> getRight() == NULL) {
+    if (temp -> getParent() -> getLeft() == temp) {
+      temp -> getParent() -> setLeft(NULL);
+      temp -> ~Node();
+      return;
     }
-    else if (current -> getParent() -> getRight() == current) {
-      current -> getParent() -> setRight(NULL);
-      current -> ~Node();
+    else if (temp -> getParent() -> getRight() == temp) {
+      temp -> getParent() -> setRight(NULL);
+      temp -> ~Node();
+      return;
     }
   }
   else {
-    if (current -> getLeft() == NULL) {
-      if (current -> getParent() -> getLeft() == current) {
-	current -> getParent() -> setLeft(current -> getRight());
-	current -> ~Node();
+    if (temp -> getLeft() == NULL) {
+      if (temp -> getParent() -> getLeft() == temp) {
+	temp -> getParent() -> setLeft(temp -> getRight());
+	temp -> ~Node();
+	return;
       }
-      else if (current -> getParent() -> getRight() == current) {
-	current -> getParent() -> setRight(current -> getRight());
-	current -> ~Node();
-      }
-    }
-    else if (current -> getRight() == NULL) {
-      if (current -> getParent() -> getLeft() == current) {
-	current -> getParent() -> setLeft(current -> getLeft());
-	current -> ~Node();
-      }
-      else if (current -> getParent() -> getRight() == current) {
-	current -> getParent() -> setRight(current -> getLeft());
-	current -> ~Node();
+      else if (temp -> getParent() -> getRight() == temp) {
+	temp -> getParent() -> setRight(temp -> getRight());
+	temp -> ~Node();
+	return;
       }
     }
-    else { 
-      shiftUp(current);
+    else if (temp -> getRight() == NULL) {
+      if (temp -> getParent() -> getLeft() == temp) {
+	temp -> getParent() -> setLeft(temp -> getLeft());
+	temp -> ~Node();
+	return;
+      }
+      else if (temp -> getParent() -> getRight() == temp) {
+	temp -> getParent() -> setRight(temp -> getLeft());
+	temp -> ~Node();
+	return;
+      }
+    }
+    else {
+      //cout << "two children" << endl << endl;
+      if (temp -> getRight() -> getLeft() != NULL) {//min in right subtree
+	
+      }
+      else if (temp -> getLeft() -> getRight() != NULL) {//max in left subtree
+	
+      }
+      else {
+	
+      }
+      return;
     }
   }
 }
 
-void shiftUp(Node* current) {
+void shiftUp(Node* current) {  
   if (current -> getParent() != NULL) {
     current -> setValue(current -> getRight() -> getValue());
   }
@@ -313,6 +333,15 @@ void shiftUp(Node* current) {
     current -> getParent() -> setRight(NULL);
   }
   current -> getRight() -> ~Node();
+}
+
+Node* findLeast(Node* current, bool LR) {
+  if (current -> getLeft != NULL) {
+    while (current -> getLeft() != NULL) {
+      current = current -> getLeft();
+    }
+    return current; //-> getValue();
+  }
 }
 
 Node* search(int value, Node* current) {
