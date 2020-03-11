@@ -108,8 +108,7 @@ int main() {
 	cout << endl << value << " is in the tree." << endl << endl;
       else
 	cout << endl << value << " is not in the tree." << endl << endl;
-      temp = NULL;
-      delete temp;
+      temp -> ~Node();
     }
     else if (method == 4) {
       break;
@@ -358,18 +357,18 @@ void shiftUp(Node* current, bool LR) {//true is shift left, false is shift right
    return current;
  }
 
-Node* search(int value, Node* current) {//searching for a node with a certain value
-  if (value == current -> getValue())
+Node* search(int value, Node** current) {//searching for a node with a certain value
+  if (value == current -> *getValue())
     return current;
 
-  else if (value > current -> getValue()) {
-    if (current -> getRight() == NULL)
+  else if (value > current -> *getValue()) {
+    if (current -> *getRight() == NULL)
       return NULL;
     else
-      search(value, current -> getRight());
+      search(value, current -> *getRight());
   }
   
-  else if (value < current -> getValue()) {
+  else if (value < current -> *getValue()) {
     if (current -> getLeft() == NULL)
       return NULL;
     else
