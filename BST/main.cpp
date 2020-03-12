@@ -1,3 +1,8 @@
+/* A program that can create a binary search tree from user input
+ *Author: Omar Nassar
+ *Date: 3/1/2020
+ */
+
 #include <cstring>
 #include <iostream>
 #include <stdlib.h>
