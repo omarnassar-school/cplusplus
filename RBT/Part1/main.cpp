@@ -9,6 +9,8 @@
 #include <fstream>
 #include <cmath>
 #include "node.h"
+#define RESET "\033[0m"
+#define RED "\033[31m"
 
 using namespace std;
 
@@ -21,6 +23,20 @@ struct Trunk {
     this -> str = str;
   }
 };
+
+void parseInput(char input[]);
+void printTree(Node* root, Trunk *prev, bool isLeft);
+void showTrunks(Trunk *p);
+void addNode(Node* head);
+
+Node* head = NULL;
+const bool red = true;
+const bool black = false;
+
+int main() {
+  
+  return 0;
+}
 
 void parseInput(char input[]) {//remove spaces between the chars, make int pointer (array)
   /*This works by finding a space and adding a pointer, then moving forward in the array until it finds another
@@ -89,15 +105,6 @@ void parseInput(char input[]) {//remove spaces between the chars, make int point
   }
 }
 
-//https://www.techiedelight.com/c-program-print-binary-tree/
-void showTrunks(Trunk *p) {//helper method for printing
-  if (p == NULL)
-    return;
-  
-  showTrunks(p -> prev);
-  
-  cout << p -> str;
-}
 
 //https://www.techiedelight.com/c-program-print-binary-tree/
 void showTrunks(Trunk *p) {//helper method for printing
@@ -131,7 +138,11 @@ void printTree(Node* root, Trunk *prev, bool isLeft) {
     prev -> str = prev_str;
   }
   showTrunks(trunk);
-  cout << root -> getValue() << endl;
+  if (root -> getColor() == red)
+    //https://stackoverflow.com/questions/9158150/colored-output-in-c/9158263
+    cout << RED << root -> getValue() << RESET << endl; 
+  else
+    cout << root -> getValue() << endl;
 
   if (prev)
     prev -> str = prev_str;
@@ -139,11 +150,33 @@ void printTree(Node* root, Trunk *prev, bool isLeft) {
   printTree(root -> getRight(), trunk, false);
 }
 
-Node* head = NULL;
-const bool red = true;
-const bool black = false;
-
-int main() {
-  
-  return 0;
+void addNode(int value, Node* current) {//method for adding nodes
+  //cout << "Works?" << endl;
+  if (head == NULL) {//if the tree doesn't exist
+    head = new Node();
+    head-> setValue(value);
+  }
+  else {//if it does exist
+    if (value > current -> getValue()) {//if the value is larger than the current node
+      if (current -> getRight() == NULL) {//if the node doesn't have a right child
+	current -> setRight(new Node());
+	current -> getRight() -> setParent(current);
+	current -> getRight() -> setValue(value);
+      }
+      else //if not null, recursively call next right
+	addNode(value, current -> getRight());
+    }
+    else if (value < current -> getValue()) {//if the value is less than the current node
+      if (current -> getLeft() == NULL) {//if the node doesn't have a left child
+	current -> setLeft(new Node());
+	current-> getLeft() -> setParent(current);
+	current -> getLeft() -> setValue(value);
+      }
+      else //if not null, recursively call next left
+	addNode(value, current -> getLeft());
+    }
+    else {//if the value is a duplicate
+      //cout << "You cannot have duplicate values." << endl;
+    }
+  }
 }

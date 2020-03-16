@@ -8,6 +8,7 @@ Node::Node() {
   left = NULL;
   right = NULL;
   sibling = NULL;
+  color = true;
 }
 
 Node::~Node() {

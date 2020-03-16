@@ -21,10 +21,8 @@ void parseInput(char input[]);
 void addNode(int value, Node* current);
 void printTree(Node* root, Trunk *prev, bool isLeft);
 void showTrunks(Trunk *p);
-Node* search(int value, Node* current);
+bool search(int value, Node* current);
 void remove(int value, Node* current);
-void shiftUp(Node* current, bool LR);
-Node* findLeast(Node* current, bool LR);
 
 Node* head = NULL;
 
@@ -52,7 +50,7 @@ int main() {
     cin.ignore(1000000, '\n');
     streampos size;
     ifstream file(fileName, ios::in | ios::binary | ios::ate);
-    if (file.is_open()) {//same file reading method from shunting yard and heap
+    if (file.is_open()) {
       size = file.tellg();
       file.seekg(0, ios::beg);
       file.read(input, size);
@@ -65,13 +63,12 @@ int main() {
     return 0;
   }
   parseInput(input);
-  cout << endl;
   printTree(head, NULL, false);
   while (true) {
     method = NULL;
     value = NULL;
     cout << endl << "What would you like to do?";
-    cout << endl << "(1 for add, 2 for delete, 3 to search, 4 to quit)" << endl << ">> ";
+    cout << endl << "(1 for insert, 2 for delete, 3 to search, 4 to quit)" << endl << ">> ";
     cin >> method;
     cin.clear();
     cin.ignore(1000000, '\n');
@@ -80,35 +77,22 @@ int main() {
       cin >> value;
       cin.clear();
       cin.ignore(1000000, '\n');
-      cout << endl;
       addNode(value, head);
     }
     else if (method == 2) {
       cout << "Please enter a value: ";
       cin >> value;
       cin.ignore(100000, '\n');
-      cout << endl;
-      Node* temp = search(value, head);
-      if (temp != NULL) {
-	cout << endl << value << " has been deleted." << endl << endl;
-	remove(value, head);
-      }
-      else
-	cout << endl << value << " is not in the tree." << endl << endl;
-      temp = NULL;
-      delete temp;
+      remove(value, head);
     }
     else if (method == 3) {
       cout << "Please enter a value: ";
       cin >> value;
       cin.ignore(1000000, '\n');
-      cout << endl;
-      Node* temp = search(value, head);
-      if (temp != NULL)
+      if (search(value, head))
 	cout << endl << value << " is in the tree." << endl << endl;
       else
 	cout << endl << value << " is not in the tree." << endl << endl;
-      temp -> ~Node();
     }
     else if (method == 4) {
       break;
@@ -117,9 +101,7 @@ int main() {
       cout << endl << "Invalid Input." << endl;
       break;
     }
-    
-    if (head != NULL)
-      printTree(head, NULL, false);
+    printTree(head, NULL, false);
   }
   return 0;
 }
@@ -185,45 +167,43 @@ void parseInput(char input[]) {//remove spaces between the chars, make int point
     cout << endl << parsed[i] << endl;
     }*/
   //cout << "works" << endl;
-  for (int i = 0; i < counter; i++) {//add all input to the tree
+  for (int i = 0; i < counter; i++) {
     //cout << "fault?" << endl;
     addNode(parsed[i], head);
   }
 }
 
-void addNode(int value, Node* current) {//method for adding nodes
+void addNode(int value, Node* current) {
   //cout << "Works?" << endl;
-  if (head == NULL) {//if the tree doesn't exist
+  if (head == NULL) {
     head = new Node();
     head-> setValue(value);
   }
-  else {//if it does exist
-    if (value > current -> getValue()) {//if the value is larger than the current node
-      if (current -> getRight() == NULL) {//if the node doesn't have a right child
+  else {
+    if (value > current -> getValue()) {
+      if (current -> getRight() == NULL) {
 	current -> setRight(new Node());
-	current -> getRight() -> setParent(current);
 	current -> getRight() -> setValue(value);
       }
-      else //if not null, recursively call next right
+      else
 	addNode(value, current -> getRight());
     }
-    else if (value < current -> getValue()) {//if the value is less than the current node
-      if (current -> getLeft() == NULL) {//if the node doesn't have a left child
+    else if (value < current -> getValue()) {
+      if (current -> getLeft() == NULL) {
 	current -> setLeft(new Node());
-	current-> getLeft() -> setParent(current);
 	current -> getLeft() -> setValue(value);
       }
-      else //if not null, recursively call next left
+      else
 	addNode(value, current -> getLeft());
     }
-    else {//if the value is a duplicate
+    else {
       //cout << "You cannot have duplicate values." << endl;
     }
   }
 }
 
 //https://www.techiedelight.com/c-program-print-binary-tree/
-void showTrunks(Trunk *p) {//helper method for printing
+void showTrunks(Trunk *p) {
   if (p == NULL)
     return;
 
@@ -234,10 +214,7 @@ void showTrunks(Trunk *p) {//helper method for printing
 
 //https://www.techiedelight.com/c-program-print-binary-tree
 void printTree(Node* root, Trunk *prev, bool isLeft) {
-  /*what this method does is start out with the leftmost node and then print until the right most
-   *i chose to use this method from this site because it was visually appealing :)
-   */
-  if (root == NULL) //don't print if the tree is nonexistant
+  if (root == NULL)
     return;
 
   char* prev_str = (char*)("    ");
@@ -263,119 +240,30 @@ void printTree(Node* root, Trunk *prev, bool isLeft) {
 }
 
 void remove(int value, Node* current) {
-  //if the tree only has a head
-  if (current -> getParent() == NULL && current -> getLeft() == NULL && current -> getRight() == NULL) {
-    head = NULL;
-    return;
-  }
-  
-  Node* temp = search(value, current);  
-  
-  if (temp -> getLeft() == NULL && temp -> getRight() == NULL) {//if there are no childtren
-    if (temp -> getParent() -> getLeft() == temp) {
-      temp -> getParent() -> setLeft(NULL);
-      temp -> ~Node();
-      return;
-    }
-    else if (temp -> getParent() -> getRight() == temp) {
-      temp -> getParent() -> setRight(NULL);
-      temp -> ~Node();
-      return;
-    }
-  }
-  else {
-    if (temp -> getLeft() == NULL) {//if there is only a right child
-      if (temp -> getParent() -> getLeft() == temp) {
-	temp -> getParent() -> setLeft(temp -> getRight());
-	temp -> ~Node();
-	return;
-      }
-      else if (temp -> getParent() -> getRight() == temp) {
-	temp -> getParent() -> setRight(temp -> getRight());
-	temp -> ~Node();
-	return;
-      }
-    }
-    else if (temp -> getRight() == NULL) {//if there is only aleft child
-      if (temp -> getParent() -> getLeft() == temp) {
-	temp -> getParent() -> setLeft(temp -> getLeft());
-	temp -> ~Node();
-	return;
-      }
-      else if (temp -> getParent() -> getRight() == temp) {
-	temp -> getParent() -> setRight(temp -> getLeft());
-	temp -> ~Node();
-	return;
-      }
-    }
-    else {//if there are two children
-      //need to still move the rest of the subtree (finished)
-      //cout << "two children" << endl << endl;
-      if (temp -> getRight() -> getLeft() != NULL) {//min in right subtree
-	Node* temp2 = findLeast(temp -> getRight(), true);
-	temp -> setValue(temp2 -> getValue());
-	shiftUp(temp2, true);
-	//temp2 -> getParent() -> setLeft(NULL);
-	temp2 -> ~Node();
-      }
-      else if (temp -> getLeft() -> getRight() != NULL) {//max in left subtree
-	Node* temp2 = findLeast(temp -> getLeft(), false);
-	temp -> setValue(temp2 -> getValue());
-	shiftUp(temp2, false);
-	//temp2 -> getParent() -> setLeft(NULL);
-	temp2 -> ~Node();
-      }
-      else {//if none of the subtrees have children
-	temp -> setValue(temp -> getRight() -> getValue());
-	temp -> getRight() -> ~Node();
-	temp -> setRight(NULL);
-      }
-      return;
-    }
+  if (value == head -> getValue()) {
+    
   }
 }
 
-void shiftUp(Node* current, bool LR) {//true is shift left, false is shift right 
-  if (LR) {
-    current -> getParent() -> setLeft(current -> getRight());
-  }
-  else {
-    current -> getParent() -> setRight(current -> getLeft());
-  }
-  return;
-}
+bool search(int value, Node* current) {
+  if (value == current -> getValue())
+    return true;
 
- Node* findLeast(Node* current, bool LR) {//true for left min, false for right max
-   if (LR) {
-     while (current -> getLeft() != NULL)
-       current = current -> getLeft();
-   }
-   else {
-     while (current -> getRight() != NULL)
-       current = current -> getRight();
-   }
-   return current;
- }
-
-Node* search(int value, Node** current) {//searching for a node with a certain value
-  if (value == current -> *getValue())
-    return current;
-
-  else if (value > current -> *getValue()) {
-    if (current -> *getRight() == NULL)
-      return NULL;
+  else if (value > current -> getValue()) {
+    if (current -> getRight() == NULL)
+      return false;
     else
-      search(value, current -> *getRight());
+      search(value, current -> getRight());
   }
   
-  else if (value < current -> *getValue()) {
+  else if (value < current -> getValue()) {
     if (current -> getLeft() == NULL)
-      return NULL;
+      return false;
     else
       search(value, current -> getLeft());
   }
 
   else {
-    return NULL;
+    return false;
   }
 }
