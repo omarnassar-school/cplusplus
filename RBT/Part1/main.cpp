@@ -27,7 +27,8 @@ struct Trunk {
 void parseInput(char input[]);
 void printTree(Node* root, Trunk *prev, bool isLeft);
 void showTrunks(Trunk *p);
-void addNode(Node* head);
+void addNode(int value, Node* current);
+void checkTree(Node* current);
 
 Node* head = NULL;
 const bool red = true;
@@ -162,6 +163,10 @@ void addNode(int value, Node* current) {//method for adding nodes
 	current -> setRight(new Node());
 	current -> getRight() -> setParent(current);
 	current -> getRight() -> setValue(value);
+	if (current -> getLeft() != NULL) {
+	  current -> getRight() -> setSibling(current -> getLeft());
+	  current -> getLeft() -> setSibling(current -> getRight());
+	}
       }
       else //if not null, recursively call next right
 	addNode(value, current -> getRight());
@@ -171,12 +176,28 @@ void addNode(int value, Node* current) {//method for adding nodes
 	current -> setLeft(new Node());
 	current-> getLeft() -> setParent(current);
 	current -> getLeft() -> setValue(value);
+	if (current -> getRight() != NULL) {
+	  current -> getLeft() -> setSibling(current -> getRight());
+	  current -> getRight() -> setSibling(current -> getLeft());
+	}
       }
       else //if not null, recursively call next left
 	addNode(value, current -> getLeft());
     }
     else {//if the value is a duplicate
       //cout << "You cannot have duplicate values." << endl;
+    }
+  }
+}
+
+void checkTree(Node* current) {
+  if (current == head)
+    current -> setColor(black);
+  else {
+    if (current -> getParent() -> getSibling() -> getColor() == red) {
+      current -> getParent() -> setColor(black);
+      current -> getParent() -> getSibling() -> setColor(black);
+      current -> getParent() -> getParent() -> setColor(red);
     }
   }
 }
