@@ -198,6 +198,21 @@ void checkTree(Node* current) {
       current -> getParent() -> setColor(black);
       current -> getParent() -> getSibling() -> setColor(black);
       current -> getParent() -> getParent() -> setColor(red);
+      checkTree(current -> getParent() -> getParent());
+    }
+    else {
+      if (current == current -> getParent() -> getLeft() && current -> getParent() -> getValue() < current -> getParent() -> getSibling() -> getValue()) {//left left
+	
+      }
+      else if (current == current -> getParent() -> getRight() && current -> getParent() -> getValue() < current -> getParent() -> getSibling() -> getValue()) {//left right
+	
+      }
+      else if (current == current -> getParent() -> getLeft() && current -> getParent() -> getValue() > current -> getParent() -> getSibling() -> getValue()) {//right left
+	
+      }
+      else if (current == current -> getParent() -> getRight() && current -> getParent() -> getValue() > current -> getParent() -> getSibling() -> getValue()) {//right right
+	
+      }
     }
   }
 }
