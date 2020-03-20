@@ -29,13 +29,21 @@ void printTree(Node* root, Trunk *prev, bool isLeft);
 void showTrunks(Trunk *p);
 void addNode(int value, Node* current);
 void checkTree(Node* current);
+void rotate(Node* current, int method);
 
 Node* head = NULL;
 const bool red = true;
 const bool black = false;
 
 int main() {
-  
+  addNode(10, head);
+  printTree(head, NULL, NULL);
+  addNode(20, head);
+  printTree(head, NULL, NULL);
+  addNode(30, head);
+  printTree(head, NULL, NULL);
+  addNode(15, head);
+  printTree(head, NULL, NULL);
   return 0;
 }
 
@@ -155,7 +163,8 @@ void addNode(int value, Node* current) {//method for adding nodes
   //cout << "Works?" << endl;
   if (head == NULL) {//if the tree doesn't exist
     head = new Node();
-    head-> setValue(value);
+    head -> setValue(value);
+    checkTree(head);
   }
   else {//if it does exist
     if (value > current -> getValue()) {//if the value is larger than the current node
@@ -167,6 +176,8 @@ void addNode(int value, Node* current) {//method for adding nodes
 	  current -> getRight() -> setSibling(current -> getLeft());
 	  current -> getLeft() -> setSibling(current -> getRight());
 	}
+	if (current -> getParent() != NULL)
+	  checkTree(current -> getRight());
       }
       else //if not null, recursively call next right
 	addNode(value, current -> getRight());
@@ -180,6 +191,8 @@ void addNode(int value, Node* current) {//method for adding nodes
 	  current -> getLeft() -> setSibling(current -> getRight());
 	  current -> getRight() -> setSibling(current -> getLeft());
 	}
+	if (current -> getParent() != NULL)
+	  checkTree(current -> getLeft());
       }
       else //if not null, recursively call next left
 	addNode(value, current -> getLeft());
@@ -191,28 +204,89 @@ void addNode(int value, Node* current) {//method for adding nodes
 }
 
 void checkTree(Node* current) {
+  cout << endl << "got here" << endl;
   if (current == head)
     current -> setColor(black);
-  else {
-    if (current -> getParent() -> getSibling() -> getColor() == red) {
-      current -> getParent() -> setColor(black);
-      current -> getParent() -> getSibling() -> setColor(black);
-      current -> getParent() -> getParent() -> setColor(red);
-      checkTree(current -> getParent() -> getParent());
-    }
+  else if (current -> getParent() -> getParent() != NULL) {// & current -> getParent() -> getSibling() != NULL) {
+    if (current -> getParent() -> getSibling() != NULL) {
+      if (current -> getParent() -> getSibling() -> getColor() == red) {
+	current -> getParent() -> setColor(black);
+	current -> getParent() -> getSibling() -> setColor(black);
+	current -> getParent() -> getParent() -> setColor(red);
+	//checkTree(current -> getParent() -> getParent());
+      }
+    }      
     else {
-      if (current == current -> getParent() -> getLeft() && current -> getParent() -> getValue() < current -> getParent() -> getSibling() -> getValue()) {//left left
-	
-      }
-      else if (current == current -> getParent() -> getRight() && current -> getParent() -> getValue() < current -> getParent() -> getSibling() -> getValue()) {//left right
-	
-      }
-      else if (current == current -> getParent() -> getLeft() && current -> getParent() -> getValue() > current -> getParent() -> getSibling() -> getValue()) {//right left
-	
-      }
-      else if (current == current -> getParent() -> getRight() && current -> getParent() -> getValue() > current -> getParent() -> getSibling() -> getValue()) {//right right
-	
-      }
-    }
+      if (current == current -> getParent() -> getLeft())// && current -> getParent() -> getValue() < current -> getParent() -> getSibling() -> getValue()) //left left
+	rotate(current, 1);
+      else if (current == current -> getParent() -> getRight())// && current -> getParent() -> getValue() < current -> getParent() -> getSibling() -> getValue()) //left right
+	rotate(current, 2);
+      else if (current == current -> getParent() -> getLeft() && current -> getParent() -> getValue() > current -> getParent() -> getSibling() -> getValue()) //right left
+	rotate(current, 3);
+      else if (current == current -> getParent() -> getRight() && current -> getParent() -> getValue() > current -> getParent() -> getSibling() -> getValue()) //right right
+	rotate(current, 4);
+    }    
   }
+}
+
+void rotate(Node* current, int method) {
+  cout << endl << "got here2" << endl;
+  Node* tempG = current -> getParent() -> getParent();
+  Node* tempP = current -> getParent();
+  Node* tempX = current;
+  if (method == 1) {//left left
+    tempP -> setSibling(tempG -> getSibling());
+    if (tempP -> getSibling() != NULL)
+      tempP -> getSibling() -> setSibling(tempP);
+    tempG -> setLeft(tempP -> getRight());
+    tempP -> setRight(tempG);
+    tempP -> setParent(tempG -> getParent());
+    tempG -> setSibling(tempX);
+    tempX -> setSibling(tempG);
+    tempG -> setParent(tempP);
+    tempP -> setColor(black);
+    tempG -> setColor(red);
+  }
+  else if (method == 2) {//left right
+    tempX -> setParent(tempG);
+    tempX -> setSibling(tempG -> getRight());
+    if (tempX -> getSibling() != NULL)
+      tempX -> getSibling() -> setSibling(tempX);
+    tempP -> setRight(tempX -> getLeft());
+    tempX -> setLeft(tempP);
+    tempP -> setParent(tempX);
+    rotate(tempP, 1);
+  }
+  else if (method == 3) {//right left
+    tempX -> setParent(tempG);
+    tempX -> setSibling(tempG -> getLeft());
+    if (tempX -> getSibling() != NULL)
+      tempX -> getSibling() -> setSibling(tempX);
+    tempP -> setRight(tempX -> getRight());
+    tempX -> setLeft(tempP);
+    tempP -> setParent(tempX);
+    rotate(tempP, 4);
+  }
+  else if (method == 4) {//right right
+    tempP -> setSibling(tempG -> getSibling());
+    if (tempP -> getSibling() != NULL)
+      tempP -> getSibling() -> setSibling(tempP);
+    tempG -> setRight(tempP -> getLeft());
+    tempP -> setLeft(tempG);
+    tempP -> setParent(tempG -> getParent());
+    tempG -> setSibling(tempX);
+    tempG -> setSibling(tempX);
+    tempG -> setParent(tempP);
+    tempP -> setColor(black);
+    tempG -> setColor(red);
+  }
+  else {
+    cout << "There's something wrong" << endl;
+  }
+  //tempG = NULL;
+  //delete tempG;
+  //tempP = NULL;
+  //delete tempP;
+  //tempX = NULL;
+  //delete tempX;
 }
