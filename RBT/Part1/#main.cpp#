@@ -41,7 +41,6 @@ int main() {
   char input[1000];
   int* parsed;
   int value;
-  /*
   cout << endl << "How would you like to initially input your numbers? (1 for console, 2 for file)" << endl << ">> ";
   cin >> method;
   cin.clear();
@@ -75,7 +74,7 @@ int main() {
   parseInput(input);
   cout << endl;
   printTree(head, NULL, false);
-  */
+  
   while (true) {
     value = NULL;
     cout << endl << "Would you like to insert another number?" << endl << ">> ";
@@ -253,29 +252,6 @@ void addNode(int value, Node* current) {//method for adding nodes
 }
 
 void checkTree(Node* current) {
-  /*cout << endl << "got here" << endl;
-  if (current == head)
-    current -> setColor(black);
-  else if (current -> getParent() -> getParent() != NULL) {// & current -> getParent() -> getSibling() != NULL) {
-    if (current -> getParent() -> getSibling() != NULL) {
-      if (current -> getParent() -> getSibling() -> getColor() == red) {
-	current -> getParent() -> setColor(black);
-	current -> getParent() -> getSibling() -> setColor(black);
-	current -> getParent() -> getParent() -> setColor(red);
-	//checkTree(current -> getParent() -> getParent());
-      }
-    }      
-    else {
-      if (current == current -> getParent() -> getLeft())// && current -> getParent() -> getValue() < current -> getParent() -> getSibling() -> getValue()) //left left
-	rotate(current, 1);
-      else if (current == current -> getParent() -> getRight())// && current -> getParent() -> getValue() < current -> getParent() -> getSibling() -> getValue()) //left right
-	rotate(current, 2);
-      else if (current == current -> getParent() -> getLeft() && current -> getParent() -> getValue() > current -> getParent() -> getSibling() -> getValue()) //right left
-	rotate(current, 3);
-      else if (current == current -> getParent() -> getRight() && current -> getParent() -> getValue() > current -> getParent() -> getSibling() -> getValue()) //right right
-	rotate(current, 4);
-    }    
-    }*/
   Node* parent = NULL;
   Node* grandParent = NULL;
 
