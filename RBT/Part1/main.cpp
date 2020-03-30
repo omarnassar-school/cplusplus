@@ -36,86 +36,29 @@ const bool red = true;
 const bool black = false;
 
 int main() {
-  /*int method;
   char fileName[20];
   char input[1000];
   int* parsed;
   int value;
-  /*
-  cout << endl << "How would you like to initially input your numbers? (1 for console, 2 for file)" << endl << ">> ";
-  cin >> method;
+  
+  cout << endl << "What is the name of your file?" << endl << ">> ";
+  cin.get(fileName, 20);
   cin.clear();
   cin.ignore(1000000, '\n');
-  if (method == 1) {//getting input from console, store in char array
-    cout << endl << "Please input your numbers with spaces in between them here: " << endl << ">> ";
-    cin.get(input, 1000);
-    cin.clear();
-    cin.ignore(1000000, '\n');
+  streampos size;
+  ifstream file(fileName, ios::in | ios::binary | ios::ate);
+  if (file.is_open()) {//same file reading method from shunting yard and heap
+    size = file.tellg();
+    file.seekg(0, ios::beg);
+    file.read(input, size);
+    file.close();
     //cout << input << endl;
-  }
-  else if (method == 2) {//getting input from file, store in char array
-    cout << endl << "What is the name of the file?" << endl << ">> ";
-    cin.get(fileName, 20);
-    cin.clear();
-    cin.ignore(1000000, '\n');
-    streampos size;
-    ifstream file(fileName, ios::in | ios::binary | ios::ate);
-    if (file.is_open()) {//same file reading method from shunting yard and heap
-      size = file.tellg();
-      file.seekg(0, ios::beg);
-      file.read(input, size);
-      file.close();
-      //cout << input << endl;
-    }
   }
   else {
     cout << "Invalid Input.";
     return 0;
   }
   parseInput(input);
-  cout << endl;
-  printTree(head, NULL, false);
-  */
-  /*while (true) {
-    value = NULL;
-    cout << endl << "Would you like to insert another number?" << endl << ">> ";
-    cin.get(input, 5);
-    cin.clear();
-    cin.ignore(1000000, '\n');
-    if (strcmp(input, "yes") == 0 || strcmp(input, "YES") == 0) {
-      cout << "Please enter a value: ";
-      cin >> value;
-      cin.clear();
-      cin.ignore(1000000, '\n');
-      cout << endl;
-      addNode(value, head);
-    }
-    else
-      break;
-    printTree(head, NULL, NULL);
-    }*/
-  addNode(10, head);
-  printTree(head, NULL, NULL);
-  addNode(3, head);
-  printTree(head, NULL, NULL);
-  addNode(54, head);
-  printTree(head, NULL, NULL);
-  addNode(6, head);
-  printTree(head, NULL, NULL);
-  addNode(2, head);
-  printTree(head, NULL, NULL);
-  addNode(9, head);
-  printTree(head, NULL, NULL);
-  addNode(1, head);
-  printTree(head, NULL, NULL);
-  addNode(12, head);
-  printTree(head, NULL, NULL);
-  addNode(43, head);
-  printTree(head, NULL, NULL);
-  addNode(94, head);
-  printTree(head, NULL, NULL);
-  addNode(13, head);
-  printTree(head, NULL, NULL);
   return 0;
 }
 
@@ -230,6 +173,9 @@ void addNode(int value, Node* current) {//insert from BST
     head = new Node();
     head -> setValue(value);
     current = head;
+    checkTree(current);
+    cout << endl;
+    printTree(head, NULL, NULL);
   }
   else {
     if (value > current -> getValue()) {
@@ -238,6 +184,9 @@ void addNode(int value, Node* current) {//insert from BST
 	current -> getRight() -> setParent(current);
 	current -> getRight() -> setValue(value);
 	current = current -> getRight();
+	checkTree(current);
+	cout << endl;
+	printTree(head, NULL, NULL);
       }
       else 
 	addNode(value, current -> getRight());
@@ -247,17 +196,18 @@ void addNode(int value, Node* current) {//insert from BST
 	current -> setLeft(new Node());
 	current-> getLeft() -> setParent(current);
 	current -> getLeft() -> setValue(value);
-        
         current = current -> getLeft();
+	checkTree(current);
+	cout << endl;
+	printTree(head, NULL, NULL);
       }
       else
 	addNode(value, current -> getLeft());
     }
     else {
-      cout << "You cannot have duplicate values." << endl;
+      //cout << "You cannot have duplicate values." << endl;
     }
   }
-  checkTree(current);
 }
 
 void checkTree(Node* current) {
