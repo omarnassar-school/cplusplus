@@ -1,0 +1,445 @@
+/*Red Black Tree: basically a self balancing binary search tree
+ *Author: Omar Nassar
+ *Date: 3/12/2020
+ */
+
+#include <cstring>
+#include <iostream>
+#include <stdlib.h>
+#include <fstream>
+#include <cmath>
+#include "node.h"
+#define RESET "\033[0m"
+#define RED "\033[31m"
+
+using namespace std;
+
+struct Trunk {
+  Trunk *prev;
+  char* str;
+
+  Trunk(Trunk *prev, char* str) {
+    this -> prev = prev;
+    this -> str = str;
+  }
+};
+
+void parseInput(char input[]);
+void printTree(Node* root, Trunk *prev, bool isLeft);
+void showTrunks(Trunk *p);
+void addNode(int value, Node* current);
+void checkTree(Node* current);
+void rotate(Node* current, bool method);
+Node* search(int value, Node* current);
+void remove(int value, Node* current);
+void shiftUp(Node* current, bool LR);
+Node* findLeast(Node* current, bool LR);
+
+Node* head = NULL;
+const bool red = true;
+const bool black = false;
+
+int main() {
+  char fileName[20];
+  char input[1000];
+  int* parsed;
+  int value;
+  
+  /*cout << endl << "What is the name of your file?" << endl << ">> ";
+  cin.get(fileName, 20);
+  cin.clear();
+  cin.ignore(1000000, '\n');*/
+  streampos size;
+  //ifstream file(fileName, ios::in | ios::binary | ios::ate);
+  ifstream file(Numbers.txt, ios::in | ios::binary | ios::ate);
+  if (file.is_open()) {
+    size = file.tellg();
+    file.seekg(0, ios::beg);
+    file.read(input, size);
+    file.close();
+    //cout << input << endl;
+  }
+  
+  parseInput(input);
+  return 0;
+}
+
+void parseInput(char input[]) {//remove spaces between the chars, make int pointer (array)
+  int counter;
+  int* parsed;
+  int pointers[2];
+  int value;
+  int* temp;
+  counter = 1;
+  pointers[0] = -1;
+  for (int i = 0; i < strlen(input); i++) {
+    if (input[i] == ' ') {
+      pointers[1] = i;
+      int j = 0;
+      char* newArray = new char[pointers[1] - pointers[0]];
+      for (int i = pointers[0] + 1; i < pointers[1]; i++) {
+	newArray[j] = input[i];
+	j = j + 1;
+      }
+      newArray[j] = '\0';
+      temp = parsed;
+      parsed = new int[counter];
+      if (counter > 1) {
+	for (int i = 0; i < counter - 1; i++) {
+	  parsed[i] = temp[i];
+	}
+      }
+      parsed[counter - 1] = atoi(newArray);
+      counter = counter + 1;
+      pointers[0] = pointers[1];
+    }
+  }
+  char* newArray = new char[strlen(input) - pointers[0]];
+  int j = 0;
+  for (int i = pointers[0] + 1; i < strlen(input); i++) {
+    newArray[j] = input[i];
+    j = j + 1;
+  }
+  newArray[j] = '\0';
+  temp = parsed;
+  parsed = new int[counter];
+  if (counter > 1) {
+    for (int i = 0; i < counter - 1; i++) {
+      parsed[i] = temp[i];
+    }
+  }
+  parsed[counter - 1] = atoi(newArray);
+  for (int i = 0; i < counter; i++) {
+    addNode(parsed[i], head);
+  }
+}
+
+//https://www.techiedelight.com/c-program-print-binary-tree/
+void showTrunks(Trunk *p) {//helper method for printing
+  if (p == NULL)
+    return;
+  
+  showTrunks(p -> prev);
+
+  cout << p -> str;
+}
+
+//https://www.techiedelight.com/c-program-print-binary-tree
+void printTree(Node* root, Trunk *prev, bool isLeft) {
+  /*what this method does is start out with the leftmost node and then print until the right most
+   *i chose to use this method from this site because it was visually appealing :)
+   */
+  if (root == NULL) //don't print if the tree is nonexistant
+    return;
+
+  char* prev_str = (char*)("    ");
+  Trunk *trunk = new Trunk(prev, prev_str);
+  printTree(root -> getLeft(), trunk, true);
+  if (!prev)
+    trunk -> str = (char*)("---");
+  else if (isLeft) {
+    trunk -> str = (char*)(".---");
+    prev_str = (char*)("   |");
+  }
+  else {
+    trunk -> str = (char*)("`---");
+    prev -> str = prev_str;
+  }
+  showTrunks(trunk);
+  if (root -> getColor() == red)
+    //https://stackoverflow.com/questions/9158150/colored-output-in-c/9158263
+    cout << RED << root -> getValue() << RESET << endl; 
+  else
+    cout << root -> getValue() << endl;
+
+  if (prev)
+    prev -> str = prev_str;
+  trunk -> str = (char*)("   |");
+  printTree(root -> getRight(), trunk, false);
+}
+
+void addNode(int value, Node* current) {//insert from BST
+  if (head == NULL) {
+    head = new Node();
+    head -> setValue(value);
+    current = head;
+    checkTree(current);
+    cout << endl;
+    printTree(head, NULL, NULL);
+  }
+  else {
+    if (value > current -> getValue()) {
+      if (current -> getRight() == NULL) {
+	current -> setRight(new Node());
+	current -> getRight() -> setParent(current);
+	current -> getRight() -> setValue(value);
+	current = current -> getRight();
+	checkTree(current);
+	cout << endl;
+	printTree(head, NULL, NULL);
+      }
+      else 
+	addNode(value, current -> getRight());
+    }
+    else if (value < current -> getValue()) {
+      if (current -> getLeft() == NULL) {
+	current -> setLeft(new Node());
+	current-> getLeft() -> setParent(current);
+	current -> getLeft() -> setValue(value);
+        current = current -> getLeft();
+	checkTree(current);
+	cout << endl;
+	printTree(head, NULL, NULL);
+      }
+      else
+	addNode(value, current -> getLeft());
+    }
+    else {
+      //cout << "You cannot have duplicate values." << endl;
+    }
+  }
+}
+
+void checkTree(Node* current) {
+  Node* parent = NULL;
+  Node* grandParent = NULL;
+  //cout << "got here" << endl;
+  while (current != head && current -> getColor() != black && current -> getParent() -> getColor() == red) {
+    parent = current -> getParent();
+    grandParent = parent -> getParent();
+    
+    if (parent == grandParent -> getLeft()) {//parent is a left child
+      Node* uncle = grandParent -> getRight();
+      if (uncle != NULL && uncle -> getColor() == red) {//uncle is red
+	grandParent -> setColor(red);
+	parent -> setColor(black);
+	uncle -> setColor(black);
+	current = grandParent;
+      }
+      else {//uncle is black
+	if (current == parent -> getRight()) {//current is right child
+	  rotate(parent, true);
+	  current = parent;
+	  parent = current -> getParent();
+	}
+	//current is left child
+	rotate(grandParent, false);
+	bool tempColor = parent -> getColor();
+	parent -> setColor(grandParent -> getColor());
+	grandParent -> setColor(tempColor);
+	
+	current = parent;
+      }
+      uncle = NULL;
+      delete uncle;
+    }
+    
+    
+    else {
+      Node* uncle = grandParent -> getLeft();
+
+      if (uncle != NULL && uncle -> getColor() == red) {//uncle is red
+	grandParent -> setColor(red);
+	parent -> setColor(black);
+	uncle -> setColor(black);
+	current = grandParent;
+      }
+      else {//uncle is black
+	if (current = parent -> getLeft()) {//current is left child
+	  rotate(parent, false);
+	  current = parent;
+	  parent = current -> getParent();
+	}
+	//current is right child
+	rotate(grandParent, true);
+
+	bool tempColor = parent -> getColor();
+	parent -> setColor(grandParent -> getColor());
+	grandParent -> setColor(tempColor);
+	
+	current = parent;
+      }
+      uncle = NULL;
+      delete uncle;
+    }
+  }
+  
+  parent = NULL;
+  delete parent;
+  grandParent = NULL;
+  delete grandParent;
+  
+  head -> setColor(black);
+}
+
+void rotate(Node* current, bool method) {//true is left, false is right
+  //cout << "got here 2" << endl;
+  if (method) {//left rotation
+    //cout << "got here 3" << endl;
+    Node* right = current -> getRight();
+    current -> setRight(current -> getLeft());
+
+    if (current -> getRight() != NULL)
+      current -> getRight() -> setParent(current);
+
+    right -> setParent(current -> getParent());
+
+    if (current -> getParent() == NULL)
+      head = right;
+
+    else if (current == current -> getParent() -> getLeft())
+      current -> getParent() -> setLeft(right);
+
+    else
+      current -> getParent() -> setRight(right);
+
+    right -> setLeft(current);
+    current -> setParent(right);
+
+    right = NULL;
+    delete right;
+  }
+  
+  else {//right rotation
+    Node* left = current -> getLeft();
+    current -> setLeft(left -> getRight());
+
+    if (current -> getLeft() != NULL)
+      current -> getLeft() -> setParent(current);
+
+    left -> setParent(current -> getParent());
+
+    if (current -> getParent() == NULL)
+      head = left;
+
+    else if (current == current -> getParent() -> getLeft())
+      current -> getParent() -> setLeft(left);
+
+    else
+      current -> getParent() -> setRight(left);
+
+    left -> setRight(current);
+    current -> setParent(left);
+
+    left = NULL;
+    delete left;
+  }
+}
+
+Node* search(int value, Node* current) {//searching for a node with a certain value
+  if (value == current -> getValue())
+    return current;
+
+  else if (value > current -> getValue()) {
+    if (current -> getRight() == NULL)
+      return NULL;
+    else
+      search(value, current -> getRight());
+  }
+
+  else if (value < current -> getValue()) {
+    if (current -> getLeft() == NULL)
+      return NULL;
+    else
+      search(value, current -> getLeft());
+  }
+
+  else {
+    return NULL;
+  }
+}
+
+void remove(int value, Node* current) {
+  //if the tree only has a head
+  if (current -> getParent() == NULL && current -> getLeft() == NULL && current -> getRight() == NULL) {
+    head = NULL;
+    return;
+  }
+
+  Node* temp = search(value, current);
+
+  if (temp -> getLeft() == NULL && temp -> getRight() == NULL) {//if there are no childtren
+    if (temp -> getParent() -> getLeft() == temp) {
+      temp -> getParent() -> setLeft(NULL);
+      temp -> ~Node();
+      return;
+    }
+    else if (temp -> getParent() -> getRight() == temp) {
+      temp -> getParent() -> setRight(NULL);
+      temp -> ~Node();
+      return;
+    }
+  }
+  else {
+    if (temp -> getLeft() == NULL) {//if there is only a right child
+      if (temp -> getParent() -> getLeft() == temp) {
+	temp -> getParent() -> setLeft(temp -> getRight());
+	temp -> ~Node();
+	return;
+      }
+      else if (temp -> getParent() -> getRight() == temp) {
+	temp -> getParent() -> setRight(temp -> getRight());
+	temp -> ~Node();
+	return;
+      }
+    }
+    else if (temp -> getRight() == NULL) {//if there is only aleft child
+      if (temp -> getParent() -> getLeft() == temp) {
+	temp -> getParent() -> setLeft(temp -> getLeft());
+	temp -> ~Node();
+	return;
+      }
+      else if (temp -> getParent() -> getRight() == temp) {
+	temp -> getParent() -> setRight(temp -> getLeft());
+	temp -> ~Node();
+	return;
+      }
+    }
+    else {//if there are two children
+      //need to still move the rest of the subtree (finished)
+      //cout << "two children" << endl << endl;
+      if (temp -> getRight() -> getLeft() != NULL) {//min in right subtree
+	Node* temp2 = findLeast(temp -> getRight(), true);
+	temp -> setValue(temp2 -> getValue());
+	shiftUp(temp2, true);
+	//temp2 -> getParent() -> setLeft(NULL);
+	temp2 -> ~Node();
+      }
+      else if (temp -> getLeft() -> getRight() != NULL) {//max in left subtree
+	Node* temp2 = findLeast(temp -> getLeft(), false);
+	temp -> setValue(temp2 -> getValue());
+	shiftUp(temp2, false);
+	//temp2 -> getParent() -> setLeft(NULL);
+	temp2 -> ~Node();
+      }
+      else {//if none of the subtrees have children
+	temp -> setValue(temp -> getRight() -> getValue());
+	temp -> getRight() -> ~Node();
+	temp -> setRight(NULL);
+      }
+      return;
+    }
+  }
+}
+
+void shiftUp(Node* current, bool LR) {//true is shift left, false is shift right
+  if (LR) {
+    current -> getParent() -> setLeft(current -> getRight());
+  }
+  else {
+    current -> getParent() -> setRight(current -> getLeft());
+  }
+  return;
+}
+
+Node* findLeast(Node* current, bool LR) {//true for left min, false for right max
+  if (LR) {
+    while (current -> getLeft() != NULL)
+      current = current -> getLeft();
+  }
+  else {
+    while (current -> getRight() != NULL)
+      current = current -> getRight();
+  }
+  return current;
+}
