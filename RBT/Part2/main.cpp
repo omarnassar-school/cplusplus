@@ -32,8 +32,12 @@ void checkTree(Node* current);
 void rotate(Node* current, bool method);
 Node* search(int value, Node* current);
 void remove(int value, Node* current);
-void shiftUp(Node* current, bool LR);
+Node* BSTsuccessor(Node* current);
 Node* findLeast(Node* current, bool LR);
+Node* twoChildren(Node* current);
+void RBTremove(Node* current);
+void fixDouble(Node* current);
+bool hasRed(Node* current);
 
 Node* head = NULL;
 const bool red = true;
@@ -51,7 +55,7 @@ int main() {
   cin.ignore(1000000, '\n');*/
   streampos size;
   //ifstream file(fileName, ios::in | ios::binary | ios::ate);
-  ifstream file(Numbers.txt, ios::in | ios::binary | ios::ate);
+  ifstream file("Numbers.txt", ios::in | ios::binary | ios::ate);
   if (file.is_open()) {
     size = file.tellg();
     file.seekg(0, ios::beg);
@@ -61,6 +65,14 @@ int main() {
   }
   
   parseInput(input);
+
+  while (true) {
+    if () {
+      
+    }
+    else
+      break;
+  }
   return 0;
 }
 
@@ -341,7 +353,7 @@ Node* search(int value, Node* current) {//searching for a node with a certain va
   }
 }
 
-void remove(int value, Node* current) {//BST removal
+void remove(int value, Node* current) {
   //if the tree only has a head
   if (current -> getParent() == NULL && current -> getLeft() == NULL && current -> getRight() == NULL) {
     head = NULL;
@@ -349,79 +361,176 @@ void remove(int value, Node* current) {//BST removal
   }
 
   Node* temp = search(value, current);
+  RBTremove(temp);
+  temp = NULL;
+  delete temp;
+}
 
-  if (temp -> getLeft() == NULL && temp -> getRight() == NULL) {//if there are no childtren
-    if (temp -> getParent() -> getLeft() == temp) {
-      temp -> getParent() -> setLeft(NULL);
-      temp -> ~Node();
-      return;
-    }
-    else if (temp -> getParent() -> getRight() == temp) {
-      temp -> getParent() -> setRight(NULL);
-      temp -> ~Node();
+void RBTremove (Node* current) {
+  Node* temp = BSTsuccessor(current);
+
+  bool doubleBlack = false;
+  if (current -> getColor() == black && temp -> getColor() == black)
+    doubleBlack = true;
+  Node* parent = current -> getParent();
+
+  if (temp == NULL) {
+    if (doubleBlack)
+      fixDouble(temp);
+    else {
+      if (parent -> getRight() != NULL && parent -> getLeft() != NULL) {
+	if (current == parent -> getRight()) {
+	  parent -> getLeft() -> setColor(red);
+	  parent -> setRight(NULL);
+	}
+	else {
+	  parent -> getRight() -> setColor(black);
+	  parent -> setLeft(NULL);
+	}
+	current -> ~Node();
+	delete current;
+      }
+      parent = NULL;
+      temp = NULL;
+      delete parent;
+      delete temp;
       return;
     }
   }
+  
+  if (current -> getLeft() == NULL || current -> getRight() == NULL) {
+    if (current == head) {
+      current -> setValue(temp -> getValue());
+      current -> setLeft(current -> getRight());
+      current -> setRight(NULL);
+      temp = NULL;
+      delete temp;
+    }
+    else {
+      if (current == parent -> getLeft())
+	parent -> setLeft(temp);
+      else
+	parent -> setRight(temp);
+      current = NULL;
+      delete current;
+      temp -> setParent(parent);
+      if (doubleBlack)
+	fixDouble(temp);
+      else
+	temp -> setColor(black);
+    }
+    temp = NULL;
+    parent = NULL;
+    delete parent;
+    delete temp;
+    return;
+  }
+  
+  int tempVal;
+  tempVal = current -> getValue();
+  current -> setValue(temp -> getValue());
+  temp -> setValue(tempVal);
+  
+  RBTremove(current);
+  
+  current = NULL;
+  temp = NULL;
+  parent = NULL;
+  delete current;
+  delete temp;
+  delete parent;
+}
+
+void fixDouble(Node* current) {
+  if (current == head)
+    return;
+
+  Node* sibling;
+  Node* parent = current -> getParent();
+  bool LR;
+  
+  if (current == parent -> getRight()) {
+    sibling = parent -> getLeft();
+    LR = false;
+  }
   else {
-    if (temp -> getLeft() == NULL) {//if there is only a right child
-      if (temp -> getParent() -> getLeft() == temp) {
-	temp -> getParent() -> setLeft(temp -> getRight());
-	temp -> ~Node();
-	return;
-      }
-      else if (temp -> getParent() -> getRight() == temp) {
-	temp -> getParent() -> setRight(temp -> getRight());
-	temp -> ~Node();
-	return;
-      }
+    sibling = parent -> getRight();
+    LR = true;
+  }
+  
+  if (sibling == NULL)
+    fixDouble(parent);
+  else {
+    if (sibling -> getColor() == red) {
+      parent -> setColor(red);
+      sibling -> setColor(black);
+      rotate(parent, LR);
+      fixDouble(current);
     }
-    else if (temp -> getRight() == NULL) {//if there is only aleft child
-      if (temp -> getParent() -> getLeft() == temp) {
-	temp -> getParent() -> setLeft(temp -> getLeft());
-	temp -> ~Node();
-	return;
+    else {
+      if (hasRed(sibling)) {
+	if (sibling -> getLeft() != NULL && sibling -> getLeft() -> getColor() == red) {
+	  if (sibling == parent -> getLeft()) {
+	    sibling -> getLeft() -> setColor(sibling -> getColor());
+	    sibling -> setColor(parent -> getColor());
+	    rotate(parent, false);
+	  }
+	  else {
+	    sibling -> getLeft() -> setColor(parent -> getColor());
+	    rotate(sibling, true);
+	    rotate(parent, false);
+	  }
+	}
+	else {
+	  if (sibling == parent -> getLeft()) {
+	    sibling -> getRight() -> setColor(parent -> getColor());
+	    rotate(sibling, true);
+	    rotate(parent, false);
+	  }
+	  else {
+	    sibling -> getRight() -> setColor(sibling -> getColor());
+	    sibling -> setColor(parent -> getColor());
+	    rotate(parent, true);
+	  }
+	}
+	parent -> setColor(black);
       }
-      else if (temp -> getParent() -> getRight() == temp) {
-	temp -> getParent() -> setRight(temp -> getLeft());
-	temp -> ~Node();
-	return;
+      else {
+	sibling -> setColor(red);
+	if (parent -> getColor() == black)
+	  fixDouble(parent);
+	else
+	  parent -> setColor(black);
       }
-    }
-    else {//if there are two children
-      //need to still move the rest of the subtree (finished)
-      //cout << "two children" << endl << endl;
-      if (temp -> getRight() -> getLeft() != NULL) {//min in right subtree
-	Node* temp2 = findLeast(temp -> getRight(), true);
-	temp -> setValue(temp2 -> getValue());
-	shiftUp(temp2, true);
-	//temp2 -> getParent() -> setLeft(NULL);
-	temp2 -> ~Node();
-      }
-      else if (temp -> getLeft() -> getRight() != NULL) {//max in left subtree
-	Node* temp2 = findLeast(temp -> getLeft(), false);
-	temp -> setValue(temp2 -> getValue());
-	shiftUp(temp2, false);
-	//temp2 -> getParent() -> setLeft(NULL);
-	temp2 -> ~Node();
-      }
-      else {//if none of the subtrees have children
-	temp -> setValue(temp -> getRight() -> getValue());
-	temp -> getRight() -> ~Node();
-	temp -> setRight(NULL);
-      }
-      return;
     }
   }
 }
 
-void shiftUp(Node* current, bool LR) {//true is shift left, false is shift right
-  if (LR) {
-    current -> getParent() -> setLeft(current -> getRight());
-  }
-  else {
-    current -> getParent() -> setRight(current -> getLeft());
-  }
-  return;
+Node* BSTsuccessor(Node* current) {
+  //no children
+  if (current -> getRight() == NULL && current -> getLeft() == NULL)
+    return NULL;
+  //right only
+  if (current -> getLeft() == NULL)
+    return current -> getRight();
+  //left only
+  else if (current -> getRight() == NULL)
+    return current -> getLeft();
+  //two children
+  else
+    return twoChildren(current);  
+}
+
+Node* twoChildren(Node* current) {
+  //min in right subtree
+  if (current -> getRight() -> getLeft() != NULL)
+    return findLeast(current -> getRight(), true);
+  //max in left subtree
+  else if (current -> getLeft() -> getRight() != NULL)
+    return findLeast(current -> getLeft(), false);
+  //none of childtren have subtrees
+  else
+    return current -> getRight();
 }
 
 Node* findLeast(Node* current, bool LR) {//true for left min, false for right max
@@ -434,4 +543,16 @@ Node* findLeast(Node* current, bool LR) {//true for left min, false for right ma
       current = current -> getRight();
   }
   return current;
+}
+
+bool hasRed(Node* current) {
+  if (current -> getLeft() != NULL) {
+    if (current -> getLeft() -> getColor() == red)
+      return true;
+  }
+  else if (current -> getRight() != NULL) {
+    if (current -> getRight() -> getColor() == red)
+      return true;
+  }
+  return false;
 }
