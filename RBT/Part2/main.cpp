@@ -31,7 +31,7 @@ void addNode(int value, Node* current);
 void checkTree(Node* current);
 void rotate(Node* current, bool method);
 Node* search(int value, Node* current);
-void remove(int value, Node* current);
+void remove(int value);
 Node* BSTsuccessor(Node* current);
 Node* findLeast(Node* current, bool LR);
 Node* twoChildren(Node* current);
@@ -63,16 +63,18 @@ int main() {
     file.close();
     //cout << input << endl;
   }
+  //parseInput(input);
   
-  parseInput(input);
-
-  while (true) {
+  addNode(50, head);
+  addNode(60, head);
+  remove(60);
+  /*while (true) {
     if () {
       
     }
     else
       break;
-  }
+      }*/
   return 0;
 }
 
@@ -138,10 +140,7 @@ void showTrunks(Trunk *p) {//helper method for printing
 
 //https://www.techiedelight.com/c-program-print-binary-tree
 void printTree(Node* root, Trunk *prev, bool isLeft) {
-  /*what this method does is start out with the leftmost node and then print until the right most
-   *i chose to use this method from this site because it was visually appealing :)
-   */
-  if (root == NULL) //don't print if the tree is nonexistant
+  if (root == NULL)
     return;
 
   char* prev_str = (char*)("    ");
@@ -175,9 +174,6 @@ void addNode(int value, Node* current) {//insert from BST
     head = new Node();
     head -> setValue(value);
     current = head;
-    checkTree(current);
-    cout << endl;
-    printTree(head, NULL, NULL);
   }
   else {
     if (value > current -> getValue()) {
@@ -186,9 +182,6 @@ void addNode(int value, Node* current) {//insert from BST
 	current -> getRight() -> setParent(current);
 	current -> getRight() -> setValue(value);
 	current = current -> getRight();
-	checkTree(current);
-	cout << endl;
-	printTree(head, NULL, NULL);
       }
       else 
 	addNode(value, current -> getRight());
@@ -199,17 +192,19 @@ void addNode(int value, Node* current) {//insert from BST
 	current-> getLeft() -> setParent(current);
 	current -> getLeft() -> setValue(value);
         current = current -> getLeft();
-	checkTree(current);
-	cout << endl;
-	printTree(head, NULL, NULL);
       }
       else
 	addNode(value, current -> getLeft());
     }
     else {
-      //cout << "You cannot have duplicate values." << endl;
+      cout << endl << "You cannot have duplicate values." << endl;
+      return;
     }
   }
+  checkTree(current);
+  cout << endl;
+  printTree(head, NULL, NULL);
+  return;
 }
 
 void checkTree(Node* current) {
@@ -353,21 +348,34 @@ Node* search(int value, Node* current) {//searching for a node with a certain va
   }
 }
 
-void remove(int value, Node* current) {
+void remove(int value) {
+  Node* temp = search(value, head);
+  if (temp == NULL) {
+    cout << "NULL" << endl;
+    return;
+  }
+  
+  cout << endl << "Removing: " << temp -> getValue() << endl;
+
   //if the tree only has a head
-  if (current -> getParent() == NULL && current -> getLeft() == NULL && current -> getRight() == NULL) {
+  if (temp -> getParent() == NULL && temp -> getLeft() == NULL && temp -> getRight() == NULL) {
     head = NULL;
     return;
   }
-
-  Node* temp = search(value, current);
+  
   RBTremove(temp);
   temp = NULL;
   delete temp;
+  cout << endl;
+  //printTree(head, NULL, NULL);
 }
 
 void RBTremove (Node* current) {
   Node* temp = BSTsuccessor(current);
+  if (temp != NULL)
+    cout << "Replacing with: " << temp -> getValue() << endl;
+  else
+    cout << "No replacement needed." << endl;
 
   bool doubleBlack = false;
   if (current -> getColor() == black && temp -> getColor() == black)
@@ -387,15 +395,15 @@ void RBTremove (Node* current) {
 	  parent -> getRight() -> setColor(black);
 	  parent -> setLeft(NULL);
 	}
-	current -> ~Node();
-	delete current;
       }
-      parent = NULL;
-      temp = NULL;
-      delete parent;
-      delete temp;
-      return;
     }
+    current -> ~Node();
+    parent = NULL;
+    temp = NULL;
+    delete current;
+    delete parent;
+    delete temp;
+    return;
   }
   
   if (current -> getLeft() == NULL || current -> getRight() == NULL) {
@@ -431,7 +439,7 @@ void RBTremove (Node* current) {
   current -> setValue(temp -> getValue());
   temp -> setValue(tempVal);
   
-  RBTremove(current);
+  RBTremove(temp);
   
   current = NULL;
   temp = NULL;
@@ -511,7 +519,7 @@ Node* BSTsuccessor(Node* current) {
   if (current -> getRight() == NULL && current -> getLeft() == NULL)
     return NULL;
   //right only
-  if (current -> getLeft() == NULL)
+  else if (current -> getLeft() == NULL)
     return current -> getRight();
   //left only
   else if (current -> getRight() == NULL)
