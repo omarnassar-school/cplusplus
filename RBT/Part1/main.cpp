@@ -287,7 +287,7 @@ void rotate(Node* current, bool method) {//true is left, false is right
   if (method) {//left rotation
     //cout << "got here 3" << endl;
     Node* right = current -> getRight();
-    current -> setRight(current -> getLeft());
+    current -> setRight(right -> getLeft());
 
     if (current -> getRight() != NULL)
       current -> getRight() -> setParent(current);
