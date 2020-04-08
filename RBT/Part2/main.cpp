@@ -48,33 +48,72 @@ int main() {
   char input[1000];
   int* parsed;
   int value;
-  
-  /*cout << endl << "What is the name of your file?" << endl << ">> ";
-  cin.get(fileName, 20);
+  char yn;
+
+  cout << endl << "Would you like to input from a file? (y/n)" << endl << ">> ";
+  cin >> yn;
   cin.clear();
-  cin.ignore(1000000, '\n');*/
-  streampos size;
-  //ifstream file(fileName, ios::in | ios::binary | ios::ate);
-  ifstream file("Numbers.txt", ios::in | ios::binary | ios::ate);
-  if (file.is_open()) {
-    size = file.tellg();
-    file.seekg(0, ios::beg);
-    file.read(input, size);
-    file.close();
-    //cout << input << endl;
+  cin.ignore(1000000, '\n');
+  if (yn == 'y') {
+    cout << endl << "What is the name of your file?" << endl << ">> ";
+    cin.get(fileName, 20);
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    streampos size;
+    ifstream file(fileName, ios::in | ios::binary | ios::ate);
+    //ifstream file("Numbers.txt", ios::in | ios::binary | ios::ate);
+    if (file.is_open()) {
+      size = file.tellg();
+      file.seekg(0, ios::beg);
+      file.read(input, size);
+      file.close();
+      //cout << input << endl;
+    }
+    parseInput(input);
   }
-  //parseInput(input);
   
-  addNode(50, head);
-  addNode(60, head);
-  remove(60);
-  /*while (true) {
-    if () {
-      
+  while (true) {
+    cout << endl << "What would you like to do? (INSERT, SEARCH, DELETE, PRINT, QUIT)" << endl << ">> ";
+    cin.get(input, 10);
+    cin.clear();
+    cin.ignore(1000000, '\n');
+    if (strcmp(input, "INSERT") == 0 || strcmp(input, "insert") == 0) {
+      cout << endl << "What number would you like to insert?" << endl << ">> ";
+      cin >> value;
+      cin.clear();
+      cin.ignore(1000000, '\n');
+      addNode(value, head);
+      cout << endl;
+      printTree(head, NULL, NULL);
+    }
+    else if (strcmp(input, "SEARCH") == 0 || strcmp(input, "search") == 0) {
+      cout << endl << "What number would you like to search for?" << endl << ">> ";
+      cin >> value;
+      cin.clear();
+      cin.ignore(100000, '\n');
+      Node* temp = search(value, head);
+      if (temp != NULL)
+	cout << endl << value << " is in the tree." << endl;
+      else
+	cout << endl << value << " is not in the tree." << endl;
+
+      temp = NULL;
+      delete temp;
+    }
+    else if (strcmp(input, "DELETE") == 0 || strcmp(input, "delete") == 0) {
+      cout << endl << "What number would you like to delete?" << endl << ">> ";
+      cin >> value;
+      cin.clear();
+      cin.ignore(1000000, '\n');
+      remove(value);
+    }
+    else if (strcmp(input, "PRINT") == 0 || strcmp(input, "print") == 0) {
+      cout << endl;
+      printTree(head, NULL, NULL);
     }
     else
       break;
-      }*/
+  }
   return 0;
 }
 
@@ -202,8 +241,8 @@ void addNode(int value, Node* current) {//insert from BST
     }
   }
   checkTree(current);
-  cout << endl;
-  printTree(head, NULL, NULL);
+  /*cout << endl;
+    printTree(head, NULL, NULL);*/
   return;
 }
 
@@ -273,16 +312,23 @@ void checkTree(Node* current) {
 }
 
 void rotate(Node* current, bool method) {//true is left, false is right
-  //cout << "got here 2" << endl;
+  /*char* LR;
+  if (method)
+    LR = (char*)("left");
+  else
+    LR = (char*)("right");
+  
+  cout << "Rotating " << current -> getValue() << " " << LR << endl;
+  */
   if (method) {//left rotation
-    //cout << "got here 3" << endl;
     Node* right = current -> getRight();
-    current -> setRight(current -> getLeft());
+    current -> setRight(right -> getLeft());
+
     if (current -> getRight() != NULL)
       current -> getRight() -> setParent(current);
-    
+
     right -> setParent(current -> getParent());
-    
+
     if (current -> getParent() == NULL)
       head = right;
 
@@ -323,6 +369,8 @@ void rotate(Node* current, bool method) {//true is left, false is right
     left = NULL;
     delete left;
   }
+  /*  cout << endl;
+  printTree(head, NULL, NULL); */
 }
 
 Node* search(int value, Node* current) {//searching for a node with a certain value
@@ -367,49 +415,55 @@ void remove(int value) {
   temp = NULL;
   delete temp;
   cout << endl;
-  //printTree(head, NULL, NULL);
+  printTree(head, NULL, NULL);
 }
 
 void RBTremove (Node* current) {
   Node* temp = BSTsuccessor(current);
-  if (temp != NULL)
+  /*if (temp != NULL)
     cout << "Replacing with: " << temp -> getValue() << endl;
   else
     cout << "No replacement needed." << endl;
-
+  */
   bool doubleBlack = false;
-  if (current -> getColor() == black && temp -> getColor() == black)
-    doubleBlack = true;
+  
   Node* parent = current -> getParent();
 
   if (temp == NULL) {
-    if (doubleBlack)
-      fixDouble(temp);
+    if (current -> getColor() == black)
+      fixDouble(current);
     else {
-      if (parent -> getRight() != NULL && parent -> getLeft() != NULL) {
-	if (current == parent -> getRight()) {
-	  parent -> getLeft() -> setColor(red);
-	  parent -> setRight(NULL);
-	}
-	else {
-	  parent -> getRight() -> setColor(black);
-	  parent -> setLeft(NULL);
-	}
+      //if current's sibling isn't red, make it red
+      if (current = parent -> getRight()) {
+	if (parent -> getLeft() != NULL)
+	  current -> getParent() -> getLeft() -> setColor(red);
+      }
+      else {
+	if (parent -> getRight() != NULL)
+	  current -> getParent() -> getRight() -> setColor(red);
       }
     }
+    
+    if (current == parent -> getLeft())
+      parent -> setLeft(NULL);
+    else
+      parent -> setRight(NULL);
+    
     current -> ~Node();
     parent = NULL;
-    temp = NULL;
     delete current;
     delete parent;
     delete temp;
     return;
   }
   
+  if (current -> getColor() == black && temp -> getColor() == black)
+    doubleBlack = true;
+  
   if (current -> getLeft() == NULL || current -> getRight() == NULL) {
     if (current == head) {
       current -> setValue(temp -> getValue());
-      current -> setLeft(current -> getRight());
+      current -> setLeft(NULL);
       current -> setRight(NULL);
       temp = NULL;
       delete temp;
@@ -419,14 +473,18 @@ void RBTremove (Node* current) {
 	parent -> setLeft(temp);
       else
 	parent -> setRight(temp);
+      
+      current -> ~Node();
       current = NULL;
       delete current;
+      
       temp -> setParent(parent);
       if (doubleBlack)
 	fixDouble(temp);
       else
 	temp -> setColor(black);
     }
+    
     temp = NULL;
     parent = NULL;
     delete parent;
@@ -438,18 +496,18 @@ void RBTremove (Node* current) {
   tempVal = current -> getValue();
   current -> setValue(temp -> getValue());
   temp -> setValue(tempVal);
+  /*
+  cout << "Recursely calling with: " << temp -> getValue() << endl;
   
+  cout << endl;
+  printTree(head, NULL, NULL);
+  */
   RBTremove(temp);
-  
-  current = NULL;
-  temp = NULL;
-  parent = NULL;
-  delete current;
-  delete temp;
-  delete parent;
 }
 
 void fixDouble(Node* current) {
+  //cout << "Called with: " << current -> getValue() << endl;
+
   if (current == head)
     return;
 
@@ -478,19 +536,19 @@ void fixDouble(Node* current) {
     else {
       if (hasRed(sibling)) {
 	if (sibling -> getLeft() != NULL && sibling -> getLeft() -> getColor() == red) {
-	  if (sibling == parent -> getLeft()) {
+	  if (sibling == sibling -> getParent() -> getLeft()) {
 	    sibling -> getLeft() -> setColor(sibling -> getColor());
 	    sibling -> setColor(parent -> getColor());
 	    rotate(parent, false);
 	  }
 	  else {
 	    sibling -> getLeft() -> setColor(parent -> getColor());
-	    rotate(sibling, true);
-	    rotate(parent, false);
+	    rotate(sibling, false);
+	    rotate(parent, true);
 	  }
 	}
 	else {
-	  if (sibling == parent -> getLeft()) {
+	  if (sibling == sibling -> getParent() -> getLeft()) {
 	    sibling -> getRight() -> setColor(parent -> getColor());
 	    rotate(sibling, true);
 	    rotate(parent, false);
@@ -512,6 +570,8 @@ void fixDouble(Node* current) {
       }
     }
   }
+  /*cout << "Rotated tree:" << endl;
+    printTree(head, NULL, NULL);*/
 }
 
 Node* BSTsuccessor(Node* current) {
