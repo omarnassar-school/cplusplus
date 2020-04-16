@@ -1,0 +1,8 @@
+#include <iostream>
+#include "vertex.h"
+
+using namespace std;
+
+Vertex::Vertex() {
+  label = NULL;
+}
