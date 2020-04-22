@@ -15,13 +15,25 @@
 using namespace std;
 
 vector<Vertex*> vertices;
+vector<Edge*> edges;
 
 void addVertex(char label) {
+  Vertex* temp = new Vertex(label);
+  vertices.push_back(temp);
+  temp = NULL;
+  delete temp;
+}
+
+void removeVertex() {
   
 }
 
 void addEdge(Vertex* first, Vertex* second, int weight) {
   
+}
+
+void removeEdge() {
+
 }
 
 void findShortest(Vertex* first, Vertex* second) {
@@ -53,7 +65,7 @@ int main() {
     cin.ignore(1000000, '\n');
     
     if (numInput == 1) {//add vertex
-      cout << "What character will you assign the vertex?" << endl << ">> ";
+      cout << endl << "What character will you assign the vertex?" << endl << ">> ";
       cin >> charInput;
       cin.clear();
       cin.ignore(1000000, '\n');
