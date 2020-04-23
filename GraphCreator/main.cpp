@@ -20,10 +20,10 @@ vector<Edge*> edges;
 void addVertex(char label) {
   Vertex* temp = new Vertex(label);
   bool exists = false;
-  vector<Vertex*>::iterator i;
-  for (i = vertices.begin(); i != vertices.end(); i++) {
-    if ((*i) -> getLabel() == label)
-      exists = true;
+  vector<Vertex*>::iterator v;
+  for (v = vertices.begin(); v != vertices.end(); v++) {
+    if ((*v) -> getLabel() == label)
+     exists = true;
   }
   
   if (!exists) {
@@ -37,7 +37,51 @@ void addVertex(char label) {
   delete temp;
 }
 
-void removeVertex() {
+void removeVertex(char label) {
+  vector<Vertex*>::iterator v;
+  vector<Edge*>::iterator e;
+  bool edged = false;
+  char yesno;
+  
+  for (v = vertices.begin(); v != vertices.end(); v++) {
+    if ((*v) -> getLabel() == label) {
+      for (e = edges.begin(); e != edges.end(); e++) {
+	if ((*e) -> getFirst() == *v || (*e) -> getSecond() == *v) {
+	  edged = false;
+	}
+      }
+      if (edged) {
+	cout << endl << "The vertex is connected to an edge. Would you still like to remove? (y/n)" << endl << ">> ";
+	cin >> yesno;
+	cin.clear();
+	cin.ignore(1000000, '\n');
+	if (yesno == 'y') {
+	  for (e = edges.begin(); e != edges.end(); e++) {
+	    if ((*e) -> getFirst() == *v || (*e) -> getSecond() == *v) {
+	      delete *e;
+	      edges.erase(e);
+	    }
+	  }
+	  delete *v;
+	  vertices.erase(v);
+	  cout << endl << "The vertex was removed." << endl; 
+	  return;
+	}
+	else {
+	  cout << endl << "The vertex was not removed." << endl;
+	  return;
+	}
+      }
+      else {
+	delete *v;
+	vertices.erase(v);
+	cout << endl << "The vertex has been removed." << endl;
+	return;
+      }
+    }
+  }
+
+  cout << endl << "There is no vertex with that label." << endl;
   
 }
 
@@ -47,13 +91,13 @@ void addEdge(char firstLabel, char secondLabel, int weight) {
   Vertex* second = NULL;
   bool exists = false;
   
-  vector<Vertex*>::iterator i;
-  for (i = vertices.begin(); i != vertices.end(); i++) {
-    if ((*i) -> getLabel() == firstLabel) {
-      first = *i;
+  vector<Vertex*>::iterator v;
+  for (v = vertices.begin(); v != vertices.end(); v++) {
+    if ((*v) -> getLabel() == firstLabel) {
+      first = *v;
     }
-    else if ((*i) -> getLabel() == secondLabel) {
-      second = *i;
+    else if ((*v) -> getLabel() == secondLabel) {
+      second = *v;
     }
   }
   
@@ -114,8 +158,8 @@ void printAdjacency() {
       }
       else {
 	for (e = edges.begin(); e != edges.end(); e++) {
-	  if ((*e) -> getFirst() -> getLabel() == (*v) -> getLabel()) {
-	    if ((*e) -> getSecond() -> getLabel() == (*v2) -> getLabel() ) {
+	  if ((*e) -> getFirst() == *v) {
+	    if ((*e) -> getSecond() == *v2) {
 	      cout << (*e) -> getWeight();
 	      connection = true;
 	    }
@@ -178,7 +222,11 @@ int main() {
     }
 
     else if (numInput == 3) {//remove vertex
-      
+      cout << endl << "What is the label of the vertex?" << endl << ">> ";
+      cin >> charInput;
+      cin.clear();
+      cin.ignore(1000000, '\n');
+      removeVertex(charInput);
     }
 
     else if (numInput == 4) {//remove edge
