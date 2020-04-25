@@ -43,11 +43,17 @@ void removeVertex(char label) {
   bool edged = false;
   char yesno;
   
+  if (vertices.size() == 0) {
+    cout << endl << "There are no vertices." << endl;
+    return;
+  }
+
+  int i = 0;
   for (v = vertices.begin(); v != vertices.end(); v++) {
     if ((*v) -> getLabel() == label) {
       for (e = edges.begin(); e != edges.end(); e++) {
 	if ((*e) -> getFirst() == *v || (*e) -> getSecond() == *v) {
-	  edged = false;
+	  edged = true;
 	}
       }
       if (edged) {
@@ -56,13 +62,15 @@ void removeVertex(char label) {
 	cin.clear();
 	cin.ignore(1000000, '\n');
 	if (yesno == 'y') {
+	  int j = 0;
 	  for (e = edges.begin(); e != edges.end(); e++) {
 	    if ((*e) -> getFirst() == *v || (*e) -> getSecond() == *v) {
-	      delete *e;
+	      //delete *e;
 	      edges.erase(e);
 	    }
+	    j++;
 	  }
-	  delete *v;
+	  //delete *v;
 	  vertices.erase(v);
 	  cout << endl << "The vertex was removed." << endl; 
 	  return;
@@ -73,12 +81,13 @@ void removeVertex(char label) {
 	}
       }
       else {
-	delete *v;
+	//delete *v;
 	vertices.erase(v);
 	cout << endl << "The vertex has been removed." << endl;
 	return;
       }
     }
+    i++;
   }
 
   cout << endl << "There is no vertex with that label." << endl;
