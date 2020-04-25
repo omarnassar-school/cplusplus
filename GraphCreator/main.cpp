@@ -23,7 +23,7 @@ void addVertex(char label) {
   vector<Vertex*>::iterator v;
   for (v = vertices.begin(); v != vertices.end(); v++) {
     if ((*v) -> getLabel() == label)
-     exists = true;
+      exists = true;
   }
   
   if (!exists) {
@@ -37,62 +37,6 @@ void addVertex(char label) {
   delete temp;
 }
 
-void removeVertex(char label) {
-  vector<Vertex*>::iterator v;
-  vector<Edge*>::iterator e;
-  bool edged = false;
-  char yesno;
-  
-  if (vertices.size() == 0) {
-    cout << endl << "There are no vertices." << endl;
-    return;
-  }
-
-  int i = 0;
-  for (v = vertices.begin(); v != vertices.end(); v++) {
-    if ((*v) -> getLabel() == label) {
-      for (e = edges.begin(); e != edges.end(); e++) {
-	if ((*e) -> getFirst() == *v || (*e) -> getSecond() == *v) {
-	  edged = true;
-	}
-      }
-      if (edged) {
-	cout << endl << "The vertex is connected to an edge. Would you still like to remove? (y/n)" << endl << ">> ";
-	cin >> yesno;
-	cin.clear();
-	cin.ignore(1000000, '\n');
-	if (yesno == 'y') {
-	  int j = 0;
-	  for (e = edges.begin(); e != edges.end(); e++) {
-	    if ((*e) -> getFirst() == *v || (*e) -> getSecond() == *v) {
-	      //delete *e;
-	      edges.erase(e);
-	    }
-	    j++;
-	  }
-	  //delete *v;
-	  vertices.erase(v);
-	  cout << endl << "The vertex was removed." << endl; 
-	  return;
-	}
-	else {
-	  cout << endl << "The vertex was not removed." << endl;
-	  return;
-	}
-      }
-      else {
-	//delete *v;
-	vertices.erase(v);
-	cout << endl << "The vertex has been removed." << endl;
-	return;
-      }
-    }
-    i++;
-  }
-
-  cout << endl << "There is no vertex with that label." << endl;
-  
-}
 
 void addEdge(char firstLabel, char secondLabel, int weight) {
   Edge* temp = new Edge();
@@ -105,9 +49,15 @@ void addEdge(char firstLabel, char secondLabel, int weight) {
     if ((*v) -> getLabel() == firstLabel) {
       first = *v;
     }
-    else if ((*v) -> getLabel() == secondLabel) {
+    
+    if ((*v) -> getLabel() == secondLabel) {
       second = *v;
     }
+  }
+  
+  if (first == second) {
+    cout << endl << "You cannot connect a vertex to itself." << endl;
+    return;
   }
   
   vector<Edge*>::iterator e;
@@ -136,17 +86,154 @@ void addEdge(char firstLabel, char secondLabel, int weight) {
   delete temp;
 }
 
-void removeEdge(char firstLabel, char secondLabel) {
+void removeEdge(char firstLabel, char secondLabel, bool user) {
+  if (edges.empty()) {
+    if (user)
+      cout << endl << "There are no edges." << endl;
+    return;
+  }
+  
+  Vertex* first = NULL;
+  Vertex* second = NULL;
+  
+  vector<Vertex*>::iterator v;
+  vector<Edge*>::iterator e;
+  
+  for (v = vertices.begin(); v != vertices.end(); v++) {
+    if ((*v) -> getLabel() == firstLabel)
+      first = *v;
 
+    if((*v) -> getLabel() == secondLabel)
+      second = *v;
+  }
+  
+  if (first == second) {
+    cout << endl << "A vertex cannot be connected to itself." << endl;
+    return;
+  }
+  
+  for (e = edges.begin(); e != edges.end(); e++) {
+    if (((*e) -> getFirst() == first && (*e) -> getSecond() == second)) {
+      edges.erase(e);
+      if (user)
+	cout << endl << "The edge has been removed." << endl;
+      return;
+    }
+  }
+  
+  if (first != NULL && second != NULL)
+    cout << endl << "This edge does not exists." << endl;
+  else
+    cout << endl << "One of the vertices does not exists." << endl;
+
+  first = NULL;
+  second = NULL;
+  delete first;
+  delete second;
 }
 
-void findShortest(char firstLabel, char  secondLabel) {
+void removeVertex(char label) {
+  vector<Vertex*>::iterator v;
+  vector<Edge*>::iterator e;
+  bool edged = false;
+  char yesno;
+  
+  if (vertices.size() == 0) {
+    cout << endl << "There are no vertices." << endl;
+    return;
+  }
+
+  for (v = vertices.begin(); v != vertices.end(); v++) {
+    if ((*v) -> getLabel() == label) {
+      for (e = edges.begin(); e != edges.end(); e++) {
+	if ((*e) -> getFirst() == *v || (*e) -> getSecond() == *v) {
+	  edged = true;
+	}
+      }
+      if (edged) {
+	cout << endl << "The vertex is connected to an edge. Would you still like to remove? (y/n)" << endl << ">> ";
+	cin >> yesno;
+	cin.clear();
+	cin.ignore(1000000, '\n');
+        if (yesno == 'y') {
+	  bool finished = false;
+	  while(!finished) {
+	    for (e = edges.begin(); e != edges.end(); e++) {
+	      if (e == edges.end() - 1)
+		finished = true;
+	      
+	      if ((*e) -> getFirst() == *v || (*e) -> getSecond() == *v) {
+		removeEdge((*e) -> getFirst() -> getLabel(), (*e) -> getSecond() -> getLabel(), false);
+		removeEdge((*e) -> getSecond() -> getLabel(), (*e) -> getFirst() -> getLabel(), false);
+		break;
+	      }
+	    }
+	  }
+	  //delete *v;
+	  vertices.erase(v);
+	  cout << endl << "The vertex was removed." << endl; 
+	  return;
+	}
+      }
+      else {
+	cout << endl << "The vertex was not removed." << endl;
+	return;
+      }
+    }
+    else {
+      //delete *v;
+      vertices.erase(v);
+      cout << endl << "The vertex has been removed." << endl;
+      return;
+    }
+  }
+  
+  
+  cout << endl << "There is no vertex with that label." << endl;
   
 }
 
-void printAdjacency() {
-  if (vertices.empty())
+void findShortest(char startLabel, char  endLabel) {
+  Vertex* start = NULL;
+  Vertex* end = NULL;
+  
+  vector<Vertex*>::iterator v;
+  vector<Edge*>::iterator e;
+  
+  for (v = vertices.begin(); v != vertices.end(); v++) {
+    if ((*v) -> getLabel() == startLabel) {
+      start = *v;
+    }
+
+    if ((*v) -> getLabel() == endLabel) {
+      end = *v;
+    }
+  }
+  
+  if (start == end) {
+    cout << endl << "There is no distance between a vertex and itself." << endl;
     return;
+  }
+  
+  if (start != NULL && end != NULL && !edges.empty()) {
+    
+  }
+  else if (edges.empty())
+    cout << endl << "There are no edges." << endl;
+  else
+    cout << endl << "One of the vertices does not exist." << endl;
+  
+  start = NULL;
+  end = NULL;
+  delete start;
+  delete end;
+}
+
+void printAdjacency() {
+  if (vertices.empty()) {
+    cout << endl << "There are no vertices." << endl;
+    return;
+  }
   
   cout << "\t";
   vector<Vertex*>::iterator v;
@@ -239,13 +326,29 @@ int main() {
     }
 
     else if (numInput == 4) {//remove edge
-
+      cout << endl << "What is the label of the first vertex?" << endl << ">> ";
+      cin >> charInput;
+      cin.clear();
+      cin.ignore(1000000, '\n');
+      cout << endl << "What is the label of the second vertex?" << endl << ">> ";
+      cin >> charInput2;
+      cin.clear();
+      cin.ignore(1000000, '\n');
+      removeEdge(charInput, charInput2, true);
     }
-
+    
     else if (numInput == 5) {//shortest path
-
+      cout << endl << "What is the label of the starting vertex?" << endl << ">> ";
+      cin >> charInput;
+      cin.clear();
+      cin.ignore(1000000, '\n');
+      cout << endl << "What is the label of the ending vertex?" << endl << ">> ";
+      cin >> charInput2;
+      cin.clear();
+      cin.ignore(1000000, '\n');
+      findShortest(charInput, charInput2);
     }
-
+    
     else if (numInput == 6) //print
       printAdjacency();
 
