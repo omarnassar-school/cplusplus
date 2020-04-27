@@ -14,6 +14,14 @@
 
 using namespace std;
 
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+
 vector<Vertex*> vertices;
 vector<Edge*> edges;
 
@@ -28,10 +36,10 @@ void addVertex(char label) {
   
   if (!exists) {
     vertices.push_back(temp);
-    cout << endl << "Vertex has been added." << endl;
+    cout << endl << GREEN << "Vertex has been added." << RESET << endl;
   }
   else
-    cout << endl << "Cannot have duplicate labels." << endl;
+    cout << endl << RED << "Cannot have duplicate labels." << RESET << endl;
   
   temp = NULL;
   delete temp;
@@ -56,7 +64,7 @@ void addEdge(char firstLabel, char secondLabel, int weight) {
   }
   
   if (first == second) {
-    cout << endl << "You cannot connect a vertex to itself." << endl;
+    cout << endl << RED << "You cannot connect a vertex to itself." << RESET << endl;
     return;
   }
   
@@ -71,12 +79,12 @@ void addEdge(char firstLabel, char secondLabel, int weight) {
     temp -> setSecond(second);
     temp -> setWeight(weight);
     edges.push_back(temp);
-    cout << endl << "Edge has been added." << endl;
+    cout << endl << GREEN << "Edge has been added." << RESET << endl;
   }
   else if (exists)
-    cout << endl << "There is already an edge connecting these two vertices." << endl;
+    cout << endl << RED << "There is already an edge connecting these two vertices." << RESET << endl;
   else
-    cout << endl << "One of the vertices does not exist." << endl;
+    cout << endl << RED << "One of the vertices does not exist." << RESET << endl;
 
   first = NULL;
   second = NULL;
@@ -89,7 +97,7 @@ void addEdge(char firstLabel, char secondLabel, int weight) {
 void removeEdge(char firstLabel, char secondLabel, bool user) {
   if (edges.empty()) {
     if (user)
-      cout << endl << "There are no edges." << endl;
+      cout << endl << RED << "There are no edges." << RESET << endl;
     return;
   }
   
@@ -108,7 +116,7 @@ void removeEdge(char firstLabel, char secondLabel, bool user) {
   }
   
   if (first == second) {
-    cout << endl << "A vertex cannot be connected to itself." << endl;
+    cout << endl << RED << "A vertex cannot be connected to itself." << RESET << endl;
     return;
   }
   
@@ -116,15 +124,16 @@ void removeEdge(char firstLabel, char secondLabel, bool user) {
     if (((*e) -> getFirst() == first && (*e) -> getSecond() == second)) {
       edges.erase(e);
       if (user)
-	cout << endl << "The edge has been removed." << endl;
+	cout << endl << GREEN << "The edge has been removed." << RESET << endl;
       return;
     }
   }
   
-  if (first != NULL && second != NULL)
-    cout << endl << "This edge does not exists." << endl;
+  if (first != NULL && second != NULL && user)
+    cout << endl << RED << "This edge does not exists." << RESET << endl;
   else
-    cout << endl << "One of the vertices does not exists." << endl;
+    if (user)
+      cout << endl << RED << "One of the vertices does not exists." << RESET << endl;
 
   first = NULL;
   second = NULL;
@@ -139,10 +148,10 @@ void removeVertex(char label) {
   char yesno;
   
   if (vertices.size() == 0) {
-    cout << endl << "There are no vertices." << endl;
+    cout << endl << RED << "There are no vertices." << RESET << endl;
     return;
   }
-
+  
   for (v = vertices.begin(); v != vertices.end(); v++) {
     if ((*v) -> getLabel() == label) {
       for (e = edges.begin(); e != edges.end(); e++) {
@@ -151,7 +160,8 @@ void removeVertex(char label) {
 	}
       }
       if (edged) {
-	cout << endl << "The vertex is connected to an edge. Would you still like to remove? (y/n)" << endl << ">> ";
+	cout << endl << YELLOW << "The vertex is connected to an edge. Would you still like to remove? (y/n)";
+	cout << endl << GREEN << ">> " << RESET;
 	cin >> yesno;
 	cin.clear();
 	cin.ignore(1000000, '\n');
@@ -171,25 +181,27 @@ void removeVertex(char label) {
 	  }
 	  //delete *v;
 	  vertices.erase(v);
-	  cout << endl << "The vertex was removed." << endl; 
+	  cout << endl << GREEN << "The vertex was removed." << RESET << endl; 
+	  return;
+	}
+      
+	else {
+	  cout << endl << GREEN << "The vertex was not removed." << RESET << endl;
 	  return;
 	}
       }
+      
       else {
-	cout << endl << "The vertex was not removed." << endl;
+	//delete *v;
+	vertices.erase(v);
+	cout << endl << GREEN << "The vertex has been removed." << RESET << endl;
 	return;
       }
-    }
-    else {
-      //delete *v;
-      vertices.erase(v);
-      cout << endl << "The vertex has been removed." << endl;
-      return;
     }
   }
   
   
-  cout << endl << "There is no vertex with that label." << endl;
+  cout << endl << RED << "There is no vertex with that label." << RESET << endl;
   
 }
 
@@ -211,7 +223,7 @@ void findShortest(char startLabel, char  endLabel) {
   }
   
   if (start == end) {
-    cout << endl << "There is no distance between a vertex and itself." << endl;
+    cout << endl << RED << "There is no distance between a vertex and itself." << RESET << endl;
     return;
   }
   
@@ -219,9 +231,9 @@ void findShortest(char startLabel, char  endLabel) {
     
   }
   else if (edges.empty())
-    cout << endl << "There are no edges." << endl;
+    cout << endl << RED << "There are no edges." << RESET << endl;
   else
-    cout << endl << "One of the vertices does not exist." << endl;
+    cout << endl << RED << "One of the vertices does not exist." << RESET << endl;
   
   start = NULL;
   end = NULL;
@@ -231,7 +243,7 @@ void findShortest(char startLabel, char  endLabel) {
 
 void printAdjacency() {
   if (vertices.empty()) {
-    cout << endl << "There are no vertices." << endl;
+    cout << endl << RED << "There are no vertices." << RESET << endl;
     return;
   }
   
@@ -249,14 +261,14 @@ void printAdjacency() {
     for (v2 = vertices.begin(); v2 != vertices.end(); v2++) {
       bool connection = false;
       if (v2 == v) {
-	cout << "n/a";
+	cout << YELLOW << "n/a" << RESET;
 	connection = true;
       }
       else {
 	for (e = edges.begin(); e != edges.end(); e++) {
 	  if ((*e) -> getFirst() == *v) {
 	    if ((*e) -> getSecond() == *v2) {
-	      cout << (*e) -> getWeight();
+	      cout << CYAN << (*e) -> getWeight() << RESET;
 	      connection = true;
 	    }
 	  }
@@ -264,7 +276,7 @@ void printAdjacency() {
       }
       
       if (!connection)
-	cout << "none";
+	cout << RED << "none" << RESET;
       
       cout << "\t";
     }
@@ -287,14 +299,14 @@ int main() {
     cout << "5: Find the shortest path between two points" << endl;
     cout << "6: Print the adjacency matrix" << endl;
     cout << "7: Quit" << endl;
-    cout << endl << ">> ";
+    cout << endl << GREEN << ">> " << RESET;
     
     cin >> numInput;
     cin.clear();
     cin.ignore(1000000, '\n');
     
     if (numInput == 1) {//add vertex
-      cout << endl << "What character will you assign the vertex?" << endl << ">> ";
+      cout << endl << "What character will you assign the vertex?" << endl << GREEN << ">> " << RESET;
       cin >> charInput;
       cin.clear();
       cin.ignore(1000000, '\n');
@@ -302,15 +314,15 @@ int main() {
     }
 
     else if (numInput == 2) {//add edge
-      cout << endl << "What is the label of the first vertex?" << endl << ">> ";
+      cout << endl << "What is the label of the first vertex?" << endl << GREEN << ">> " << RESET;
       cin >> charInput;
       cin.clear();
       cin.ignore(1000000, '\n');
-      cout << endl << "What is the label of the second vertex?" << endl << ">> ";
+      cout << endl << "What is the label of the second vertex?" << endl << GREEN << ">> " << RESET;
       cin >> charInput2;
       cin.clear();
       cin.ignore(1000000, '\n');
-      cout << endl << "What is the weight of this edge?" << endl << ">> ";
+      cout << endl << "What is the weight of this edge?" << endl << GREEN ">> " << RESET;
       cin >> numInput;
       cin.clear();
       cin.ignore(1000000, '\n');
@@ -318,7 +330,7 @@ int main() {
     }
 
     else if (numInput == 3) {//remove vertex
-      cout << endl << "What is the label of the vertex?" << endl << ">> ";
+      cout << endl << "What is the label of the vertex?" << endl << GREEN << ">> " << RESET;
       cin >> charInput;
       cin.clear();
       cin.ignore(1000000, '\n');
@@ -326,11 +338,11 @@ int main() {
     }
 
     else if (numInput == 4) {//remove edge
-      cout << endl << "What is the label of the first vertex?" << endl << ">> ";
+      cout << endl << "What is the label of the first vertex?" << endl << GREEN << ">> " << RESET;
       cin >> charInput;
       cin.clear();
       cin.ignore(1000000, '\n');
-      cout << endl << "What is the label of the second vertex?" << endl << ">> ";
+      cout << endl << "What is the label of the second vertex?" << endl << GREEN << ">> " << RESET;
       cin >> charInput2;
       cin.clear();
       cin.ignore(1000000, '\n');
@@ -338,11 +350,11 @@ int main() {
     }
     
     else if (numInput == 5) {//shortest path
-      cout << endl << "What is the label of the starting vertex?" << endl << ">> ";
+      cout << endl << "What is the label of the starting vertex?" << endl << GREEN << ">> " << RESET;
       cin >> charInput;
       cin.clear();
       cin.ignore(1000000, '\n');
-      cout << endl << "What is the label of the ending vertex?" << endl << ">> ";
+      cout << endl << "What is the label of the ending vertex?" << endl << GREEN << ">> " << RESET;
       cin >> charInput2;
       cin.clear();
       cin.ignore(1000000, '\n');
@@ -355,9 +367,9 @@ int main() {
     else if (numInput == 7) {//quit
       break;
     }
-
+    
     else
-      cout << "Invalid Input." << endl;
+      cout << endl << RED << "Invalid Input." << RESET << endl;
     
   }
   return 0;

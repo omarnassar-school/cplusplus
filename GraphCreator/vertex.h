@@ -11,10 +11,13 @@ class Vertex {
   ~Vertex();
   //Getters
   char getLabel();
+  int getDistance();
   //Setters
   void setLabel(char);
+  void setDistance(int);
  private:
   char label;
+  int distance;
 };
 
 #endif
