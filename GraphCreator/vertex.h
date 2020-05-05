@@ -12,12 +12,15 @@ class Vertex {
   //Getters
   char getLabel();
   int getDistance();
+  Vertex* getPrevious();
   //Setters
   void setLabel(char);
   void setDistance(int);
+  void setPrevious(Vertex*);
  private:
   char label;
   int distance;
+  Vertex* previous;
 };
 
 #endif

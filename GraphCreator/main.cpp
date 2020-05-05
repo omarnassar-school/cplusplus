@@ -9,6 +9,7 @@
 #include <fstream>
 #include <cmath>
 #include <vector>
+#include <map>
 #include "vertex.h"
 #include "edge.h"
 
@@ -228,6 +229,58 @@ void findShortest(char startLabel, char  endLabel) {
   }
   
   if (start != NULL && end != NULL && !edges.empty()) {
+    vector<Vertex*> visited;
+    vector<Vertex*> unvisited = vertices;
+    
+    Vertex* current = NULL;
+    
+    for (v = unvisited.begin(); v != unvisited.end(); v++) {
+      if ((*v) == start) {
+	(*v) -> setDistance(0);
+	current = (*v);
+	break;
+      }
+    }
+
+    while (!unvisited.empty()) {
+      int distance = current -> getDistance();
+      for (v = unvisited.begin(); v != unvisited.end(); v++) {
+	if ((*v) != current) {
+	  for (e = edges.begin(); e != edges.end(); e++) {
+	    if ((*e) -> getFirst() -> getLabel() == current -> getLabel() && (*e) -> getSecond() -> getLabel() == (*v) -> getLabel()) {
+	      if ((*v) -> getDistance() == -1 || (*v) -> getDistance() > distance + (*e) -> getWeight()) {
+		(*v) -> setDistance(distance + (*e) -> getWeight());
+	      }
+	    }
+	  }
+	}
+	visited.push_back(current);
+	unvisited.erase(v);
+      }
+      
+      Vertex* newCurrent = NULL;
+      for (v = unvisited.begin(); v != unvisited.end(); v++) {
+	if (newCurrent == NULL)
+	  newCurrent = *v;
+
+	if (newCurrent -> getDistance() > (*v) -> getDistance())
+	  if ((*v) -> getDistance() > 0)
+	    newCurrent = *v;
+      }
+
+      current = newCurrent;
+    }
+
+    for (v = visited.begin(); v != visited.end(); v++) {
+      if ((*v) -> getLabel() == end -> getLabel()) {
+	if ((*v) -> getDistance() > 0) {
+	  cout << endl << GREEN << "The distance between " << startLabel << " and " << endLabel << " is: " << (*v) -> getDistance() << "." << endl << RESET;
+	  break;
+	}
+	else if ((*v) -> getDistance() == -1)
+	  cout << endl << RED << "The nodes are not connected." << RESET << endl;
+      }
+    }
     
   }
   else if (edges.empty())
