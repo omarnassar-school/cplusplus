@@ -223,6 +223,11 @@ void findShortest(char startLabel, char  endLabel) {
     }
   }
   
+  if (start == NULL || end == NULL) {
+    cout << endl << RED << "One of these vertices does not exist" << RESET << endl;
+    return;
+  }
+
   if (start == end) {
     cout << endl << RED << "There is no distance between a vertex and itself." << RESET << endl;
     return;
@@ -242,43 +247,60 @@ void findShortest(char startLabel, char  endLabel) {
       }
     }
 
+
     while (!unvisited.empty()) {
       int distance = current -> getDistance();
+      //cout << endl << "Did this at least once" << endl;
       for (v = unvisited.begin(); v != unvisited.end(); v++) {
-	if ((*v) != current) {
+	//cout << endl << "got here -3" << endl;
+	//cout << endl << (*v) -> getLabel() << endl;
+	//cout << endl << current -> getLabel() << endl;
+	if ((*v) -> getLabel() != current -> getLabel()) {
+	  //cout << endl << "got here -2" << endl;
 	  for (e = edges.begin(); e != edges.end(); e++) {
+	    //cout << endl << "got here -1" << endl;
 	    if ((*e) -> getFirst() -> getLabel() == current -> getLabel() && (*e) -> getSecond() -> getLabel() == (*v) -> getLabel()) {
+	      //cout << endl << "got here" << endl;
 	      if ((*v) -> getDistance() == -1 || (*v) -> getDistance() > distance + (*e) -> getWeight()) {
+		//cout << endl << "got here 2" << endl;
 		(*v) -> setDistance(distance + (*e) -> getWeight());
 	      }
 	    }
 	  }
 	}
-	visited.push_back(current);
-	unvisited.erase(v);
       }
       
       Vertex* newCurrent = NULL;
+      
       for (v = unvisited.begin(); v != unvisited.end(); v++) {
+	if ((*v) -> getLabel() == current -> getLabel()) {
+	  //cout << endl << "happened" << endl;
+	  unvisited.erase(v);
+	  visited.push_back(current);
+	  break;
+	}
+      }
+      
+      for (v = unvisited.begin(); v != unvisited.end(); v++) {	  
 	if (newCurrent == NULL)
 	  newCurrent = *v;
-
+	
 	if (newCurrent -> getDistance() > (*v) -> getDistance())
-	  if ((*v) -> getDistance() > 0)
-	    newCurrent = *v;
+	    if ((*v) -> getDistance() > 0)
+	      newCurrent = *v;
       }
-
+      
       current = newCurrent;
     }
-
+    
     for (v = visited.begin(); v != visited.end(); v++) {
-      if ((*v) -> getLabel() == end -> getLabel()) {
+      if ((*v) -> getLabel() == endLabel) {
 	if ((*v) -> getDistance() > 0) {
-	  cout << endl << GREEN << "The distance between " << startLabel << " and " << endLabel << " is: " << (*v) -> getDistance() << "." << endl << RESET;
+	  cout << endl << GREEN << "The distance between " << startLabel << " and " << endLabel << " is: " << (*v) -> getDistance() << endl << RESET;
 	  break;
 	}
 	else if ((*v) -> getDistance() == -1)
-	  cout << endl << RED << "The nodes are not connected." << RESET << endl;
+	  cout << endl << RED << "The vertices are not connected." << RESET << endl;
       }
     }
     
@@ -287,6 +309,9 @@ void findShortest(char startLabel, char  endLabel) {
     cout << endl << RED << "There are no edges." << RESET << endl;
   else
     cout << endl << RED << "One of the vertices does not exist." << RESET << endl;
+
+  for (v = vertices.begin(); v != vertices.end(); v++)
+    (*v) -> setDistance(-1);
   
   start = NULL;
   end = NULL;
@@ -335,6 +360,12 @@ void printAdjacency() {
     }
     cout << endl;
   }
+
+  /*cout << endl << BLUE << "For debugging purposes:" << endl;
+  for (v = vertices.begin(); v != vertices.end(); v++) {
+    cout << (*v) -> getLabel() << ": " << (*v) -> getDistance() << endl;
+  }
+  cout << RESET << endl;*/
 }
 
 int main() {
