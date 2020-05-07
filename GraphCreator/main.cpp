@@ -15,6 +15,8 @@
 
 using namespace std;
 
+//colors to make the console look "pretty"
+
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
 #define GREEN   "\033[32m"
@@ -23,14 +25,14 @@ using namespace std;
 #define MAGENTA "\033[35m"
 #define CYAN    "\033[36m"
 
-vector<Vertex*> vertices;
-vector<Edge*> edges;
+vector<Vertex*> vertices; //global variable for storing vertices
+vector<Edge*> edges; //global variable for storing edges
 
-void addVertex(char label) {
+void addVertex(char label) {//function for adding a vertex
   Vertex* temp = new Vertex(label);
   bool exists = false;
   vector<Vertex*>::iterator v;
-  for (v = vertices.begin(); v != vertices.end(); v++) {
+  for (v = vertices.begin(); v != vertices.end(); v++) {//making sure that there isn't a vertex with the given label
     if ((*v) -> getLabel() == label)
       exists = true;
   }
@@ -47,14 +49,14 @@ void addVertex(char label) {
 }
 
 
-void addEdge(char firstLabel, char secondLabel, int weight) {
+void addEdge(char firstLabel, char secondLabel, int weight) {//function for adding edges
   Edge* temp = new Edge();
   Vertex* first = NULL;
   Vertex* second = NULL;
   bool exists = false;
   
   vector<Vertex*>::iterator v;
-  for (v = vertices.begin(); v != vertices.end(); v++) {
+  for (v = vertices.begin(); v != vertices.end(); v++) {//finding the first and second vertices
     if ((*v) -> getLabel() == firstLabel) {
       first = *v;
     }
@@ -75,16 +77,16 @@ void addEdge(char firstLabel, char secondLabel, int weight) {
       exists = true;
   }
   
-  if (first != NULL && second != NULL && !exists) {
+  if (first != NULL && second != NULL && !exists) {//if there is no current edge and both first and second exist
     temp -> setFirst(first);
     temp -> setSecond(second);
     temp -> setWeight(weight);
     edges.push_back(temp);
     cout << endl << GREEN << "Edge has been added." << RESET << endl;
   }
-  else if (exists)
+  else if (exists) //if there is already an edge
     cout << endl << RED << "There is already an edge connecting these two vertices." << RESET << endl;
-  else
+  else //if either first or second don't exist (or both)
     cout << endl << RED << "One of the vertices does not exist." << RESET << endl;
 
   first = NULL;
@@ -95,9 +97,9 @@ void addEdge(char firstLabel, char secondLabel, int weight) {
   delete temp;
 }
 
-void removeEdge(char firstLabel, char secondLabel, bool user) {
-  if (edges.empty()) {
-    if (user)
+void removeEdge(char firstLabel, char secondLabel, bool user) {//removing an edge (put above vertex removal so it can be called)
+  if (edges.empty()) {//making sure there are edges
+    if (user) //if not called from vertex removal function
       cout << endl << RED << "There are no edges." << RESET << endl;
     return;
   }
@@ -121,7 +123,7 @@ void removeEdge(char firstLabel, char secondLabel, bool user) {
     return;
   }
   
-  for (e = edges.begin(); e != edges.end(); e++) {
+  for (e = edges.begin(); e != edges.end(); e++) {//removing edge from vector
     if (((*e) -> getFirst() == first && (*e) -> getSecond() == second)) {
       edges.erase(e);
       if (user)
@@ -130,9 +132,9 @@ void removeEdge(char firstLabel, char secondLabel, bool user) {
     }
   }
   
-  if (first != NULL && second != NULL && user)
+  if (first != NULL && second != NULL && user) //if edge doesn't exist
     cout << endl << RED << "This edge does not exists." << RESET << endl;
-  else
+  else //if one or more of the vertices does not exist
     if (user)
       cout << endl << RED << "One of the vertices does not exists." << RESET << endl;
 
@@ -142,25 +144,25 @@ void removeEdge(char firstLabel, char secondLabel, bool user) {
   delete second;
 }
 
-void removeVertex(char label) {
+void removeVertex(char label) {//function to remove a vertex
   vector<Vertex*>::iterator v;
   vector<Edge*>::iterator e;
   bool edged = false;
   char yesno;
   
-  if (vertices.size() == 0) {
+  if (vertices.empty()) {//if there are no vertices
     cout << endl << RED << "There are no vertices." << RESET << endl;
     return;
   }
   
-  for (v = vertices.begin(); v != vertices.end(); v++) {
+  for (v = vertices.begin(); v != vertices.end(); v++) {//going through the vertices vector to find the vertex
     if ((*v) -> getLabel() == label) {
       for (e = edges.begin(); e != edges.end(); e++) {
 	if ((*e) -> getFirst() == *v || (*e) -> getSecond() == *v) {
 	  edged = true;
 	}
       }
-      if (edged) {
+      if (edged) {//if the vertex is connected to an edge, ask if they would like to continue
 	cout << endl << YELLOW << "The vertex is connected to an edge. Would you still like to remove? (y/n)";
 	cout << endl << GREEN << ">> " << RESET;
 	cin >> yesno;
@@ -173,7 +175,7 @@ void removeVertex(char label) {
 	      if (e == edges.end() - 1)
 		finished = true;
 	      
-	      if ((*e) -> getFirst() == *v || (*e) -> getSecond() == *v) {
+	      if ((*e) -> getFirst() == *v || (*e) -> getSecond() == *v) {//remove both an edge from and to this vertex (if it exists)
 		removeEdge((*e) -> getFirst() -> getLabel(), (*e) -> getSecond() -> getLabel(), false);
 		removeEdge((*e) -> getSecond() -> getLabel(), (*e) -> getFirst() -> getLabel(), false);
 		break;
@@ -206,14 +208,14 @@ void removeVertex(char label) {
   
 }
 
-void findShortest(char startLabel, char  endLabel) {
+void findShortest(char startLabel, char  endLabel) {//finding the shortest path between two points (using Dijkstra's algorithm)
   Vertex* start = NULL;
   Vertex* end = NULL;
   
   vector<Vertex*>::iterator v;
   vector<Edge*>::iterator e;
   
-  for (v = vertices.begin(); v != vertices.end(); v++) {
+  for (v = vertices.begin(); v != vertices.end(); v++) {//finding vertices with these labels
     if ((*v) -> getLabel() == startLabel) {
       start = *v;
     }
@@ -223,23 +225,23 @@ void findShortest(char startLabel, char  endLabel) {
     }
   }
   
-  if (start == NULL || end == NULL) {
+  if (start == NULL || end == NULL) {//if one or both of the vertices don't exist
     cout << endl << RED << "One of these vertices does not exist" << RESET << endl;
     return;
   }
 
-  if (start == end) {
+  if (start == end) {//if the start and end vertex are the same
     cout << endl << RED << "There is no distance between a vertex and itself." << RESET << endl;
     return;
   }
   
-  if (start != NULL && end != NULL && !edges.empty()) {
+  if (start != NULL && end != NULL && !edges.empty()) {//run algorithm
     vector<Vertex*> visited;
     vector<Vertex*> unvisited = vertices;
     
     Vertex* current = NULL;
     
-    for (v = unvisited.begin(); v != unvisited.end(); v++) {
+    for (v = unvisited.begin(); v != unvisited.end(); v++) {//go through vertices to find the starting vertex
       if ((*v) == start) {
 	(*v) -> setDistance(0);
 	current = (*v);
@@ -247,8 +249,14 @@ void findShortest(char startLabel, char  endLabel) {
       }
     }
 
-
-    while (!unvisited.empty()) {
+    /*Basically what this algorithm does is find the shortest distance between the starting vertex and all other vertices.
+     *This isn't the most efficient method, but is relatively easy to implement. What this does is go through every unvisited
+     *vertex and update its distance with the current vertex's distance if it is -1 (infinity) or if it's less than the current 
+     *distance of the vertex. After going through the current vertex's connections, it will be replaced and the vertex with an 
+     *unvisited vertex with the next-least distance. This will repeat until every vertex has been visited.
+     */
+    
+    while (!unvisited.empty()) {//while there are unvisited vertices
       int distance = current -> getDistance();
       //cout << endl << "Did this at least once" << endl;
       for (v = unvisited.begin(); v != unvisited.end(); v++) {
@@ -272,7 +280,7 @@ void findShortest(char startLabel, char  endLabel) {
       
       Vertex* newCurrent = NULL;
       
-      for (v = unvisited.begin(); v != unvisited.end(); v++) {
+      for (v = unvisited.begin(); v != unvisited.end(); v++) {//moving the unvisited vertex to visited and erasing
 	if ((*v) -> getLabel() == current -> getLabel()) {
 	  //cout << endl << "happened" << endl;
 	  unvisited.erase(v);
@@ -281,7 +289,7 @@ void findShortest(char startLabel, char  endLabel) {
 	}
       }
       
-      for (v = unvisited.begin(); v != unvisited.end(); v++) {	  
+      for (v = unvisited.begin(); v != unvisited.end(); v++) {//finding the next vertex
 	if (newCurrent == NULL)
 	  newCurrent = *v;
 	
@@ -293,24 +301,24 @@ void findShortest(char startLabel, char  endLabel) {
       current = newCurrent;
     }
     
-    for (v = visited.begin(); v != visited.end(); v++) {
+    for (v = visited.begin(); v != visited.end(); v++) {//finding the final distance at the end vertex
       if ((*v) -> getLabel() == endLabel) {
 	if ((*v) -> getDistance() > 0) {
 	  cout << endl << GREEN << "The distance between " << startLabel << " and " << endLabel << " is: " << (*v) -> getDistance() << endl << RESET;
 	  break;
 	}
-	else if ((*v) -> getDistance() == -1)
+	else if ((*v) -> getDistance() == -1) //if the end vertex still has a -1 (infinite) distance
 	  cout << endl << RED << "The vertices are not connected." << RESET << endl;
       }
     }
     
   }
-  else if (edges.empty())
+  else if (edges.empty()) //if there are no edges
     cout << endl << RED << "There are no edges." << RESET << endl;
-  else
+  else //if one or both of the vertices does not exist
     cout << endl << RED << "One of the vertices does not exist." << RESET << endl;
 
-  for (v = vertices.begin(); v != vertices.end(); v++)
+  for (v = vertices.begin(); v != vertices.end(); v++) //resetting the vector
     (*v) -> setDistance(-1);
   
   start = NULL;
@@ -319,11 +327,13 @@ void findShortest(char startLabel, char  endLabel) {
   delete end;
 }
 
-void printAdjacency() {
-  if (vertices.empty()) {
+void printAdjacency() {//function for printing adjacency matrix
+  if (vertices.empty()) {//if there are no vertices
     cout << endl << RED << "There are no vertices." << RESET << endl;
     return;
   }
+  
+  //Print out all labels then start a new line, add label on first space then tab and add all the weights for connected vertices
   
   cout << "\t";
   vector<Vertex*>::iterator v;
@@ -333,19 +343,19 @@ void printAdjacency() {
   cout << endl;
 
   vector<Vertex*>::iterator v2;
-  vector<Edge*>::iterator e;
+  vector<Edge*>::iterator e; 
   for (v = vertices.begin(); v != vertices.end(); v++) {
     cout << (*v) -> getLabel() << "\t";
     for (v2 = vertices.begin(); v2 != vertices.end(); v2++) {
       bool connection = false;
-      if (v2 == v) {
+      if (v2 == v) {//vertices cannot be connected to themselves
 	cout << YELLOW << "n/a" << RESET;
 	connection = true;
       }
       else {
 	for (e = edges.begin(); e != edges.end(); e++) {
 	  if ((*e) -> getFirst() == *v) {
-	    if ((*e) -> getSecond() == *v2) {
+	    if ((*e) -> getSecond() == *v2) {//if there is an edge connected from the column and row vertices
 	      cout << CYAN << (*e) -> getWeight() << RESET;
 	      connection = true;
 	    }
@@ -353,7 +363,7 @@ void printAdjacency() {
 	}
       }
       
-      if (!connection)
+      if (!connection) //if there the vertices are not connected
 	cout << RED << "none" << RESET;
       
       cout << "\t";
@@ -368,19 +378,19 @@ void printAdjacency() {
   cout << RESET << endl;*/
 }
 
-int main() {
+int main() {//main function for getting input
   
   int numInput;
   char charInput;
   char charInput2;
   
-  while (true) {
+  while (true) {//while user hasn't quit, keep going
     cout << endl << "Would you like to:" << endl;
     cout << "1: Add a vertex" << endl;
     cout << "2: Add an edge" << endl;
     cout << "3: Remove a vertex" << endl;
     cout << "4: Remove an edge" << endl;
-    cout << "5: Find the shortest path between two points" << endl;
+    cout << "5: Find the shortest path between two vertices" << endl;
     cout << "6: Print the adjacency matrix" << endl;
     cout << "7: Quit" << endl;
     cout << endl << GREEN << ">> " << RESET;
@@ -452,7 +462,7 @@ int main() {
       break;
     }
     
-    else
+    else //if something other than 1-7 has been inputted
       cout << endl << RED << "Invalid Input." << RESET << endl;
     
   }
