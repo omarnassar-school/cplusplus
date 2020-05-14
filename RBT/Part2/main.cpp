@@ -49,6 +49,7 @@ int main() {
   int* parsed;
   int value;
   char yn;
+  int intIn;
 
   cout << endl << "Would you like to input from a file? (y/n)" << endl << ">> ";
   cin >> yn;
@@ -61,7 +62,7 @@ int main() {
     cin.ignore(1000000, '\n');
     streampos size;
     ifstream file(fileName, ios::in | ios::binary | ios::ate);
-    //ifstream file("Numbers.txt", ios::in | ios::binary | ios::ate);
+    //ifstream file("Numbers3.txt", ios::in | ios::binary | ios::ate);
     if (file.is_open()) {
       size = file.tellg();
       file.seekg(0, ios::beg);
@@ -70,14 +71,22 @@ int main() {
       //cout << input << endl;
     }
     parseInput(input);
+    cout << endl;
+    printTree(head, NULL, NULL);
   }
   
   while (true) {
-    cout << endl << "What would you like to do? (INSERT, SEARCH, DELETE, PRINT, QUIT)" << endl << ">> ";
-    cin.get(input, 10);
+    cout << endl << "What would you like to do?" << endl;
+    cout << "1: INSERT" << endl;
+    cout << "2: SEARCH" << endl;
+    cout << "3: DELETE" << endl;
+    cout << "4: PRINT" << endl;
+    cout << "5: QUIT" << endl;
+    cout << ">> ";
+    cin >> intIn;
     cin.clear();
     cin.ignore(1000000, '\n');
-    if (strcmp(input, "INSERT") == 0 || strcmp(input, "insert") == 0) {
+    if (intIn == 1) {
       cout << endl << "What number would you like to insert?" << endl << ">> ";
       cin >> value;
       cin.clear();
@@ -86,7 +95,7 @@ int main() {
       cout << endl;
       printTree(head, NULL, NULL);
     }
-    else if (strcmp(input, "SEARCH") == 0 || strcmp(input, "search") == 0) {
+    else if (intIn == 2) {
       cout << endl << "What number would you like to search for?" << endl << ">> ";
       cin >> value;
       cin.clear();
@@ -96,23 +105,27 @@ int main() {
 	cout << endl << value << " is in the tree." << endl;
       else
 	cout << endl << value << " is not in the tree." << endl;
-
+      
       temp = NULL;
       delete temp;
     }
-    else if (strcmp(input, "DELETE") == 0 || strcmp(input, "delete") == 0) {
+    else if (intIn == 3) {
       cout << endl << "What number would you like to delete?" << endl << ">> ";
       cin >> value;
       cin.clear();
       cin.ignore(1000000, '\n');
       remove(value);
     }
-    else if (strcmp(input, "PRINT") == 0 || strcmp(input, "print") == 0) {
+    else if (intIn == 4) {
       cout << endl;
       printTree(head, NULL, NULL);
     }
-    else
+
+    else if (intIn == 5)
       break;
+    
+    else
+      cout << endl << "Invalid Input." << endl;
   }
   return 0;
 }
@@ -164,6 +177,8 @@ void parseInput(char input[]) {//remove spaces between the chars, make int point
   parsed[counter - 1] = atoi(newArray);
   for (int i = 0; i < counter; i++) {
     addNode(parsed[i], head);
+    //cout << endl;
+    //printTree(head, NULL, NULL);
   }
 }
 
@@ -251,9 +266,10 @@ void checkTree(Node* current) {
   Node* grandParent = NULL;
   //cout << "got here" << endl;
   while (current != head && current -> getColor() != black && current -> getParent() -> getColor() == red) {
+    //cout << "checking: " << current -> getValue() << endl;
     parent = current -> getParent();
     grandParent = parent -> getParent();
-    
+    //printTree(head, NULL, NULL);
     if (parent == grandParent -> getLeft()) {//parent is a left child
       Node* uncle = grandParent -> getRight();
       if (uncle != NULL && uncle -> getColor() == red) {//uncle is red
@@ -261,6 +277,7 @@ void checkTree(Node* current) {
 	parent -> setColor(black);
 	uncle -> setColor(black);
 	current = grandParent;
+	//printTree(head, NULL, NULL);
       }
       else {//uncle is black
 	if (current == parent -> getRight()) {//current is right child
@@ -268,31 +285,35 @@ void checkTree(Node* current) {
 	  current = parent;
 	  parent = current -> getParent();
 	}
+	//printTree(head, NULL, NULL);
 	//current is left child
 	rotate(grandParent, false);
 	bool tempColor = parent -> getColor();
 	parent -> setColor(grandParent -> getColor());
 	grandParent -> setColor(tempColor);	
 	current = parent;
+	//printTree(head, NULL, NULL);
       }
       uncle = NULL;
       delete uncle;
     }    
-    else {
+    else {//parent is a right child
       Node* uncle = grandParent -> getLeft();
-
+      
       if (uncle != NULL && uncle -> getColor() == red) {//uncle is red
 	grandParent -> setColor(red);
 	parent -> setColor(black);
 	uncle -> setColor(black);
 	current = grandParent;
+	//printTree(head, NULL, NULL);
       }
       else {//uncle is black
-	if (current = parent -> getLeft()) {//current is left child
+	if (current == parent -> getLeft()) {//current is left child
 	  rotate(parent, false);
 	  current = parent;
 	  parent = current -> getParent();
 	}
+	//printTree(head, NULL, NULL);
 	//current is right child
 	rotate(grandParent, true);
 	bool tempColor = parent -> getColor();
@@ -302,6 +323,7 @@ void checkTree(Node* current) {
       }
       uncle = NULL;
       delete uncle;
+      //printTree(head, NULL, NULL);
     }
   }
   parent = NULL;
@@ -309,6 +331,7 @@ void checkTree(Node* current) {
   grandParent = NULL;
   delete grandParent;
   head -> setColor(black);
+  //printTree(head, NULL, NULL);
 }
 
 void rotate(Node* current, bool method) {//true is left, false is right
@@ -320,8 +343,9 @@ void rotate(Node* current, bool method) {//true is left, false is right
   
   cout << "Rotating " << current -> getValue() << " " << LR << endl;
   */
+  
   if (method) {//left rotation
-    Node* right = current -> getRight();
+    /*Node* right = current -> getRight();
     current -> setRight(right -> getLeft());
 
     if (current -> getRight() != NULL)
@@ -342,11 +366,35 @@ void rotate(Node* current, bool method) {//true is left, false is right
     current -> setParent(right);
 
     right = NULL;
+    delete right;*/
+
+    Node* right = current -> getRight();
+
+    if (current == head)
+      head = right;
+
+    if (current -> getParent() != NULL) {
+      if (current == current -> getParent() -> getLeft())
+	current -> getParent() -> setLeft(right);
+      else
+	current -> getParent() -> setRight(right);
+    }
+    right -> setParent(current -> getParent());
+    current -> setParent(right);
+
+    current -> setRight(right -> getLeft());
+
+    if (right -> getLeft() != NULL)
+      right -> getLeft() -> setParent(current);
+
+    right -> setLeft(current);
+
+    right = NULL;
     delete right;
   }
   
   else {//right rotation
-    Node* left = current -> getLeft();
+    /*Node* left = current -> getLeft();
     current -> setLeft(left -> getRight());
 
     if (current -> getLeft() != NULL)
@@ -367,10 +415,32 @@ void rotate(Node* current, bool method) {//true is left, false is right
     current -> setParent(left);
 
     left = NULL;
+    delete left;*/
+
+    Node* left = current -> getLeft();
+
+    if (current == head)
+      head = left;
+
+    if (current -> getParent() != NULL) {
+      if (current == current -> getParent() -> getLeft())
+	current -> getParent() -> setLeft(left);
+      else
+	current -> getParent() -> setRight(left);
+    }
+    left -> setParent(current -> getParent());
+    current -> setParent(left);
+
+    current -> setLeft(left -> getRight());
+
+    if (left -> getRight() != NULL)
+      left -> getRight() -> setParent(current);
+
+    left -> setRight(current);
+
+    left = NULL;
     delete left;
   }
-  /*  cout << endl;
-  printTree(head, NULL, NULL); */
 }
 
 Node* search(int value, Node* current) {//searching for a node with a certain value
@@ -399,7 +469,7 @@ Node* search(int value, Node* current) {//searching for a node with a certain va
 void remove(int value) {
   Node* temp = search(value, head);
   if (temp == NULL) {
-    cout << "NULL" << endl;
+    cout << endl << "That number is not in the tree." << endl;
     return;
   }
   
@@ -506,11 +576,12 @@ void RBTremove (Node* current) {
 }
 
 void fixDouble(Node* current) {
-  //cout << "Called with: " << current -> getValue() << endl;
-
+  //cout << "Called with: " << current -> getValue() << endl << endl;
+  /*printTree(head, NULL, NULL);
   if (current == head)
     return;
-
+  */
+  
   Node* sibling;
   Node* parent = current -> getParent();
   bool LR;
@@ -524,8 +595,9 @@ void fixDouble(Node* current) {
     LR = true;
   }
   
-  if (sibling == NULL)
+  if (sibling == NULL) {
     fixDouble(parent);
+  }
   else {
     if (sibling -> getColor() == red) {
       parent -> setColor(red);
@@ -563,8 +635,9 @@ void fixDouble(Node* current) {
       }
       else {
 	sibling -> setColor(red);
-	if (parent -> getColor() == black)
+	if (parent -> getColor() == black) {
 	  fixDouble(parent);
+	}
 	else
 	  parent -> setColor(black);
       }
@@ -615,12 +688,18 @@ Node* findLeast(Node* current, bool LR) {//true for left min, false for right ma
 
 bool hasRed(Node* current) {
   if (current -> getLeft() != NULL) {
+    //cout << current -> getLeft() -> getValue() << endl;
     if (current -> getLeft() -> getColor() == red)
       return true;
   }
-  else if (current -> getRight() != NULL) {
+
+  if (current -> getRight() != NULL) {
+    //cout << current -> getRight() -> getValue() << endl;
     if (current -> getRight() -> getColor() == red)
       return true;
   }
+  //cout << "checking if " << current -> getValue() << " has any red children" << endl;
+  //cout << "no red found" << endl;
+  
   return false;
 }
