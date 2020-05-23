@@ -22,9 +22,6 @@ struct Student {
 struct Node {
   Student* student;
   Node* next;
-  Node* chained;
-  int chainNumber;
-  bool empty;
 };
 
 //colors to make the console look "pretty"
@@ -36,6 +33,8 @@ struct Node {
 #define BLUE    "\033[34m"
 #define MAGENTA "\033[35m"
 #define CYAN    "\033[36m"
+
+Node** HashTable = new Node*[100];
 
 int main() {
   int choice;
@@ -52,16 +51,48 @@ int main() {
     cin.ignore(1000000, '\n');
 
     if (choice == 1) {//ADD
+      Student* newStudent = new Student();
+      Node* newNode = new Node();
+      
       cout << endl << "Would you like to add:" << endl;
       cout << CYAN << "1: " << RESET << "Manually" << endl;
       cout << CYAN << "2: " << RESET << "From a file" << endl;
       cout << GREEN << endl << ">> " << RESET;
-
+      
       cin >> choice;
       cin.clear();
       cin.ignore(1000000, '\n');
 
       if (choice == 1) {//Manually
+	cout << endl << "What is the student's first name?" << endl << GREEN << ">> " << RESET;
+	cin.get(newStudent -> first, 10);
+	cin.clear();
+	cin.ignore(1000000, '\n');
+
+	cout << endl << "What is the student's last name?" << endl << GREEN << ">> " << RESET;
+	cin.get(newStudent -> last, 10);
+	cin.clear();
+	cin.ignore(1000000, '\n');
+
+	cout << endl << "What is their ID?" << endl << GREEN << ">> " << RESET;
+	cin >> newStudent -> id;
+	cin.clear();
+	cin.ignore(1000000, '\n');
+
+	cout << endl << "What is their GPA?" << endl << GREEN << ">> " << RESET;
+	cin >> newStudent -> gpa;
+	cin.clear();
+	cin.ignore(1000000, '\n');
+	
+	int index;
+	
+	for (int i = 0; i < 10; i++) {
+	  if (newStudent -> first[i] != '\0')
+	    index += newStudent -> first[i];
+	}
+	
+	//cout << index;
+
 	
       }
 
