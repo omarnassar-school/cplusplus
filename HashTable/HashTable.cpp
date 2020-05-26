@@ -34,7 +34,8 @@ struct Node {
 #define MAGENTA "\033[35m"
 #define CYAN    "\033[36m"
 
-Node** HashTable = new Node*[100];
+int tableSize = 10;
+Node** HashTable = new Node*[tableSize];
 
 int main() {
   int choice;
@@ -91,8 +92,13 @@ int main() {
 	    index += newStudent -> first[i];
 	}
 	
+	index = index % tableSize;
+	
+	if (HashTable[index] == NULL)
+	  HashTable[index] = newNode;
+	
 	//cout << index;
-
+	
 	
       }
 
@@ -105,7 +111,10 @@ int main() {
     }
     
     else if (choice == 2) {//PRINT
-      
+      for (int i = 0; i < tableSize; i++) {
+	if (HashTable[i] != NULL)
+	  cout << endl << HashTable[i] -> student -> first << endl;
+      }
     }
     
     else if (choice == 3) {//DELETE
