@@ -6,16 +6,20 @@
 #include <cstring>
 #include <iostream>
 #include <iomanip>
-#include <stdlib.h>
+#include <cstdlib>
+#include <ctime>
 #include <fstream>
 #include <cmath>
 #include <vector>
+#include <map>
 
 using namespace std;
 
 struct Student {
   char* first;
   char* last;
+  //char first[10];
+  //char last[10];
   int id;
   float gpa;
 };
@@ -40,6 +44,8 @@ int tableSize = 10;
 Node** HashTable = new Node*[tableSize];
 //int idCounter = 0;
 vector<int> usedIDs;
+map<char*, char*> usedNames;
+int nameSize = 20;
 
 void initTable(Node** table, int size) {
   for (int i = 0; i < size; i++) {
@@ -47,7 +53,8 @@ void initTable(Node** table, int size) {
   }
 }
 
-bool checkTable() {
+bool checkTable() {//checking if table is full so we can rehash
+  //decided not to rehash based on collisions because names can be the same and would cause endless rehashing
   int counter = 0;
   for (int i = 0; i < tableSize; i++) {
     if (HashTable[i] != NULL)
@@ -59,15 +66,16 @@ bool checkTable() {
     return false;
 }
 
-void reHash() {
-  while (checkTable()) {
+void reHash(bool forced) {
+  while (checkTable() || forced) {
+    forced = false;
     cout << endl << YELLOW << "Rehashing..." << GREEN << " New table size is: " << RESET << pow(tableSize, 2) << endl;
     Node** tempTable = new Node*[(int)pow(tableSize, 2)];
     initTable(tempTable, (int)pow(tableSize, 2));
     for (int i = 0; i < tableSize; i++) {
       Node* tempNode = HashTable[i];
       int pos = 0;
-      for (int i = 0; i < 10; i++) {
+      for (int i = 0; i < nameSize; i++) {
 	if (tempNode -> student -> first[i] != '\0') {
 	  pos += (int)tempNode -> student -> first[i];
 	}
@@ -87,7 +95,7 @@ void reHash() {
 	    Node* parent = current;
 	    current = current -> next;
 	    int pos = 0;
-	    for (int i = 0; i < 10; i++) {
+	    for (int i = 0; i < nameSize; i++) {
 	      if (current -> student -> first[i] != '\0') {
 		pos += (int) current -> student -> first[i];
 	      }
@@ -120,9 +128,8 @@ void reHash() {
   }
 }
 
-void addStudent(char* inFirst, char* inLast, float inGPA) {
-  Student* newStudent = new Student();
-  Node* newNode = new Node();
+int genID() {
+  //decided to generate a random ID number, just like an actual school would most likely do it
   int randID;
   while (true) {
     randID = rand() % 1000000;
@@ -136,17 +143,34 @@ void addStudent(char* inFirst, char* inLast, float inGPA) {
     if (!exists)
       break;
   }
-  
-  newStudent -> id = randID;
   usedIDs.push_back(randID);
+  return randID;
+}
 
+bool checkCombos(char* first, char* last) {
+  map<char*, char*>::const_iterator j;
+  for (j = usedNames.begin(); j != usedNames.end(); ++j) {
+    if (strcmp(first, j -> first) == 0) {
+      if (strcmp(last, j -> second) == 0) {
+	return false;
+      }
+    }
+  }
+  return true;
+}
+
+void addStudent(char* inFirst, char* inLast, float inGPA) {
+  Student* newStudent = new Student();
+  Node* newNode = new Node();
+  
+  newStudent -> id = genID();  
   newStudent -> first = inFirst;
   newStudent -> last = inLast;
   newStudent -> gpa = inGPA;
 
   int pos = 0;
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < nameSize; i++) {
     if (newStudent -> first[i] != '\0') {
       pos += (int)newStudent -> first[i];
       //cout << (int)newStudent -> first[i] << endl;
@@ -171,11 +195,140 @@ void addStudent(char* inFirst, char* inLast, float inGPA) {
     
     current -> next = newNode;
   }
+
+  usedNames.insert(pair<char*, char*> (inFirst, inLast));
   
   //cout << pos;
   //cout << HashTable[pos] -> student -> first;
   
   //pos = 0;
+  reHash(false);
+}
+
+void parseInput(vector<char*> &names, char* input) {
+  char* name = new char[nameSize];
+  int i = 0;
+  int counter = 0;
+  while (input[i] != '\0') {
+    //cout << input[i];
+    if (input[i] == ' ') {
+      if (counter < nameSize) {
+	name[counter] = '\0';
+	//cout << endl << name << endl << endl;
+	names.push_back(name);
+      }
+      name = new char[nameSize];
+      counter = 0;
+    }
+    else {
+      name[counter] = input[i];
+      counter++;
+      //cout << endl << counter;
+    }
+    i++;
+  }
+  //name[counter] = '\0';
+  //cout << endl << name << endl << endl;
+  names.push_back(name);
+  //cout << endl << endl;
+}
+
+void randomGen(char first[], char last[], int amount) {
+  vector<char*> firstNames;
+  vector<char*> lastNames;
+  char* input = new char[10000];
+  ifstream file;
+  
+  
+  file.open(first);
+  if (file) {
+    int i = 0;
+    while (!file.eof()) {
+      input[i] = file.get();
+      i++;
+    }
+    input[i - 1] = '\0';
+  }
+  else {
+    cout << endl << RED << "There is an error opening: " << first << endl << RESET;
+    return;
+  }
+  parseInput(firstNames, input);
+  file.close();
+  
+  file.open(last);
+  if (file) {
+    int i = 0;
+    while (!file.eof()) {
+      input[i] = file.get();
+      i++;
+    }
+    input[i - 1] = '\0';
+  }
+  else {
+    cout << endl << RED << "There is an error opening: " << last << endl << RESET;
+    return;
+  }
+  parseInput(lastNames, input);
+  file.close();
+  vector<map<char*,char*>> combos;
+  vector<char*>::iterator n;
+  vector<char*>::iterator n2;
+  int z;
+  //cout << endl <<  firstNames.size() << endl << lastNames.size() << endl;
+  for (n = firstNames.begin(); n != firstNames.end(); n++) {
+    for (n2 = lastNames.begin(); n2 != lastNames.end(); n2++) {
+      //cout << z << endl;
+      map<char*, char*> temp;
+      if (checkCombos(*n, *n2)) {
+	temp.insert(pair<char*, char*> (*n, *n2));
+	combos.push_back(temp);
+      }
+      temp.clear();
+      z++;
+    }
+  }
+  //cout << endl << z;
+  //cout << endl << firstNames.size() << endl << lastNames.size() << endl <<  combos.size() << endl;
+
+  if (amount > combos.size()) {
+    cout << RED << endl << "Maximum amount of random students is: " << combos.size() << RESET << endl;
+    return;
+  }
+  
+  for (int i = 0; i < amount; i++) {
+    char* firstName = new char[nameSize];
+    char* lastName = new char[nameSize];
+    float gpa = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/5));
+    //cout << endl << "1" << endl;
+    do {
+      vector<map<char*, char*>>::const_iterator v;
+      map<char*, char*>::const_iterator m;
+      int random = rand() % combos.size();
+      //cout << random;
+      int counter = 0;
+      for (v = combos.begin(); v != combos.end(); ++v) {
+	if (counter == random) {
+	  for (m = v -> begin(); m != v -> end(); ++m) {
+	    //cout << endl << m -> first << " " << m -> second << endl;
+	    firstName = m -> first;
+	    lastName = m -> second;
+	    break;
+	  }
+	  break;
+	}
+	counter++;
+      }
+      //cout << endl << random << endl;
+    } while (!checkCombos(firstName, lastName));
+    //cout << endl << "2" << endl;
+    //cout << endl << firstName << endl;
+    //cout << endl << lastName << endl;
+    //cout << endl << gpa << endl;
+    addStudent(firstName, lastName, gpa);
+    //cout << endl << "4" << endl;
+  }
+ 
 }
 
 void removeStudent(int idx) {
@@ -267,6 +420,7 @@ void removeStudent(int idx) {
 }
 
 int main() {
+  srand(time(0));
   int choice;
   initTable(HashTable, tableSize);
   while (true) {
@@ -274,7 +428,8 @@ int main() {
     cout << CYAN << "1: " << RESET << "ADD" << endl;
     cout << CYAN << "2: " << RESET << "PRINT" << endl;
     cout << CYAN << "3: " << RESET << "DELETE" << endl;
-    cout << CYAN << "4: " << RESET << "QUIT" << endl;
+    cout << CYAN << "4: " << RESET << "REHASH" << endl;
+    cout << CYAN << "5: " << RESET << "QUIT" << endl;
     cout << GREEN << endl << ">> " << RESET;
     
     cin >> choice;
@@ -291,21 +446,20 @@ int main() {
       cin >> choice;
       cin.clear();
       cin.ignore(1000000, '\n');
-
+      
       if (choice == 1) {//Manually
-	char* first;
-	char* last;
+	char* first = new char[nameSize];
+	char* last = new char[nameSize];
 	float gpa;
-	
 	cout << endl << "What is the student's first name?" << endl << GREEN << ">> " << RESET;
 	//cin.get(newStudent -> first, 10);
-	cin.get(first, 10);
+	cin.get(first, nameSize);
 	cin.clear();
 	cin.ignore(1000000, '\n');
 
 	cout << endl << "What is the student's last name?" << endl << GREEN << ">> " << RESET;
 	//cin.get(newStudent -> last, 10);
-	cin.get(last, 10);
+	cin.get(last, nameSize);
 	cin.clear();
 	cin.ignore(1000000, '\n');
 
@@ -319,12 +473,43 @@ int main() {
 	cin >> gpa;
 	cin.clear();
 	cin.ignore(1000000, '\n');
-
-	addStudent(first, last, gpa);
+	
+	if (gpa <= 5 && gpa > 0) {
+	  if (checkCombos(first, last)) {
+	    addStudent(first, last, gpa);
+	    cout << endl << GREEN << "Student has been added." << endl << RESET;
+	  }
+	  else 
+	    cout << endl << RED << "There is already a student with that name." << endl << RESET;
+	}
+	else
+	  if (gpa > 0)
+	    cout << endl << RED << "GPA is too high." << endl << RESET;
+	  else
+	    cout << endl << RED << "GPA is too low." << endl << RESET;
       }
 
       else if (choice == 2) {//From a file
+	char firstFile[20];
+	char secondFile[20];
+	int amount;
 	
+	cout << endl << "What is name of the file with the first names?" << endl << GREEN << ">> " << RESET;
+	cin.get(firstFile, 20);
+	cin.clear();
+	cin.ignore(1000000, '\n');
+
+	cout << endl << "What is the name of the file with the last names?" << endl << GREEN << ">> " << RESET;
+	cin.get(secondFile, 20);
+	cin.clear();
+	cin.ignore(1000000, '\n');
+
+	cout << endl << "How many student would you like to generate?" << endl << GREEN << ">> " << RESET;
+	cin >> amount;
+	cin.clear();
+	cin.ignore(1000000, '\n');
+
+	randomGen(firstFile, secondFile, amount);
       }
 
       else
@@ -403,14 +588,16 @@ int main() {
 	  removeStudent(idx);
       }
     }
+
+    else if (choice == 4)
+      reHash(true);
     
-    else if (choice == 4) //QUIT
+    else if (choice == 5) //QUIT
       break;
     
     else
       cout << endl << RED << "Invalid Input" << RESET << endl;
     
-    reHash();
   }
   return 0;
 }
