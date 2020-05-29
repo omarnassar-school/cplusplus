@@ -53,7 +53,11 @@ void initTable(Node** table, int size) {
   }
 }
 
-bool checkTable() {//checking if table is full so we can rehash
+bool checkTable(bool forced) {//checking if table is full so we can rehash
+  cout << endl << "checked" << endl;
+  if (forced)
+    return true;
+  
   //decided not to rehash based on collisions because names can be the same and would cause endless rehashing
   int counter = 0;
   for (int i = 0; i < tableSize; i++) {
@@ -67,22 +71,25 @@ bool checkTable() {//checking if table is full so we can rehash
 }
 
 void reHash(bool forced) {
-  while (checkTable() || forced) {
+  while (checkTable(forced)) {
     forced = false;
-    cout << endl << YELLOW << "Rehashing..." << GREEN << " New table size is: " << RESET << pow(tableSize, 2) << endl;
+    cout << endl << YELLOW << "Rehashing...";
     Node** tempTable = new Node*[(int)pow(tableSize, 2)];
     initTable(tempTable, (int)pow(tableSize, 2));
     for (int i = 0; i < tableSize; i++) {
-      Node* tempNode = HashTable[i];
-      int pos = 0;
-      for (int i = 0; i < nameSize; i++) {
-	if (tempNode -> student -> first[i] != '\0') {
-	  pos += (int)tempNode -> student -> first[i];
+      if (HashTable[i] != NULL) {
+	Node* tempNode = HashTable[i];
+	int pos = 0;
+	for (int i = 0; i < nameSize; i++) {
+	  if (tempNode -> student -> first[i] != '\0') {
+	    pos += (int)tempNode -> student -> first[i];
+	  }
 	}
+	
+	pos = pos % (int)pow(tableSize, 2);
+	tempNode -> index = pos;
+	tempTable[pos] = tempNode;
       }
-      pos = pos % (int)pow(tableSize, 2);
-      tempNode -> index = pos;
-      tempTable[pos] = tempNode;
     }    
     HashTable = tempTable;
     tableSize = (int)pow(tableSize, 2);
@@ -125,6 +132,7 @@ void reHash(bool forced) {
 	}
       }
     }
+    cout << GREEN << " New table size is: " << RESET << tableSize << endl;
   }
 }
 
