@@ -44,7 +44,9 @@ int tableSize = 10;
 Node** HashTable = new Node*[tableSize];
 //int idCounter = 0;
 vector<int> usedIDs;
-map<char*, char*> usedNames;
+//map<char*, char*> usedNames;
+//didn't use map because for some reason it wasn't adding all the names correctly
+vector<map<char*, char*>> usedNames;
 int nameSize = 20;
 
 void initTable(Node** table, int size) {
@@ -54,7 +56,7 @@ void initTable(Node** table, int size) {
 }
 
 bool checkTable(bool forced) {//checking if table is full so we can rehash
-  cout << endl << "checked" << endl;
+  //cout << endl << "checked" << endl;
   if (forced)
     return true;
   
@@ -64,7 +66,8 @@ bool checkTable(bool forced) {//checking if table is full so we can rehash
     if (HashTable[i] != NULL)
       counter++;
   }
-  if (counter >= tableSize)
+  //cout << endl << counter << endl << usedNames.size() << endl;
+  if (counter >= tableSize/2)
     return true;
   else
     return false;
@@ -156,11 +159,14 @@ int genID() {
 }
 
 bool checkCombos(char* first, char* last) {
+  vector<map<char*, char*>>::iterator v;
   map<char*, char*>::const_iterator j;
-  for (j = usedNames.begin(); j != usedNames.end(); ++j) {
-    if (strcmp(first, j -> first) == 0) {
-      if (strcmp(last, j -> second) == 0) {
-	return false;
+  for (v = usedNames.begin(); v != usedNames.end(); v++) {
+    for (j = v -> begin(); j != v -> end(); ++j) {
+      if (strcmp(first, j -> first) == 0) {
+	if (strcmp(last, j -> second) == 0) {
+	  return false;
+	}
       }
     }
   }
@@ -204,7 +210,10 @@ void addStudent(char* inFirst, char* inLast, float inGPA) {
     current -> next = newNode;
   }
 
-  usedNames.insert(pair<char*, char*> (inFirst, inLast));
+  map<char*, char*> temp;
+  temp.insert(pair<char*, char*> (inFirst, inLast));
+  usedNames.push_back(temp);
+  temp.clear();
   
   //cout << pos;
   //cout << HashTable[pos] -> student -> first;
@@ -437,7 +446,8 @@ int main() {
     cout << CYAN << "2: " << RESET << "PRINT" << endl;
     cout << CYAN << "3: " << RESET << "DELETE" << endl;
     cout << CYAN << "4: " << RESET << "REHASH" << endl;
-    cout << CYAN << "5: " << RESET << "QUIT" << endl;
+    cout << CYAN << "5: " << RESET << "RESET" << endl;
+    cout << CYAN << "6: " << RESET << "QUIT" << endl;
     cout << GREEN << endl << ">> " << RESET;
     
     cin >> choice;
@@ -527,10 +537,12 @@ int main() {
     else if (choice == 2) {//PRINT
       Node* current;
       bool found = false;
+      int counter = 0;
       for (int i = 0; i < tableSize; i++) {
 	if (HashTable[i] != NULL) {
 	  found = true;
 	  if (HashTable[i] -> student != NULL) {
+	    counter++;
 	    cout << endl << HashTable[i] -> student -> first << endl;
 	    cout << HashTable[i] -> student -> last << endl;
 	    cout << setw(6) << setfill('0') << HashTable[i] -> student -> id << endl;
@@ -543,6 +555,7 @@ int main() {
 	    current = current -> next;
 	    num++;
 	    if (current -> student != NULL) {
+	      counter++;
 	      cout << endl << current -> student -> first << endl;
 	      cout << current -> student -> last << endl;
 	      cout << setw(6) << setfill('0') << current -> student -> id << endl;
@@ -554,6 +567,8 @@ int main() {
       }
       if (!found)
 	cout << RED << endl << "There are no students to print." << RESET << endl;
+      else
+	cout << endl << counter << " total students." << endl;
     }
     
     else if (choice == 3) {//DELETE
@@ -597,10 +612,19 @@ int main() {
       }
     }
 
-    else if (choice == 4)
+    else if (choice == 4) //REHASH (forced)
       reHash(true);
+
+    else if (choice == 5) {//RESET
+      tableSize = 10;
+      HashTable = new Node*[tableSize];
+      initTable(HashTable, tableSize);
+      usedIDs.clear();
+      usedNames.clear();
+    }
+      
     
-    else if (choice == 5) //QUIT
+    else if (choice == 6) //QUIT
       break;
     
     else
