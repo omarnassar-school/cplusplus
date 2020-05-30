@@ -59,21 +59,23 @@ bool checkTable(bool forced) {//checking if table is full so we can rehash
   //cout << endl << "checked" << endl;
   if (forced)
     return true;
-  
+  //cout << endl << forced << endl;
   //decided not to rehash based on collisions because names can be the same and would cause endless rehashing
-  int counter = 0;
+  /*int counter = 0;
   for (int i = 0; i < tableSize; i++) {
     if (HashTable[i] != NULL)
       counter++;
-  }
+    cout << endl << counter << endl;
+  }*/
   //cout << endl << counter << endl << usedNames.size() << endl;
-  if (counter >= tableSize/2)
+  if (usedNames.size() >= tableSize/2)
     return true;
   else
     return false;
 }
 
 void reHash(bool forced) {
+  //cout << endl << "called" << endl;
   while (checkTable(forced)) {
     forced = false;
     cout << endl << YELLOW << "Rehashing...";
@@ -158,13 +160,15 @@ int genID() {
   return randID;
 }
 
-bool checkCombos(char* first, char* last) {
+bool checkCombos(char* first, char* last, bool shouldDelete) {
   vector<map<char*, char*>>::iterator v;
   map<char*, char*>::const_iterator j;
   for (v = usedNames.begin(); v != usedNames.end(); v++) {
     for (j = v -> begin(); j != v -> end(); ++j) {
       if (strcmp(first, j -> first) == 0) {
 	if (strcmp(last, j -> second) == 0) {
+	  if (shouldDelete)
+	    usedNames.erase(v);
 	  return false;
 	}
       }
@@ -297,7 +301,7 @@ void randomGen(char first[], char last[], int amount) {
     for (n2 = lastNames.begin(); n2 != lastNames.end(); n2++) {
       //cout << z << endl;
       map<char*, char*> temp;
-      if (checkCombos(*n, *n2)) {
+      if (checkCombos(*n, *n2, false)) {
 	temp.insert(pair<char*, char*> (*n, *n2));
 	combos.push_back(temp);
       }
@@ -337,7 +341,7 @@ void randomGen(char first[], char last[], int amount) {
 	counter++;
       }
       //cout << endl << random << endl;
-    } while (!checkCombos(firstName, lastName));
+    } while (!checkCombos(firstName, lastName, false));
     //cout << endl << "2" << endl;
     //cout << endl << firstName << endl;
     //cout << endl << lastName << endl;
@@ -357,6 +361,7 @@ void removeStudent(int idx) {
     cin.ignore(1000000, '\n');
 
     if (yesno == 'y') {
+      checkCombos(HashTable[idx] -> student -> first, HashTable[idx] -> student -> last, true);
       delete HashTable[idx];
       HashTable[idx] = NULL;
       cout << endl << GREEN << "Student was deleted." << endl << RESET;
@@ -407,6 +412,7 @@ void removeStudent(int idx) {
     cin.ignore(1000000, '\n');
     if (yesno == 'y') {
       if (current -> next == NULL) {
+	checkCombos(current -> student -> first, current -> student -> last, true);
 	parent -> next = NULL;
 	current = NULL;
 	delete current;
@@ -419,6 +425,8 @@ void removeStudent(int idx) {
 	}
 	if (parent != NULL)
 	  parent -> next = temp;
+
+	checkCombos(current -> student -> first, current -> student -> last, true);
 	current = NULL;
 	delete current;
 	cout << endl <<  GREEN << "Student was deleted." << endl << RESET;
@@ -493,7 +501,7 @@ int main() {
 	cin.ignore(1000000, '\n');
 	
 	if (gpa <= 5 && gpa > 0) {
-	  if (checkCombos(first, last)) {
+	  if (checkCombos(first, last, false)) {
 	    addStudent(first, last, gpa);
 	    cout << endl << GREEN << "Student has been added." << endl << RESET;
 	  }
@@ -569,52 +577,73 @@ int main() {
 	cout << RED << endl << "There are no students to print." << RESET << endl;
       else
 	cout << endl << counter << " total students." << endl;
+
+      cout << usedNames.size();
     }
     
     else if (choice == 3) {//DELETE
+      char* name = new char[nameSize];
       int idx;
       cout << endl << "What is the student's index? (If unknown input -1)" << endl << GREEN << ">> " << RESET;
       cin >> idx;
       cin.clear();
       cin.ignore(1000000, '\n');
 
-      if (idx == -1)
-	cout << endl << "Input 2 to print all students and their information." << endl;
-      else {
-	bool found = false;
-	if (HashTable[idx] != NULL) {
-	  cout << endl << HashTable[idx] -> student -> first << endl;
-	  cout << HashTable[idx] -> student -> last << endl;
-	  cout << setw(6) << setfill('0') << HashTable[idx] -> student -> id << endl;
-	  printf("%.2f\n", HashTable[idx] -> student -> gpa);
-	  if (HashTable[idx] -> next != NULL)
-	    cout << CYAN << "Chain number: " << MAGENTA << "0" << endl << RESET;
-	
-	  Node* current = HashTable[idx];
-	  int num = 0;
-	  while (current -> next != NULL) {
-	    current = current -> next;
-	    num++;
-	    if (current -> student != NULL) {
-	      cout << endl << current -> student -> first << endl;
-	      cout << current -> student -> last << endl;
-	      cout << setw(6) << setfill('0') << current -> student -> id << endl;
-	      printf("%.2f\n", current -> student -> gpa);
-	      cout << CYAN << "Chain number: " << MAGENTA << num << endl << RESET;
-	    }
-	  }
-	  found = true;
-	}
-	if (!found)
-	  cout << endl << RED << "There is no student with that index number." << RESET << endl;
-	else
-	  removeStudent(idx);
-      }
-    }
+      if (idx == -1) {
+	cout << endl << "What is the student's first name?" << endl << GREEN << ">> " << RESET;
+	cin.get(name, nameSize);
+	cin.clear();
+	cin.ignore(1000000, '\n');
 
+	int pos = 0;
+
+	for (int i = 0; i < nameSize; i++) {
+	  if (name[i] != '\0') {
+	    pos += (int)name[i];
+	    //cout << (int)newStudent -> first[i] << endl;
+	    //cout << pos << endl;
+	  }
+	}
+
+	pos = pos % tableSize;
+	
+	idx = pos;
+
+	cout << endl << "Students with index: " << pos << endl;
+      }
+      bool found = false;
+      if (HashTable[idx] != NULL) {
+	cout << endl << HashTable[idx] -> student -> first << endl;
+	cout << HashTable[idx] -> student -> last << endl;
+	cout << setw(6) << setfill('0') << HashTable[idx] -> student -> id << endl;
+	printf("%.2f\n", HashTable[idx] -> student -> gpa);
+	if (HashTable[idx] -> next != NULL)
+	  cout << CYAN << "Chain number: " << MAGENTA << "0" << endl << RESET;
+	
+	Node* current = HashTable[idx];
+	int num = 0;
+	while (current -> next != NULL) {
+	  current = current -> next;
+	  num++;
+	  if (current -> student != NULL) {
+	    cout << endl << current -> student -> first << endl;
+	    cout << current -> student -> last << endl;
+	    cout << setw(6) << setfill('0') << current -> student -> id << endl;
+	    printf("%.2f\n", current -> student -> gpa);
+	    cout << CYAN << "Chain number: " << MAGENTA << num << endl << RESET;
+	  }
+	}
+	found = true;
+      }
+      if (!found)
+	cout << endl << RED << "There is no student with that index number." << RESET << endl;
+      else
+	removeStudent(idx);
+    }
+    
     else if (choice == 4) //REHASH (forced)
       reHash(true);
-
+    
     else if (choice == 5) {//RESET
       tableSize = 10;
       HashTable = new Node*[tableSize];
@@ -622,7 +651,7 @@ int main() {
       usedIDs.clear();
       usedNames.clear();
     }
-      
+    
     
     else if (choice == 6) //QUIT
       break;
