@@ -15,7 +15,7 @@
 
 using namespace std;
 
-struct Student {
+struct Student {//struct to store students data
   char* first;
   char* last;
   //char first[10];
@@ -24,7 +24,7 @@ struct Student {
   float gpa;
 };
 
-struct Node {
+struct Node {//nodes for adding to array and create chains
   Student* student;
   Node* next;
   int index;
@@ -40,22 +40,22 @@ struct Node {
 #define MAGENTA "\033[35m"
 #define CYAN    "\033[36m"
 
-int tableSize = 10;
-Node** HashTable = new Node*[tableSize];
+int tableSize = 10; //global array size
+Node** HashTable = new Node*[tableSize]; //hash table
 //int idCounter = 0;
-vector<int> usedIDs;
+vector<int> usedIDs; //storing IDs that have been used
 //map<char*, char*> usedNames;
 //didn't use map because for some reason it wasn't adding all the names correctly
-vector<map<char*, char*>> usedNames;
-int nameSize = 20;
+vector<map<char*, char*>> usedNames; //storing names that are in the table
+int nameSize = 20; //length of first and last names
 
-void initTable(Node** table, int size) {
+void initTable(Node** table, int size) {//making all nodes in table null
   for (int i = 0; i < size; i++) {
     table[i] = NULL;
   }
 }
 
-bool checkTable(bool forced) {//checking if table is full so we can rehash
+bool checkTable(bool forced) {//checking if table is half full so we can rehash, can also be forced to be true
   //cout << endl << "checked" << endl;
   if (forced)
     return true;
@@ -74,18 +74,18 @@ bool checkTable(bool forced) {//checking if table is full so we can rehash
     return false;
 }
 
-void reHash(bool forced) {
+void reHash(bool forced) {//rehashing table to make it larger and reindex all nodes
   //cout << endl << "called" << endl;
-  while (checkTable(forced)) {
+  while (checkTable(forced)) {//can rehash multiple times if needed
     forced = false;
     cout << endl << YELLOW << "Rehashing...";
-    Node** tempTable = new Node*[(int)pow(tableSize, 2)];
+    Node** tempTable = new Node*[(int)pow(tableSize, 2)]; //make a temporary table with all the nodes
     initTable(tempTable, (int)pow(tableSize, 2));
     for (int i = 0; i < tableSize; i++) {
       if (HashTable[i] != NULL) {
 	Node* tempNode = HashTable[i];
 	int pos = 0;
-	for (int i = 0; i < nameSize; i++) {
+	for (int i = 0; i < nameSize; i++) {//reindex
 	  if (tempNode -> student -> first[i] != '\0') {
 	    pos += (int)tempNode -> student -> first[i];
 	  }
@@ -99,7 +99,7 @@ void reHash(bool forced) {
     HashTable = tempTable;
     tableSize = (int)pow(tableSize, 2);
     
-    for (int i = 0; i < tableSize; i++) {
+    for (int i = 0; i < tableSize; i++) {//check for chain and reindex chained nodes
       if (HashTable[i] != NULL) {
 	if (HashTable[i] -> next != NULL) {
 	  Node* current = HashTable[i];
@@ -141,7 +141,7 @@ void reHash(bool forced) {
   }
 }
 
-int genID() {
+int genID() {//generate random ID that hasn't been used before
   //decided to generate a random ID number, just like an actual school would most likely do it
   int randID;
   while (true) {
@@ -160,7 +160,7 @@ int genID() {
   return randID;
 }
 
-bool checkCombos(char* first, char* last, bool shouldDelete) {
+bool checkCombos(char* first, char* last, bool shouldDelete) {//check if a name has been used before, can also delete
   vector<map<char*, char*>>::iterator v;
   map<char*, char*>::const_iterator j;
   for (v = usedNames.begin(); v != usedNames.end(); v++) {
@@ -177,7 +177,7 @@ bool checkCombos(char* first, char* last, bool shouldDelete) {
   return true;
 }
 
-void addStudent(char* inFirst, char* inLast, float inGPA) {
+void addStudent(char* inFirst, char* inLast, float inGPA) {//adding student to table
   Student* newStudent = new Student();
   Node* newNode = new Node();
   
@@ -215,7 +215,7 @@ void addStudent(char* inFirst, char* inLast, float inGPA) {
   }
 
   map<char*, char*> temp;
-  temp.insert(pair<char*, char*> (inFirst, inLast));
+  temp.insert(pair<char*, char*> (inFirst, inLast)); //adding name to used names list
   usedNames.push_back(temp);
   temp.clear();
   
@@ -226,7 +226,7 @@ void addStudent(char* inFirst, char* inLast, float inGPA) {
   reHash(false);
 }
 
-void parseInput(vector<char*> &names, char* input) {
+void parseInput(vector<char*> &names, char* input) {//parse file input that's separated by spaces, won't work if name is longer than 'tableSize - 1'
   char* name = new char[nameSize];
   int i = 0;
   int counter = 0;
@@ -254,7 +254,7 @@ void parseInput(vector<char*> &names, char* input) {
   //cout << endl << endl;
 }
 
-void randomGen(char first[], char last[], int amount) {
+void randomGen(char first[], char last[], int amount) {//generate random students given file with first and last names
   vector<char*> firstNames;
   vector<char*> lastNames;
   char* input = new char[10000];
@@ -297,7 +297,7 @@ void randomGen(char first[], char last[], int amount) {
   vector<char*>::iterator n2;
   int z;
   //cout << endl <<  firstNames.size() << endl << lastNames.size() << endl;
-  for (n = firstNames.begin(); n != firstNames.end(); n++) {
+  for (n = firstNames.begin(); n != firstNames.end(); n++) {//adding all possible names to a vector
     for (n2 = lastNames.begin(); n2 != lastNames.end(); n2++) {
       //cout << z << endl;
       map<char*, char*> temp;
@@ -317,7 +317,7 @@ void randomGen(char first[], char last[], int amount) {
     return;
   }
   
-  for (int i = 0; i < amount; i++) {
+  for (int i = 0; i < amount; i++) {//choosing a random combo that hasn't been used
     char* firstName = new char[nameSize];
     char* lastName = new char[nameSize];
     float gpa = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/5));
@@ -352,7 +352,7 @@ void randomGen(char first[], char last[], int amount) {
  
 }
 
-void removeStudent(int idx) {
+void removeStudent(int idx) {//removing students
   if (HashTable[idx] -> next == NULL) {
     char yesno = '\0';
     cout << YELLOW << endl << "Are you sure you would like to delete this student? (y/n)" << endl << GREEN << ">> " << RESET;
@@ -377,7 +377,7 @@ void removeStudent(int idx) {
     }
   }
 
-  else {
+  else {//if index has multiple nodes associated with it
     int chainNo = 0;
     char yesno = '\0';
     cout << endl << "What is the student's chain number?" << endl << GREEN << ">> " << RESET;
@@ -500,8 +500,8 @@ int main() {
 	cin.clear();
 	cin.ignore(1000000, '\n');
 	
-	if (gpa <= 5 && gpa > 0) {
-	  if (checkCombos(first, last, false)) {
+	if (gpa <= 5 && gpa > 0) {//gpa can never be over 5
+	  if (checkCombos(first, last, false)) {//if name hasn't been used
 	    addStudent(first, last, gpa);
 	    cout << endl << GREEN << "Student has been added." << endl << RESET;
 	  }
@@ -543,6 +543,7 @@ int main() {
     }
     
     else if (choice == 2) {//PRINT
+      //go through table and print nodes that exist as well as their children if they exist
       Node* current;
       bool found = false;
       int counter = 0;
@@ -589,7 +590,7 @@ int main() {
       cin.clear();
       cin.ignore(1000000, '\n');
 
-      if (idx == -1) {
+      if (idx == -1) {//will calculate index
 	cout << endl << "What is the student's first name?" << endl << GREEN << ">> " << RESET;
 	cin.get(name, nameSize);
 	cin.clear();
@@ -645,6 +646,7 @@ int main() {
       reHash(true);
     
     else if (choice == 5) {//RESET
+      //reset all global variables
       tableSize = 10;
       HashTable = new Node*[tableSize];
       initTable(HashTable, tableSize);
