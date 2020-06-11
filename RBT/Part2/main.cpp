@@ -340,7 +340,7 @@ void rotate(Node* current, bool method) {//true is left, false is right
     LR = (char*)("left");
   else
     LR = (char*)("right");
-  
+   
   cout << "Rotating " << current -> getValue() << " " << LR << endl;
   */
   
@@ -495,6 +495,7 @@ void RBTremove (Node* current) {
   else
     cout << "No replacement needed." << endl;
   */
+  
   bool doubleBlack = false;
   
   Node* parent = current -> getParent();
@@ -561,28 +562,28 @@ void RBTremove (Node* current) {
     delete temp;
     return;
   }
+
   
-  int tempVal;
-  tempVal = current -> getValue();
+  int tempVal = current -> getValue();
   current -> setValue(temp -> getValue());
   temp -> setValue(tempVal);
-  /*
-  cout << "Recursely calling with: " << temp -> getValue() << endl;
+  
+  //cout << "Recursely calling with: " << temp -> getValue() << endl;
   
   cout << endl;
   printTree(head, NULL, NULL);
-  */
+  
   RBTremove(temp);
 }
 
 void fixDouble(Node* current) {
   //cout << "Called with: " << current -> getValue() << endl << endl;
-  /*printTree(head, NULL, NULL);
+  //printTree(head, NULL, NULL);
   if (current == head)
     return;
-  */
   
-  Node* sibling;
+  
+  Node* sibling = NULL;
   Node* parent = current -> getParent();
   bool LR;
   
