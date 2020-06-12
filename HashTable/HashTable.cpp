@@ -42,6 +42,7 @@ struct Node {//nodes for adding to array and create chains
 
 int tableSize = 10; //global array size
 Node** HashTable = new Node*[tableSize]; //hash table
+Node** tempTable = NULL;
 //int idCounter = 0;
 vector<int> usedIDs; //storing IDs that have been used
 //map<char*, char*> usedNames;
@@ -53,6 +54,7 @@ void initTable(Node** table, int size) {//making all nodes in table null
   for (int i = 0; i < size; i++) {
     table[i] = NULL;
   }
+  //cout << endl << "All NULL" << endl;
 }
 
 bool checkTable(bool forced) {//checking if table is half full so we can rehash, can also be forced to be true
@@ -68,76 +70,11 @@ bool checkTable(bool forced) {//checking if table is half full so we can rehash,
     cout << endl << counter << endl;
   }*/
   //cout << endl << counter << endl << usedNames.size() << endl;
-  if (usedNames.size() >= tableSize/2)
-    return true;
-  else
-    return false;
-}
-
-void reHash(bool forced) {//rehashing table to make it larger and reindex all nodes
-  //cout << endl << "called" << endl;
-  while (checkTable(forced)) {//can rehash multiple times if needed
-    forced = false;
-    cout << endl << YELLOW << "Rehashing...";
-    Node** tempTable = new Node*[(int)pow(tableSize, 2)]; //make a temporary table with all the nodes
-    initTable(tempTable, (int)pow(tableSize, 2));
-    for (int i = 0; i < tableSize; i++) {
-      if (HashTable[i] != NULL) {
-	Node* tempNode = HashTable[i];
-	int pos = 0;
-	for (int i = 0; i < nameSize; i++) {//reindex
-	  if (tempNode -> student -> first[i] != '\0') {
-	    pos += (int)tempNode -> student -> first[i];
-	  }
-	}
-	
-	pos = pos % (int)pow(tableSize, 2);
-	tempNode -> index = pos;
-	tempTable[pos] = tempNode;
-      }
-    }    
-    HashTable = tempTable;
-    tableSize = (int)pow(tableSize, 2);
-    
-    for (int i = 0; i < tableSize; i++) {//check for chain and reindex chained nodes
-      if (HashTable[i] != NULL) {
-	if (HashTable[i] -> next != NULL) {
-	  Node* current = HashTable[i];
-	  while (current -> next != NULL) {
-	    Node* parent = current;
-	    current = current -> next;
-	    int pos = 0;
-	    for (int i = 0; i < nameSize; i++) {
-	      if (current -> student -> first[i] != '\0') {
-		pos += (int) current -> student -> first[i];
-	      }
-	    }
-	    pos = pos % tableSize;
-	    
-	    if (pos != parent -> index) {
-	      Node* temp = current;
-	      temp -> index = pos;
-	      current = parent;
-	      parent = NULL;
-	      current -> next = temp -> next;
-	      if (HashTable[pos] == NULL)
-		HashTable[pos] = temp;
-	      else {
-		Node* occupier = HashTable[pos];
-		while (occupier -> next != NULL)
-		  occupier = occupier -> next;
-		
-		occupier -> next = temp;
-	      }
-	    }
-	    else {
-	      current -> index = pos;
-	    }
-	  }
-	}
-      }
-    }
-    cout << GREEN << " New table size is: " << RESET << tableSize << endl;
+  else {
+    if (usedNames.size() >= tableSize/2)
+      return true;
+    else
+      return false;
   }
 }
 
@@ -160,6 +97,208 @@ int genID() {//generate random ID that hasn't been used before
   return randID;
 }
 
+void addStudent(char* inFirst, char* inLast, float inGPA, bool overRide, Student* inStudent, int inIndex) {//adding student to table
+  if (overRide) {
+    Node* newNode = new Node();
+    newNode -> student = inStudent;
+    newNode -> index = inIndex;
+    if (HashTable[inIndex] == NULL) {
+      HashTable[inIndex] = newNode;
+    }
+    else {
+      Node* current = HashTable[inIndex];
+      while (current -> next != NULL)
+	current = current -> next;
+      
+      current -> next = newNode;
+      current = NULL;
+    }
+    newNode = NULL;
+  }
+  else {
+    Student* newStudent = new Student();
+    Node* newNode = new Node();
+    
+    newStudent -> id = genID();
+    newStudent -> first = inFirst;
+    newStudent -> last = inLast;
+    newStudent -> gpa = inGPA;
+    
+    int pos = 0;
+    
+    for (int i = 0; i < nameSize; i++) {
+      if (newStudent -> first[i] != '\0') {
+	pos += (int)newStudent -> first[i];
+	//cout << (int)newStudent -> first[i] << endl;
+	//cout << pos << endl;
+      }
+    }
+    
+    pos = pos % tableSize;
+    //cout << tableSize << endl;
+    //cout << pos << endl;
+    newNode -> student = newStudent;
+    newNode -> index = pos;
+    
+    if (HashTable[pos] ==  NULL) {
+      HashTable[pos] = newNode;
+      //cout << "happened";
+    }
+    else {
+      Node* current = HashTable[pos];
+      while (current -> next != NULL)
+	current = current -> next;
+      
+      current -> next = newNode;
+    }
+    
+    map<char*, char*> temp;
+    temp.insert(pair<char*, char*> (inFirst, inLast)); //adding name to used names list
+    usedNames.push_back(temp);
+    temp.clear();
+    
+    //cout << pos;
+    //cout << HashTable[pos] -> student -> first;
+    
+    //pos = 0;
+    //reHash(false);
+  }
+}
+
+void reIndex(int size) {
+  for (int i = 0; i < tableSize; i++) {
+    if (HashTable[i] != NULL) {
+      int pos = 0;
+      //cout << nameSize;
+      for (int j = 0; j < nameSize; j++) {
+	//cout << endl << i << endl << j << endl;
+	if (HashTable[i] -> student -> first[j] != '\0') {
+	  pos += (int)HashTable[i] -> student -> first[i];
+	}
+      }
+      pos = pos % size;
+      HashTable[i] -> index = pos;
+      
+      if (HashTable[i] -> next != NULL) {
+	Node* current = HashTable[i];
+	do {
+	  current = current -> next;
+	  for (int j = 0; j < nameSize; j++) {
+	    if (current -> student -> first[j] != '\0') {
+	      pos += (int)current -> student -> first[j];
+	    }
+	  }
+	  pos = pos % size;
+	  current -> index = pos;
+	} while (current -> next != NULL);
+	current = NULL;
+      }
+    }
+  }
+}
+
+void reHash(bool forced) {//rehashing table to make it larger and reindex all nodes
+  //cout << endl << "called" << endl;
+  bool needHash = checkTable(forced);
+  //cout << endl << "need hash is: " << needHash << endl;
+  if (needHash) {
+    //cout << endl << "happened" << endl;
+    forced = false;
+    //cout << endl << "here " << (int)pow(tableSize, 2) << endl;
+    cout << endl << YELLOW << "Rehashing..." << RESET;
+    int tempSize = (int)pow(tableSize, 2);
+    tempTable = new Node*[tempSize]; //make a temporary table with all the nodes
+    initTable(tempTable, tempSize);
+    for (int i = 0; i < tableSize; i++) {
+      if (HashTable[i] != NULL) {
+	tempTable[i] = HashTable[i];
+      }
+    }
+    //cout << endl << "hit here" << endl;
+    /*for (int i = 0; i < tableSize; i++) {
+      if (HashTable[i] != NULL) {
+	Node* tempNode = HashTable[i];
+	int pos = 0;
+	for (int i = 0; i < nameSize; i++) {//reindex
+	  if (tempNode -> student -> first[i] != '\0') {
+	    pos += (int)tempNode -> student -> first[i];
+	  }
+	}
+	
+	pos = pos % (int)pow(tableSize, 2);
+	tempNode -> index = pos;
+	tempTable[pos] = tempNode;
+      }
+    }*/    
+    //HashTable = tempTable;
+    //tempTable = NULL;
+    //cout << endl << "now here" << endl;
+    //cout << tableSize;
+    /*for (int i = 0; i < tempSize; i++) {//check for chain and reindex chained nodes
+      cout << endl << i << endl;
+      if (tempTable[i] != NULL) {
+	cout << endl << i << endl;
+	if (tempTable[i] -> next != NULL) {
+	  cout << endl << "here" << endl;
+	  Node* current = tempTable[i];
+	  while (current -> next != NULL) {
+	    Node* parent = current;
+	    current = current -> next;
+	    int pos = 0;
+	    for (int i = 0; i < nameSize; i++) {
+	      if (current -> student -> first[i] != '\0') {
+		pos += (int) current -> student -> first[i];
+	      }
+	    }
+	    pos = pos % tempSize;
+	    
+	    if (pos != parent -> index) {
+	      Node* temp = current;
+	      temp -> index = pos;
+	      current = parent;
+	      parent = NULL;
+	      current -> next = temp -> next;
+	      if (tempTable[pos] == NULL)
+		tempTable[pos] = temp;
+	      else {
+		Node* occupier = tempTable[pos];
+		while (occupier -> next != NULL)
+		  occupier = occupier -> next;
+		
+		occupier -> next = temp;
+	      }
+	    }
+	    else {
+	      current -> index = pos;
+	    }
+	  }
+	}
+      }
+      }*/
+    reIndex(tempSize);
+    tableSize = tempSize;
+    HashTable = new Node*[tableSize];
+    initTable(HashTable, tableSize);
+    for (int i = 0; i < tableSize; i++) {
+      if (tempTable[i] != NULL) {
+	if (tempTable[i] -> next != NULL) {
+	  Node* current = tempTable[i];
+	  while (current != NULL) {
+	    addStudent(NULL, NULL, NULL, true, current -> student, current -> index);
+	    current = current -> next;
+	  }
+	  current = NULL;
+ 	}
+	else {
+	  addStudent(NULL, NULL, NULL, true, tempTable[i] -> student, tempTable[i] -> index);
+	}
+      }
+    }
+    tempTable = NULL;
+    cout << GREEN << "New table size is: " << RESET << tableSize << endl;
+  }
+}
+
 bool checkCombos(char* first, char* last, bool shouldDelete) {//check if a name has been used before, can also delete
   vector<map<char*, char*>>::iterator v;
   map<char*, char*>::const_iterator j;
@@ -177,54 +316,6 @@ bool checkCombos(char* first, char* last, bool shouldDelete) {//check if a name 
   return true;
 }
 
-void addStudent(char* inFirst, char* inLast, float inGPA) {//adding student to table
-  Student* newStudent = new Student();
-  Node* newNode = new Node();
-  
-  newStudent -> id = genID();  
-  newStudent -> first = inFirst;
-  newStudent -> last = inLast;
-  newStudent -> gpa = inGPA;
-
-  int pos = 0;
-
-  for (int i = 0; i < nameSize; i++) {
-    if (newStudent -> first[i] != '\0') {
-      pos += (int)newStudent -> first[i];
-      //cout << (int)newStudent -> first[i] << endl;
-      //cout << pos << endl;
-    }
-  }
-
-  pos = pos % tableSize;
-  //cout << tableSize << endl;
-  //cout << pos << endl;
-  newNode -> student = newStudent;
-  newNode -> index = pos;
-  
-  if (HashTable[pos] ==  NULL) {
-    HashTable[pos] = newNode;
-    //cout << "happened";
-  }
-  else {
-    Node* current = HashTable[pos];
-    while (current -> next != NULL)
-      current = current -> next;
-    
-    current -> next = newNode;
-  }
-
-  map<char*, char*> temp;
-  temp.insert(pair<char*, char*> (inFirst, inLast)); //adding name to used names list
-  usedNames.push_back(temp);
-  temp.clear();
-  
-  //cout << pos;
-  //cout << HashTable[pos] -> student -> first;
-  
-  //pos = 0;
-  reHash(false);
-}
 
 void parseInput(vector<char*> &names, char* input) {//parse file input that's separated by spaces, won't work if name is longer than 'tableSize - 1'
   char* name = new char[nameSize];
@@ -346,7 +437,7 @@ void randomGen(char first[], char last[], int amount) {//generate random student
     //cout << endl << firstName << endl;
     //cout << endl << lastName << endl;
     //cout << endl << gpa << endl;
-    addStudent(firstName, lastName, gpa);
+    addStudent(firstName, lastName, gpa, false, NULL, NULL);
     //cout << endl << "4" << endl;
   }
  
@@ -502,7 +593,7 @@ int main() {
 	
 	if (gpa <= 5 && gpa > 0) {//gpa can never be over 5
 	  if (checkCombos(first, last, false)) {//if name hasn't been used
-	    addStudent(first, last, gpa);
+	    addStudent(first, last, gpa, false, NULL, NULL);
 	    cout << endl << GREEN << "Student has been added." << endl << RESET;
 	  }
 	  else 
@@ -546,12 +637,12 @@ int main() {
       //go through table and print nodes that exist as well as their children if they exist
       Node* current;
       bool found = false;
-      int counter = 0;
+      //int counter = 0;
       for (int i = 0; i < tableSize; i++) {
 	if (HashTable[i] != NULL) {
 	  found = true;
 	  if (HashTable[i] -> student != NULL) {
-	    counter++;
+	    //counter++;
 	    cout << endl << HashTable[i] -> student -> first << endl;
 	    cout << HashTable[i] -> student -> last << endl;
 	    cout << setw(6) << setfill('0') << HashTable[i] -> student -> id << endl;
@@ -564,7 +655,7 @@ int main() {
 	    current = current -> next;
 	    num++;
 	    if (current -> student != NULL) {
-	      counter++;
+	      //counter++;
 	      cout << endl << current -> student -> first << endl;
 	      cout << current -> student -> last << endl;
 	      cout << setw(6) << setfill('0') << current -> student -> id << endl;
@@ -577,9 +668,9 @@ int main() {
       if (!found)
 	cout << RED << endl << "There are no students to print." << RESET << endl;
       else
-	cout << endl << counter << " total students." << endl;
-
-      cout << usedNames.size();
+	cout << endl << usedNames.size() << " total students." << endl;
+      
+      //cout << counter;
     }
     
     else if (choice == 3) {//DELETE
@@ -661,6 +752,7 @@ int main() {
     else
       cout << endl << RED << "Invalid Input" << RESET << endl;
     
+    reHash(false);
   }
   return 0;
 }
